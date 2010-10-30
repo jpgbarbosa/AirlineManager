@@ -1,9 +1,15 @@
-package FrontOffice;
+package frontOffice;
 
-import Miscellaneous.Booking;
-import Miscellaneous.Flight;
+import bookings.Booking;
+import common.Flight;
+
 
 public class BookingManager {
+	
+	/* The constructor. */
+	public BookingManager(){
+		
+	}
 	
 	/* Books a flight. */
 	public void bookFlight(Flight flight){
@@ -21,6 +27,5 @@ public class BookingManager {
 	public void changeBooking(Booking bookings){
 		
 	}
-	
 	
 }

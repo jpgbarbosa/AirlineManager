@@ -1,11 +1,17 @@
-package BackOffice;
+package backOffice;
 
 import java.util.LinkedList;
-import Miscellaneous.Airplane;
+
+import common.Airplane;
 
 public class PlanesManager {
 	/* The list of registered planes. */
-	LinkedList <Airplane> planesList;
+	private LinkedList <Airplane> planesList;
+	
+	/* The constructor. */
+	public PlanesManager(){
+		
+	}
 	
 	/* Adds a new plane to the system. */
 	public void addPlane(){

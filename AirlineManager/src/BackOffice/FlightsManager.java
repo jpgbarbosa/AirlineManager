@@ -1,11 +1,17 @@
-package BackOffice;
+package backOffice;
 
 import java.util.LinkedList;
-import Miscellaneous.Flight;
+
+import common.Flight;
 
 public class FlightsManager {
 	/* The list of all(?) the flights in the system. */
-	LinkedList <Flight> flightsList;
+	private LinkedList <Flight> flightsList;
+	
+	/* The constructor. */
+	public FlightsManager(){
+		
+	}
 	
 	/* Schedules a new flight. */
 	public void scheduleFlight(){
