@@ -86,7 +86,7 @@ public class BackOffice {
 		
 		JFrame f = new JFrame();
 		f.setSize(dimH,dimV);
-		f.setTitle("Móveis PIB");
+		f.setTitle("Airplane Agency");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		panel.setLayout(null);
@@ -259,19 +259,19 @@ public class BackOffice {
 		public void mouseReleased(MouseEvent e){
 			if(e.getComponent().getName().equals("Airplanes")){
 				menu.setVisible(false);
-				planesManagerMenu.setVisible(true);
+				planesManagerMenu.entry();
 			}
 			else if(e.getComponent().getName().equals("Flights")){
 				menu.setVisible(false);
-				flightsManagerMenu.setVisible(true);
+				flightsManagerMenu.entry();
 			}
 			else if(e.getComponent().getName().equals("Feedback")){
 				menu.setVisible(false);
-				feedBackManagerMenu.setVisible(true);
+				feedBackManagerMenu.entry();
 			}
 			else if(e.getComponent().getName().equals("Statistics")){
 				menu.setVisible(false);
-				statisticsManagerMenu.setVisible(true);
+				statisticsManagerMenu.entry();
 				
 			}
 			else if (e.getComponent().getName().equals("Exit")){
@@ -325,6 +325,12 @@ public class BackOffice {
 			sendPanel.setVisible(false);
 			positivePanel.setVisible(false);
 			
+		}
+		
+		public void entry(){
+			setVisible(true);
+			/* As default, we have the Buy Plane Menu. */
+			positivePanel.setVisible(true);
 		}
 		
 		public void mouseReleased(MouseEvent e){
@@ -405,6 +411,15 @@ public class BackOffice {
 			schedulePanel.setVisible(false);
 		}
 		
+		/* This function is used when the user enters this menu.
+		 * We need to set true the right menu and one of its subpanels.
+		 */
+		public void entry(){
+			setVisible(true);
+			/* As default, we have the Buy Plane Menu. */
+			schedulePanel.setVisible(true);
+		}
+		
 		public void mouseReleased(MouseEvent e){
 			if(e.getComponent().getName().equals("Schedule Flight")){
 				reschedulePanel.setVisible(false);
@@ -446,18 +461,21 @@ public class BackOffice {
 	private class PlanesManagerMenu extends Window{
 		JPanel buyPanel;
 		JPanel sellPanel;
+		JPanel listPanel;
 		JPanel findPanel;
 		
 		public PlanesManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
-			CreateButton("Buy Plane",Color.white,"Adds a new plane to the fleet",15,60,200,100,30);
-			CreateButton("Sell Plane",Color.white,"Removes a plane from the fleet",15,60,250,100,30);
-			CreateButton("Find Plane",Color.white,"Search for a plane",15,60,350,100,30);
+			CreateButton("Buy Plane",Color.white,"Adds a new plane to the fleet",15,60,200,150,30);
+			CreateButton("Sell Plane",Color.white,"Removes a plane from the fleet",15,60,250,150,30);
+			CreateButton("List Planes",Color.white,"Removes a plane from the fleet",15,60,300,150,30);
+			CreateButton("Find Plane",Color.white,"List all the planes from the fleet",15,60,350,150,30);
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			
 			/* Creates the subpanels that are displayed accordingly to the user's choice. */
 			buyPanel = new JPanel();
 			sellPanel = new JPanel();
+			listPanel = new JPanel();
 			findPanel = new JPanel();
 			
 			/* Defines the subpanels. */
@@ -469,6 +487,10 @@ public class BackOffice {
 			sellPanel.setBounds(new Rectangle(400, 40, 400, 400));
 			sellPanel.add(CreateButton("re",Color.white,"Search for a flight",15,60,100,200,30));
 			
+			listPanel.setLayout(null);
+			listPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			listPanel.add(CreateButton("Cenas",Color.white,"Search for a flight",15,60,100,200,30));
+			
 			findPanel.setLayout(null);
 			findPanel.setBounds(new Rectangle(400, 40, 400, 400));
 			findPanel.add(CreateButton("Go",Color.white,"Search for a flight",15,60,100,200,30));
@@ -476,33 +498,54 @@ public class BackOffice {
 			/* Adds the subpanels to the main panel. */
 			panel.add(buyPanel);
 			panel.add(sellPanel);
+			panel.add(listPanel);
 			panel.add(findPanel);
 			
 			buyPanel.setVisible(false);
 			sellPanel.setVisible(false);
+			listPanel.setVisible(false);
 			findPanel.setVisible(false);
 			
+		}
+		
+		/* This function is used when the user enters this menu.
+		 * We need to set true the right menu and one of its subpanels.
+		 */
+		public void entry(){
+			setVisible(true);
+			/* As default, we have the Buy Plane Menu. */
+			buyPanel.setVisible(true);
 		}
 		
 		public void mouseReleased(MouseEvent e){
 			if(e.getComponent().getName().equals("Buy Plane")){
 				buyPanel.setVisible(true);
 				sellPanel.setVisible(false);
+				listPanel.setVisible(false);
 				findPanel.setVisible(false);
 			}
 			else if(e.getComponent().getName().equals("Sell Plane")){
 				buyPanel.setVisible(false);
 				sellPanel.setVisible(true);
+				listPanel.setVisible(false);
+				findPanel.setVisible(false);
+			}
+			else if(e.getComponent().getName().equals("List Planes")){
+				buyPanel.setVisible(false);
+				sellPanel.setVisible(false);
+				listPanel.setVisible(true);
 				findPanel.setVisible(false);
 			}
 			else if(e.getComponent().getName().equals("Find Plane")){
 				buyPanel.setVisible(false);
 				sellPanel.setVisible(false);
+				listPanel.setVisible(false);
 				findPanel.setVisible(true);
 			}
 			else if (e.getComponent().getName().equals("Return")){
 				buyPanel.setVisible(false);
 				sellPanel.setVisible(false);
+				listPanel.setVisible(false);
 				findPanel.setVisible(false);
 				
 				planesManagerMenu.setVisible(false);
@@ -519,6 +562,15 @@ public class BackOffice {
 			CreateButton("Statistics 2",Color.white,"Manage Flights",15,60,250,150,30);
 
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
+		}
+		
+		/* This function is used when the user enters this menu.
+		 * We need to set true the right menu and one of its subpanels.
+		 */
+		public void entry(){
+			setVisible(true);
+			/* As default, we have the Buy Plane Menu. */
+			//buyPanel.setVisible(true);
 		}
 		
 		public void mouseReleased(MouseEvent e){
