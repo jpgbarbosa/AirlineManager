@@ -25,6 +25,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class BackOffice {
+	/* The main panel. */
+	JPanel panel = new JPanel();
+	
 	/* The list of managers that the BackOffice will deal with. */
 	private FeedBackManager feedBackManager;
 	private FlightsManager flightsManager;
@@ -86,7 +89,6 @@ public class BackOffice {
 		f.setTitle("Móveis PIB");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(Color.lightGray);
 		panel.setVisible(true);
@@ -141,7 +143,7 @@ public class BackOffice {
 			add(line);
 		}
 		
-		protected void CreateButton(String name, Color cor,String toolTip, int size, int x, int y, int x1,int y1){
+		protected JButton CreateButton(String name, Color cor,String toolTip, int size, int x, int y, int x1,int y1){
 			JButton botao = new JButton(name);
 			botao.setName(name);
 			botao.setFont(new Font("sansserif",Font.PLAIN,size));
@@ -150,6 +152,8 @@ public class BackOffice {
 			botao.addMouseListener(this);
 			botao.setToolTipText(toolTip);
 			add(botao);
+			
+			return botao;
 		}
 		
 		protected JRadioButton CreateRadioButton(String name, Color cor, boolean selected, int size, int x, int y, int x1,int y1){
@@ -283,25 +287,67 @@ public class BackOffice {
 	
 	@SuppressWarnings("serial")
 	private class FeedBackManagerMenu extends Window{
+		JPanel positivePanel;
+		JPanel negativePanel;
+		JPanel sendPanel;
+		
 		public FeedBackManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
 			CreateButton("Positive Feedback",Color.white,"Read positive critics sent by clients",15,60,200,200,30);
 			CreateButton("Negative Feedback",Color.white,"Read negative messages sent by clients",15,60,250,200,30);
 			CreateButton("Send Notifications",Color.white,"Notificate clients about a special event",15,60,300,200,30);
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
+			
+			/* Creates the subpanels that are displayed accordingly to the user's choice. */
+			positivePanel = new JPanel();
+			negativePanel = new JPanel();
+			sendPanel = new JPanel();
+			
+			/* Defines the subpanels. */
+			positivePanel.setLayout(null);
+			positivePanel.setBounds(new Rectangle(400, 40, 400, 400));
+			positivePanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			negativePanel.setLayout(null);
+			negativePanel.setBounds(new Rectangle(400, 40, 400, 400));
+			negativePanel.add(CreateButton("re",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			sendPanel.setLayout(null);
+			sendPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			sendPanel.add(CreateButton("cancel",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			/* Adds the subpanels to the main panel. */
+			panel.add(positivePanel);
+			panel.add(negativePanel);
+			panel.add(sendPanel);
+			
+			negativePanel.setVisible(false);
+			sendPanel.setVisible(false);
+			positivePanel.setVisible(false);
+			
 		}
 		
 		public void mouseReleased(MouseEvent e){
 			if(e.getComponent().getName().equals("Positive Feedback")){
-				
+				negativePanel.setVisible(false);
+				sendPanel.setVisible(false);
+				positivePanel.setVisible(true);
 			}
 			else if(e.getComponent().getName().equals("Negative Feedback")){
-				
+				negativePanel.setVisible(true);
+				sendPanel.setVisible(false);
+				positivePanel.setVisible(false);
 			}
 			else if(e.getComponent().getName().equals("Send Notifications")){
-				
+				negativePanel.setVisible(false);
+				sendPanel.setVisible(true);
+				positivePanel.setVisible(false);
 			}
 			else if (e.getComponent().getName().equals("Return")){
+				negativePanel.setVisible(false);
+				sendPanel.setVisible(false);
+				positivePanel.setVisible(false);
+				
 				feedBackManagerMenu.setVisible(false);
 				menu.setVisible(true);
 			}
@@ -310,6 +356,11 @@ public class BackOffice {
 	
 	@SuppressWarnings("serial")
 	private class FlightsManagerMenu extends Window{
+		JPanel schedulePanel;
+		JPanel reschedulePanel;
+		JPanel cancelPanel;
+		JPanel findPanel;
+		
 		public FlightsManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
 			CreateButton("Schedule Flight",Color.white,"Schedule a new flight",15,60,200,200,30);
@@ -318,22 +369,73 @@ public class BackOffice {
 			CreateButton("Find Flight",Color.white,"Search for a flight",15,60,350,200,30);
 			
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
+			 
+			/* Creates the subpanels that are displayed accordingly to the user's choice. */
+			schedulePanel = new JPanel();
+			reschedulePanel = new JPanel();
+			cancelPanel = new JPanel();
+			findPanel = new JPanel();
+			
+			/* Defines the subpanels. */
+			schedulePanel.setLayout(null);
+			schedulePanel.setBounds(new Rectangle(400, 40, 400, 400));
+			schedulePanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			reschedulePanel.setLayout(null);
+			reschedulePanel.setBounds(new Rectangle(400, 40, 400, 400));
+			reschedulePanel.add(CreateButton("re",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			cancelPanel.setLayout(null);
+			cancelPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			cancelPanel.add(CreateButton("cancel",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			findPanel.setLayout(null);
+			findPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			findPanel.add(CreateButton("Go",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			/* Adds the subpanels to the main panel. */
+			panel.add(schedulePanel);
+			panel.add(reschedulePanel);
+			panel.add(cancelPanel);
+			panel.add(findPanel);
+			
+			reschedulePanel.setVisible(false);
+			cancelPanel.setVisible(false);
+			findPanel.setVisible(false);
+			schedulePanel.setVisible(false);
 		}
 		
 		public void mouseReleased(MouseEvent e){
-			if(e.getComponent().getName().equals("Schedule Flights")){
-				
+			if(e.getComponent().getName().equals("Schedule Flight")){
+				reschedulePanel.setVisible(false);
+				cancelPanel.setVisible(false);
+				findPanel.setVisible(false);
+				schedulePanel.setVisible(true);
 			}
-			else if(e.getComponent().getName().equals("Reschedule Flights")){
-				
+			else if(e.getComponent().getName().equals("Reschedule Flight")){
+				reschedulePanel.setVisible(true);
+				cancelPanel.setVisible(false);
+				findPanel.setVisible(false);
+				schedulePanel.setVisible(false);
 			}
 			else if(e.getComponent().getName().equals("Cancel Flight")){
-				
+				reschedulePanel.setVisible(false);
+				cancelPanel.setVisible(true);
+				findPanel.setVisible(false);
+				schedulePanel.setVisible(false);
 			}
-			else if(e.getComponent().getName().equals("Search Flight")){
-				
+			else if(e.getComponent().getName().equals("Find Flight")){
+				reschedulePanel.setVisible(false);
+				cancelPanel.setVisible(false);
+				findPanel.setVisible(true);
+				schedulePanel.setVisible(false);
 			}
 			else if (e.getComponent().getName().equals("Return")){
+				reschedulePanel.setVisible(false);
+				cancelPanel.setVisible(false);
+				findPanel.setVisible(false);
+				schedulePanel.setVisible(false);
+				
 				flightsManagerMenu.setVisible(false);
 				menu.setVisible(true);
 			}
@@ -342,25 +444,67 @@ public class BackOffice {
 	
 	@SuppressWarnings("serial")
 	private class PlanesManagerMenu extends Window{
+		JPanel buyPanel;
+		JPanel sellPanel;
+		JPanel findPanel;
+		
 		public PlanesManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
 			CreateButton("Buy Plane",Color.white,"Adds a new plane to the fleet",15,60,200,100,30);
 			CreateButton("Sell Plane",Color.white,"Removes a plane from the fleet",15,60,250,100,30);
 			CreateButton("Find Plane",Color.white,"Search for a plane",15,60,350,100,30);
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
+			
+			/* Creates the subpanels that are displayed accordingly to the user's choice. */
+			buyPanel = new JPanel();
+			sellPanel = new JPanel();
+			findPanel = new JPanel();
+			
+			/* Defines the subpanels. */
+			buyPanel.setLayout(null);
+			buyPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			buyPanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			sellPanel.setLayout(null);
+			sellPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			sellPanel.add(CreateButton("re",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			findPanel.setLayout(null);
+			findPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			findPanel.add(CreateButton("Go",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			/* Adds the subpanels to the main panel. */
+			panel.add(buyPanel);
+			panel.add(sellPanel);
+			panel.add(findPanel);
+			
+			buyPanel.setVisible(false);
+			sellPanel.setVisible(false);
+			findPanel.setVisible(false);
+			
 		}
 		
 		public void mouseReleased(MouseEvent e){
 			if(e.getComponent().getName().equals("Buy Plane")){
-				
+				buyPanel.setVisible(true);
+				sellPanel.setVisible(false);
+				findPanel.setVisible(false);
 			}
 			else if(e.getComponent().getName().equals("Sell Plane")){
-				
+				buyPanel.setVisible(false);
+				sellPanel.setVisible(true);
+				findPanel.setVisible(false);
 			}
 			else if(e.getComponent().getName().equals("Find Plane")){
-				
+				buyPanel.setVisible(false);
+				sellPanel.setVisible(false);
+				findPanel.setVisible(true);
 			}
 			else if (e.getComponent().getName().equals("Return")){
+				buyPanel.setVisible(false);
+				sellPanel.setVisible(false);
+				findPanel.setVisible(false);
+				
 				planesManagerMenu.setVisible(false);
 				menu.setVisible(true);
 			}
@@ -371,8 +515,8 @@ public class BackOffice {
 	private class StatisticsManagerMenu extends Window{
 		public StatisticsManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
-			CreateButton("Statistics 1",Color.white,"Manage Airplanes",15,60,200,100,30);
-			CreateButton("Statistics 2",Color.white,"Manage Flights",15,60,250,100,30);
+			CreateButton("Statistics 1",Color.white,"Manage Airplanes",15,60,200,150,30);
+			CreateButton("Statistics 2",Color.white,"Manage Flights",15,60,250,150,30);
 
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 		}
