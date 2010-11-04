@@ -1,5 +1,7 @@
 package backOffice;
 
+import java.util.GregorianCalendar;
+
 public class StatisticsManager {
 	private FeedBackManager feedBackManager;
 	private FlightsManager flightsManager;
@@ -22,6 +24,11 @@ public class StatisticsManager {
 		output.append("\nNumero de Feedbacks Negativos: "+feedBackManager.getNumNegative());
 		output.append("\n");
 		
+		return output.toString();
+	}
+	
+	public String generate(GregorianCalendar begining, GregorianCalendar end){
+		StringBuilder output = new StringBuilder();
 		return output.toString();
 	}
 }
