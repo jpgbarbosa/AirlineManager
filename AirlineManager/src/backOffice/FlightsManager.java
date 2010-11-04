@@ -1,12 +1,12 @@
 package backOffice;
 
-import java.util.LinkedList;
+import java.util.Vector;
 
 import common.Flight;
 
 public class FlightsManager {
 	/* The list of all(?) the flights in the system. */
-	private LinkedList <Flight> flightsList;
+	private Vector<Flight> flightsList;
 	
 	/* The constructor. */
 	public FlightsManager(){
@@ -27,4 +27,14 @@ public class FlightsManager {
 	public void reScheduleFlight(Flight flight){
 		
 	}
+
+	public Vector<Flight> getFlightsList() {
+		return flightsList;
+	}
+
+	public void setFlightsList(Vector<Flight> flightsList) {
+		this.flightsList = flightsList;
+	}
+	
+	
 }

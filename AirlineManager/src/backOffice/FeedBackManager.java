@@ -1,6 +1,6 @@
 package backOffice;
 
-import java.util.LinkedList;
+import java.util.Vector;
 
 import messages.Feedback;
 
@@ -12,14 +12,14 @@ public class FeedBackManager {
 	 * The feed back can be either positive or negative, so we use two lists
 	 * to keep them separated.
 	 */
-	private LinkedList <Feedback> positiveFeedBackList;
-	private LinkedList <Feedback> negativeFeedBackList;
+	private Vector <Feedback> positiveFeedBackList;
+	private Vector <Feedback> negativeFeedBackList;
 	
 	/* The constructor. */
 	public FeedBackManager(){
 		//TODO: Later, we have to read it from a file.
-		positiveFeedBackList = new LinkedList <Feedback>();
-		negativeFeedBackList = new LinkedList <Feedback>();
+		positiveFeedBackList = new Vector <Feedback>();
+		negativeFeedBackList = new Vector <Feedback>();
 	}
 	
 	/* Sends a notification to a specific client. */
@@ -38,12 +38,12 @@ public class FeedBackManager {
 	}
 	
 	/* Reads the positive feed back provided by the clients. */
-	public LinkedList <Feedback> getPositiveFeedBackList(){
+	public Vector <Feedback> getPositiveFeedBackList(){
 		return positiveFeedBackList;
 	}
 	
 	/* Reads the negative feed back provided by the clients. */
-	public LinkedList <Feedback> getNegativeFeedBackList(){
+	public Vector <Feedback> getNegativeFeedBackList(){
 		return negativeFeedBackList;
 	}
 	

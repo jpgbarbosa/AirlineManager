@@ -24,6 +24,8 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import common.Search;
+
 public class BackOffice {
 	/* The main panel. */
 	JPanel panel = new JPanel();
@@ -33,6 +35,7 @@ public class BackOffice {
 	private FlightsManager flightsManager;
 	private PlanesManager planesManager;
 	private StatisticsManager statisticsManager;
+	private Search search;
 	
 	/* Window dimensions for the graphical interface. */
 	private int dimH = 1000;
@@ -51,6 +54,7 @@ public class BackOffice {
 		flightsManager = new FlightsManager();
 		planesManager = new PlanesManager();
 		statisticsManager = new StatisticsManager();
+		search = new Search(flightsManager, planesManager);
 		
 		menu = new Menu();
 		feedBackManagerMenu = new FeedBackManagerMenu();

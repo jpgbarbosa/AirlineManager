@@ -1,8 +1,6 @@
 package common;
 
-import java.util.LinkedList;
-
-import bookings.Booking;
+import java.util.Vector;
 
 public class Airplane {
 	/* The total amount of seats and the number of occupied seats.
@@ -13,12 +11,78 @@ public class Airplane {
 	//TODO: Um voo pode ter mais do que um flight, logo, estas variáveis não podem ficar associadas ao avião.
 	private int noSeats, occupiedSeats;
 	/* The flight associated with this airplane. */
-	private LinkedList <Flight> flights;
+	private Vector <Flight> flights;
+	private String company, model;
+	private int id;
+	
+	//TODO: This is temporary!
+	public static int idCreator = 0;
 	
 	/* The constructor. */
-	public Airplane(int number){
+	public Airplane(int number, String company, String model){
 		noSeats = number;
-		this.flights = new LinkedList<Flight>();
+		this.company = company;
+		this.model = model;
+		this.flights = new Vector <Flight>();
+		
+		id = idCreator++;
+	}
+
+	public void associateFlight(Flight flight){
+		flights.add(flight);
+	}
+	
+	public void removeFlight (Flight flight){
+		flights.remove(flight);
+	}
+	
+	/* Getters and setters. */
+	public int getNoSeats() {
+		return noSeats;
+	}
+
+	public int getOccupiedSeats() {
+		return occupiedSeats;
+	}
+
+	public Vector <Flight> getFlights() {
+		return flights;
+	}
+
+	public int getId() {
+		return id;
+	}
+	
+	public String getCompany() {
+		return company;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setNoSeats(int noSeats) {
+		this.noSeats = noSeats;
+	}
+
+	public void setOccupiedSeats(int occupiedSeats) {
+		this.occupiedSeats = occupiedSeats;
+	}
+
+	public void setFlights(Vector <Flight> flights) {
+		this.flights = flights;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
 	}
 	
 }

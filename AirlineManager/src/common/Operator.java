@@ -9,5 +9,14 @@ public class Operator extends Client{
 		super(name,addr,phone,mail);
 		company = comp;
 	}
-	
+
+	/* Getters and setters. */
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
 }
