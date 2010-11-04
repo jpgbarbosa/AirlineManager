@@ -16,7 +16,7 @@ public class StatisticsManager {
 		StringBuilder output = new StringBuilder();
 		output.append("Estatisticas:\n\nNumero de Avioes Disponiveis: "+planesManager.getNumPlanes());
 		output.append("\nNumero de Voos Registados: "+flightsManager.getNumFlights()); // falta implementar
-		output.append("\nNumero de Voos Cancalados: "+flightsManager.getNumCancelled()); //falta implementar
+		output.append("\nNumero de Voos Cancelados: "+flightsManager.getNumCancelled()); //falta implementar
 		output.append("\nTaxa de Ocupacao dos Voos: "+flightsManager.getOccupation());
 		output.append("\n\nNumero de Feedbacks Positivos: "+feedBackManager.getNumPositive());
 		output.append("\nNumero de Feedbacks Negativos: "+feedBackManager.getNumNegative());
