@@ -3,6 +3,7 @@ package backOffice;
 import java.util.Vector;
 
 import common.Flight;
+import common.FileManager;
 
 public class FlightsManager {
 	/* The list of all(?) the flights in the system. */
@@ -10,12 +11,18 @@ public class FlightsManager {
 	
 	/* The constructor. */
 	public FlightsManager(){
-		
+		if(FileManager.loadObjectFromFile("flightsList", flightsList) == null)
+			flightsList = new Vector<Flight>();
 	}
 	
 	/* Schedules a new flight. */
 	public void scheduleFlight(){
 		
+	}
+	
+	/* Search a fligh */
+	public Flight searchFlight(){
+		return null;
 	}
 	
 	/* Cancels a specific flight.  */
