@@ -33,4 +33,8 @@ public class PlanesManager {
 		this.planesList = planesList;
 	}
 	
+	public int getNumPlanes(){
+		return planesList.size();
+	}
+	
 }

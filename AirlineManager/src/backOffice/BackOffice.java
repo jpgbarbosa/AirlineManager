@@ -53,7 +53,7 @@ public class BackOffice {
 		feedBackManager = new FeedBackManager();
 		flightsManager = new FlightsManager();
 		planesManager = new PlanesManager();
-		statisticsManager = new StatisticsManager();
+		statisticsManager = new StatisticsManager(feedBackManager, flightsManager, planesManager);
 		search = new Search(flightsManager, planesManager);
 		
 		menu = new Menu();

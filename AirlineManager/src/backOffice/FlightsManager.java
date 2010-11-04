@@ -36,5 +36,18 @@ public class FlightsManager {
 		this.flightsList = flightsList;
 	}
 	
+	public int getNumFlights(){
+		return flightsList.size();
+	}
+	
+	public int getNumCancelled(){
+		
+		return 0;
+	}
+	
+	public int getOccupation(){
+		
+		return 0;
+	}
 	
 }

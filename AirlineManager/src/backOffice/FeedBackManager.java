@@ -82,5 +82,13 @@ public class FeedBackManager {
 		return negativeFeedBackList;
 	}
 	
+	public int getNumPositive(){
+		return positiveFeedBackList.size();
+	}
+	
+	public int getNumNegative(){
+		return negativeFeedBackList.size();
+	}
+	
 	
 }
