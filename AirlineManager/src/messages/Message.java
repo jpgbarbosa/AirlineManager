@@ -13,4 +13,8 @@ public abstract class Message {
 		this.date = date;
 		
 	}
+	
+	public GregorianCalendar getDate(){
+		return date;
+	}
 }

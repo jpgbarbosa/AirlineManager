@@ -1,5 +1,6 @@
 package backOffice;
 
+import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -86,9 +87,30 @@ public class FeedBackManager {
 		return positiveFeedBackList.size();
 	}
 	
+	public int getNumPositive(GregorianCalendar beginning, GregorianCalendar end){
+		int num = 0;
+		
+		for(Feedback f:positiveFeedBackList){
+			if(f.getDate().after(beginning) && f.getDate().before(end))
+				num++;
+		}
+		
+		return num;
+	}
+	
 	public int getNumNegative(){
 		return negativeFeedBackList.size();
 	}
 	
+	public int getNumNegative(GregorianCalendar beginning, GregorianCalendar end){
+		int num = 0;
+		
+		for(Feedback f:negativeFeedBackList){
+			if(f.getDate().after(beginning) && f.getDate().before(end))
+				num++;
+		}
+		
+		return num;
+	}
 	
 }
