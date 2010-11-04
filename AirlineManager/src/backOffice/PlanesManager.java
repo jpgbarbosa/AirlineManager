@@ -10,16 +10,17 @@ public class PlanesManager {
 	
 	/* The constructor. */
 	public PlanesManager(){
-		
+		planesList = new LinkedList<Airplane>();
 	}
 	
 	/* Adds a new plane to the system. */
-	public void addPlane(){
-		
+	public void addPlane(Airplane airplane){
+		planesList.add(airplane);
 	}
 	
 	/* Removes a plane from the system. */
 	public void removePlane(Airplane airplane){
-		
+		planesList.remove(airplane);
 	}
+	
 }
