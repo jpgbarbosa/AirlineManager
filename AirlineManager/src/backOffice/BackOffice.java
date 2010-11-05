@@ -9,6 +9,9 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Vector;
+
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -24,11 +27,14 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import common.Airplane;
+import common.Constants;
 import common.Search;
+import common.Window;
 
 public class BackOffice {
 	/* The main panel. */
-	JPanel panel = new JPanel();
+	private JPanel panel = new JPanel();
 	
 	/* The list of managers that the BackOffice will deal with. */
 	private FeedBackManager feedBackManager;
@@ -37,10 +43,6 @@ public class BackOffice {
 	private StatisticsManager statisticsManager;
 	private Search search;
 	
-	/* Window dimensions for the graphical interface. */
-	private int dimH = 1000;
-	private int dimV = 600;
-	/* The windows used on the graphical interface. */
 	private Menu menu;
 	private FeedBackManagerMenu feedBackManagerMenu;
 	private FlightsManagerMenu flightsManagerMenu;
@@ -89,7 +91,7 @@ public class BackOffice {
     public void executeGraphics(){
 		
 		JFrame f = new JFrame();
-		f.setSize(dimH,dimV);
+		f.setSize(Constants.DIM_H,Constants.DIM_V);
 		f.setTitle("Airplane Agency");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -122,131 +124,6 @@ public class BackOffice {
 		f.setContentPane(panel);
 		f.setVisible(true);
 		
-	}
-	
-	@SuppressWarnings("serial")
-	private abstract class Window extends JPanel implements MouseListener{
-		Window(){
-			setLayout(null);
-		    setBounds(new Rectangle(0, -1, 1000, 600));
-		    setBackground(Color.lightGray);
-		}
-		
-		//Métodos impostos por MouseListener;
-		public void mouseClicked(MouseEvent e) {}
-		public void mouseEntered(MouseEvent e) {}
-		public void mouseExited(MouseEvent e) {}
-		public void mousePressed(MouseEvent e) {}
-		public void mouseReleased(MouseEvent e) {}
-		
-		protected void DrawLine(int pos,Color cor, int x,int y,int x1,int y1){
-			JSeparator line = new JSeparator(pos);
-			line.setBackground(cor);
-			line.setBounds(new Rectangle(x,y,x1,y1));
-			
-			add(line);
-		}
-		
-		protected JButton CreateButton(String name, Color cor,String toolTip, int size, int x, int y, int x1,int y1){
-			JButton botao = new JButton(name);
-			botao.setName(name);
-			botao.setFont(new Font("sansserif",Font.PLAIN,size));
-			botao.setBounds(new Rectangle(x, y, x1, y1));
-			botao.setBackground(cor);
-			botao.addMouseListener(this);
-			botao.setToolTipText(toolTip);
-			add(botao);
-			
-			return botao;
-		}
-		
-		protected JRadioButton CreateRadioButton(String name, Color cor, boolean selected, int size, int x, int y, int x1,int y1){
-			JRadioButton botao = new JRadioButton(name);
-			botao.setName(name);
-			botao.setFont(new Font("sansserif",Font.PLAIN,size));
-			botao.setBounds(new Rectangle(x, y, x1, y1));
-			botao.setBackground(cor);
-			botao.setSelected(selected);
-			botao.addMouseListener(this);
-			add(botao);
-			
-			return botao;
-		}
-
-		protected void CreateTitle(String name,Color cor, int size, int x, int y, int x1,int y1){
-			JLabel title = new JLabel();
-			title.setBounds(new Rectangle(x,y,x1,y1));
-			title.setText(name);
-			title.setName(name);
-			title.setFont(new Font("sansserif",Font.PLAIN,size));
-			title.setForeground(cor);
-			title.validate();
-			add(title);
-		}
-		
-		public JTextField CreateBoxDouble(int size,int x,int y,int x1,int y1,double def){
-			JTextField box = new JTextField(size);
-			box.setBounds(new Rectangle(x,y,x1,y1));
-			box.setText(Double.toString(def));
-			add(box);
-			
-			return box;
-		}
-		
-		public JTextField CreateBoxInt(int size,int x,int y,int x1,int y1,int def){
-			JTextField box = new JTextField(size);
-			box.setBounds(new Rectangle(x,y,x1,y1));
-			box.setText(Integer.toString(def));
-			add(box);
-			
-			return box;
-		}
-		
-		public JTextField CreateBoxText(int size,int x,int y,int x1,int y1){
-			JTextField box = new JTextField(size);
-			box.setBounds(new Rectangle(x,y,x1,y1));
-			box.setText("");
-			add(box);
-			
-			return box;
-		}
-		
-		public JPasswordField CreateBoxPassword(int size,int x,int y,int x1,int y1){
-			JPasswordField box = new JPasswordField(size);
-			box.setBounds(new Rectangle(x,y,x1,y1));
-			box.setText("");
-			add(box);
-			
-			return box;
-		}
-		
-		public JTextArea CreateText(int size,int size1,int x,int y, int x1,int y1){
-			JTextArea text = new JTextArea(size,size1);
-			text.setBounds(new Rectangle(x,y,x1,y1));
-			add(text);
-			
-			return text;
-		}
-		
-		public JLabel CreateImage(String path, String toolTip,int x,int y,int x1,int y1){
-			BufferedImage img = null;
-			Icon icon;
-			JLabel label;
-			
-			try {
-				img = ImageIO.read(new File(path));
-			} catch (IOException e){
-				System.out.println("Could not open the image located in " + path + "!");
-			}
-			icon = new ImageIcon(img);
-	        label = new JLabel(icon);
-	        label.setBounds(new Rectangle(x,y,x1,y1));
-	        if (!toolTip.equals(""))
-	        	label.setToolTipText(toolTip);
-	        add(label);
-	        
-	        return label;
-		}
 	}
 	
 	@SuppressWarnings("serial")
@@ -463,10 +340,28 @@ public class BackOffice {
 	
 	@SuppressWarnings("serial")
 	private class PlanesManagerMenu extends Window{
-		JPanel buyPanel;
-		JPanel sellPanel;
-		JPanel listPanel;
-		JPanel findPanel;
+		private JPanel buyPanel;
+		private JPanel sellPanel;
+		private JPanel listPanel;
+		private JPanel findPanel;
+		
+		private JTextArea logInfo;
+		
+		/* So we can know in which the user is at the moment. */
+		private String menuIdentifier;
+		
+		/* BUYPANEL VARIABLES */
+		private JTextField companyField;
+		private JTextField modelField;
+		private JTextField noSeatsField;
+		
+		/* SELLPANEL VARIABLES */
+		private JTextField idSellField;
+		
+		/* LISTPANEL VARIABLES */
+		private JTextArea listArea;
+		
+		/* FINDPANEL VARIABLES */
 		
 		public PlanesManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
@@ -475,6 +370,8 @@ public class BackOffice {
 			CreateButton("List Planes",Color.white,"Removes a plane from the fleet",15,60,300,150,30);
 			CreateButton("Find Plane",Color.white,"List all the planes from the fleet",15,60,350,150,30);
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
+			
+			logInfo = CreateText(10,10,400,500,275,50);
 			
 			/* Creates the subpanels that are displayed accordingly to the user's choice. */
 			buyPanel = new JPanel();
@@ -485,15 +382,25 @@ public class BackOffice {
 			/* Defines the subpanels. */
 			buyPanel.setLayout(null);
 			buyPanel.setBounds(new Rectangle(400, 40, 400, 400));
-			buyPanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,100,200,30));
+			buyPanel.add(CreateTitle("No. Seats:",Color.black,15,100,100,70,20));
+			buyPanel.add(noSeatsField = CreateBoxInt(20,175,100,50,20, 0));
+			buyPanel.add(CreateTitle("Company:",Color.black,15,100,130,70,20));
+			buyPanel.add(companyField = CreateBoxText(20,175,130,110,20));
+			buyPanel.add(CreateTitle("Model:",Color.black,15,100,160,70,20));
+			buyPanel.add(modelField = CreateBoxText(20,175,160,110,20));
+			buyPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,330,100,30));
 			
 			sellPanel.setLayout(null);
 			sellPanel.setBounds(new Rectangle(400, 40, 400, 400));
-			sellPanel.add(CreateButton("re",Color.white,"Search for a flight",15,60,100,200,30));
+			sellPanel.add(CreateTitle("Plane's ID:",Color.black,15,100,100,70,20));
+			sellPanel.add(idSellField = CreateBoxInt(20,175,100,50,20, 0));
+			sellPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,330,100,30));
 			
 			listPanel.setLayout(null);
 			listPanel.setBounds(new Rectangle(400, 40, 400, 400));
-			listPanel.add(CreateButton("Cenas",Color.white,"Search for a flight",15,60,100,200,30));
+			listPanel.add(CreateTitle("LIST OF FLIGHTS:",Color.black,15,20,20,150,20));
+			listPanel.add(CreateTitle("     ID    SEATS        COMPANY            MODEL",Color.black,15,20,40,400,20));
+			listPanel.add(listArea = CreateText(10,50,40,60,350,320));
 			
 			findPanel.setLayout(null);
 			findPanel.setBounds(new Rectangle(400, 40, 400, 400));
@@ -519,6 +426,7 @@ public class BackOffice {
 			setVisible(true);
 			/* As default, we have the Buy Plane Menu. */
 			buyPanel.setVisible(true);
+			menuIdentifier = "buyPanel";
 		}
 		
 		public void mouseReleased(MouseEvent e){
@@ -527,24 +435,94 @@ public class BackOffice {
 				sellPanel.setVisible(false);
 				listPanel.setVisible(false);
 				findPanel.setVisible(false);
+				
+				logInfo.setText("");
+				menuIdentifier = "buyPanel";
 			}
 			else if(e.getComponent().getName().equals("Sell Plane")){
 				buyPanel.setVisible(false);
 				sellPanel.setVisible(true);
 				listPanel.setVisible(false);
 				findPanel.setVisible(false);
+				
+				logInfo.setText("");
+				menuIdentifier = "sellPanel";
 			}
 			else if(e.getComponent().getName().equals("List Planes")){
 				buyPanel.setVisible(false);
 				sellPanel.setVisible(false);
 				listPanel.setVisible(true);
 				findPanel.setVisible(false);
+				
+				logInfo.setText("");
+				listArea.setText("");
+				Vector <Airplane> list = planesManager.getPlanesList();
+				
+				for (int i = 0; i < list.size(); i++){
+					Airplane airplane = list.get(i);
+					listArea.append(airplane.getId() + "              " + airplane.getNoSeats() + "\t         " + airplane.getCompany() + "\t                   " + airplane.getModel() + "\n");
+				}
+				
+				menuIdentifier = "listPanel";
 			}
 			else if(e.getComponent().getName().equals("Find Plane")){
 				buyPanel.setVisible(false);
 				sellPanel.setVisible(false);
 				listPanel.setVisible(false);
 				findPanel.setVisible(true);
+				
+				logInfo.setText("");
+				menuIdentifier = "findPanel";
+			}
+			else if ((e.getComponent().getName().equals("Submit"))){
+				/* We are inside one of the filling forms. */
+				if (menuIdentifier.equals("buyPanel")){
+					//TODO: Eventualmente protecções.
+					Airplane airplane = null;
+					try{
+						int noSeats = Integer.parseInt(noSeatsField.getText());
+						String company = companyField.getText();
+						String model = modelField.getText();
+						
+						if (!company.equals("") && !model.equals("") && noSeats > 0){
+							airplane = new Airplane(noSeats , company, model);
+						}
+						else{
+							logInfo.setText("Invalid data.");
+						}
+					} catch (Exception e1){
+						logInfo.setText("Invalid data.");
+					}
+					
+					if (airplane != null){
+						planesManager.addPlane(airplane);
+						logInfo.setText("Plane successfully added to the fleet, with ID " + airplane.getId()+ "!");
+					}
+				}
+				else if (menuIdentifier.equals("sellPanel")){
+					//TODO: Eventualmente protecções.
+					Airplane airplane = null;
+					int id = -1;
+					try{
+						id = Integer.parseInt(idSellField.getText());
+						
+						airplane = search.searchPlane(id);
+						
+					} catch (Exception e1){
+						logInfo.setText("Invalid data.");
+					}
+					
+					if (airplane != null && id != -1){
+						planesManager.removePlane(airplane);
+						logInfo.setText("Plane successfully remove from the fleet!");
+					}
+					else if (airplane == null){
+						logInfo.setText("Plane not found.");
+					}
+				}
+				else if (menuIdentifier.equals("findPanel")){
+					
+				}
 			}
 			else if (e.getComponent().getName().equals("Return")){
 				buyPanel.setVisible(false);

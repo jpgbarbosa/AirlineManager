@@ -12,8 +12,10 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
@@ -22,22 +24,26 @@ import javax.swing.JTextField;
 
 import messages.Feedback;
 
+import common.Constants;
 import common.Flight;
+import common.Search;
+import common.Window;
 
 
 public class FrontOffice {
+	/* The main panel. */
+	private JPanel panel = new JPanel();
+	
 	private BookingManager bookingManager;
 	
-	/* Window dimensions for the graphical interface. */
-	private int dimH = 1000;
-	private int dimV = 600;
 	/* The windows used on the graphical interface. */
 	private Menu menu;
 	private BookingsMenu bookingsMenu;
 	private SendFeedBackMenu sendFeedBackMenu;
 	private SearchMenu searchMenu;
-	private PrintTicketsMenu printTicketsMenu;
-	private ModifyBookingMenu modifyBookingMenu;
+	//TODO: Think about this! The constructor accepts a flight and a plane manager, so
+	// 		we will need to eventually invoke an RMI command when we want to access this class.
+	private Search search;
 	
 	/* The main constructor. */
 	public FrontOffice(){
@@ -45,8 +51,6 @@ public class FrontOffice {
 		bookingsMenu = new BookingsMenu();
 		sendFeedBackMenu = new SendFeedBackMenu();
 		searchMenu = new SearchMenu();
-		printTicketsMenu = new PrintTicketsMenu();
-		modifyBookingMenu = new ModifyBookingMenu();
 	}
 	
 	public static void main(String[] args) {
@@ -66,11 +70,10 @@ public class FrontOffice {
 	public void executeGraphics(){
 		
 		JFrame f = new JFrame();
-		f.setSize(dimH,dimV);
+		f.setSize(Constants.DIM_H,Constants.DIM_V);
 		f.setTitle("Móveis PIB");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBackground(Color.lightGray);
 		panel.setVisible(true);
@@ -79,8 +82,6 @@ public class FrontOffice {
 		panel.add(bookingsMenu);
 		panel.add(sendFeedBackMenu);
 		panel.add(searchMenu);
-		panel.add(printTicketsMenu);
-		panel.add(modifyBookingMenu);
 		
 		/*menu.CreateImage("./src/imagens/furniture.jpg","Visite as nossas exposições!",250,100,500,340);
 		menu.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
@@ -94,8 +95,6 @@ public class FrontOffice {
 		bookingsMenu.setVisible(false);
 		sendFeedBackMenu.setVisible(false);
 		searchMenu.setVisible(false);
-		printTicketsMenu.setVisible(false);
-		modifyBookingMenu.setVisible(false);
 		
 		f.setContentPane(panel);
 		f.setVisible(true);
@@ -103,246 +102,205 @@ public class FrontOffice {
 	}
 	
 	@SuppressWarnings("serial")
-	private abstract class Window extends JPanel implements MouseListener{
-		Window(){
-			setLayout(null);
-		    setBounds(new Rectangle(0, -1, 1000, 600));
-		    setBackground(Color.lightGray);
-		    
-		}
-		
-		//Métodos impostos por MouseListener;
-		public void mouseClicked(MouseEvent e) {}
-		public void mouseEntered(MouseEvent e) {}
-		public void mouseExited(MouseEvent e) {}
-		public void mousePressed(MouseEvent e) {}
-		public void mouseReleased(MouseEvent e) {}
-		
-		protected void DrawLine(int pos,Color cor, int x,int y,int x1,int y1){
-			JSeparator line = new JSeparator(pos);
-			line.setBackground(cor);
-			line.setBounds(new Rectangle(x,y,x1,y1));
-			
-			add(line);
-			
-		}
-		
-		protected void CreateButton(String name, Color cor,String toolTip, int size, int x, int y, int x1,int y1){
-			JButton botao = new JButton(name);
-			botao.setName(name);
-			botao.setFont(new Font("sansserif",Font.PLAIN,size));
-			botao.setBounds(new Rectangle(x, y, x1, y1));
-			botao.setBackground(cor);
-			botao.addMouseListener(this);
-			botao.setToolTipText(toolTip);
-			add(botao);
-		}
-		
-		protected JRadioButton CreateRadioButton(String name, Color cor, boolean selected, int size, int x, int y, int x1,int y1){
-			JRadioButton botao = new JRadioButton(name);
-			botao.setName(name);
-			botao.setFont(new Font("sansserif",Font.PLAIN,size));
-			botao.setBounds(new Rectangle(x, y, x1, y1));
-			botao.setBackground(cor);
-			botao.setSelected(selected);
-			botao.addMouseListener(this);
-			add(botao);
-			
-			return botao;
-		}
-
-		protected void CreateTitle(String name,Color cor, int size, int x, int y, int x1,int y1){
-			JLabel title = new JLabel();
-			title.setBounds(new Rectangle(x,y,x1,y1));
-			title.setText(name);
-			title.setName(name);
-			title.setFont(new Font("sansserif",Font.PLAIN,size));
-			title.setForeground(cor);
-			title.validate();
-			add(title);
-		}
-		
-		public JTextField CreateBoxDouble(int size,int x,int y,int x1,int y1,double def){
-			JTextField box = new JTextField(size);
-			box.setBounds(new Rectangle(x,y,x1,y1));
-			box.setText(Double.toString(def));
-			add(box);
-			
-			return box;
-		}
-		
-		public JTextField CreateBoxInt(int size,int x,int y,int x1,int y1,int def){
-			JTextField box = new JTextField(size);
-			box.setBounds(new Rectangle(x,y,x1,y1));
-			box.setText(Integer.toString(def));
-			add(box);
-			
-			return box;
-		}
-		
-		public JTextArea CreateText(int size,int size1,int x,int y, int x1,int y1){
-			JTextArea text = new JTextArea(size,size1);
-			text.setBounds(new Rectangle(x,y,x1,y1));
-			add(text);
-			
-			return text;
-		}
-		
-		public JLabel CreateImage(String path, String toolTip,int x,int y,int x1,int y1){
-			BufferedImage img = null;
-			Icon icon;
-			JLabel label;
-			
-			try {
-				img = ImageIO.read(new File(path));
-			} catch (IOException e){
-				System.out.println("Could not open the image located in " + path + "!");
-			}
-			icon = new ImageIcon(img);
-	        label = new JLabel(icon);
-	        label.setBounds(new Rectangle(x,y,x1,y1));
-	        if (!toolTip.equals(""))
-	        	label.setToolTipText(toolTip);
-	        add(label);
-	        
-	        return label;
-		}
-	}
-	
-	@SuppressWarnings("serial")
 	private class Menu extends Window{
 		public Menu(){
-			CreateTitle("Bem-vindo ao Simulador da Empresa Móveis PIB",Color.orange,30,180,50,800,30);
-			CreateButton("Iniciar",Color.white, "Iniciar a simulação",15,60,500,100,30);
-			CreateButton("Opções",Color.white, "Especificar as condições inicias", 15,180,500,100,30);
-			CreateButton("Sair",Color.white,"Sair do simulador" ,15,820,500,100,30);
+			/* Creates the buttons that redirect to each manager window. */
+			CreateButton("Bookings",Color.white,"Check Your Bookings",15,60,200,150,30);
+			CreateButton("Find Flights",Color.white,"Find all the Flights Available",15,60,250,150,30);
+			CreateButton("Feedback",Color.white,"Send Feedback",15,60,300,150,30);
+			CreateButton("Exit",Color.white,"Leave the application",15,60,500,150,30);
 		}
 		
 		public void mouseReleased(MouseEvent e){
-			if(e.getComponent().getName().equals("Iniciar")){
-				/*menu.setVisible(false);
-				beginSimulation();
-				start.resetJanelaReplica();
-				start.update();
-				start.setVisible(true);*/
+			if(e.getComponent().getName().equals("Bookings")){
+				menu.setVisible(false);
+				bookingsMenu.entry();
 			}
-			else if(e.getComponent().getName().equals("Opções")){
-				/*menu.setVisible(false);
-				setup.setVisible(true);*/
+			else if(e.getComponent().getName().equals("Find Flights")){
+				menu.setVisible(false);
+				searchMenu.entry();
 			}
-			else if (e.getComponent().getName().equals("Sair")){
-				/*JOptionPane jp= new JOptionPane("Os Móveis PIB desejam-lhe um bom-dia!",JOptionPane.INFORMATION_MESSAGE);
-				JDialog jd = jp.createDialog("Adeus!");
+			else if(e.getComponent().getName().equals("Feedback")){
+				menu.setVisible(false);
+				sendFeedBackMenu.entry();
+			}
+			else if (e.getComponent().getName().equals("Exit")){
+				/* The user is leaving the application. */
+				JOptionPane jp= new JOptionPane("Have a nice day!", JOptionPane.INFORMATION_MESSAGE);
+				JDialog jd = jp.createDialog("Thank you!");
 				jd.setBounds(new Rectangle(340,200,320,120));
 				jd.setVisible(true);
-				System.exit( 0 );*/
+				System.exit( 0 );
 			}
 		}
 	}
 	
 	@SuppressWarnings("serial")
 	private class BookingsMenu extends Window{
-		/* The constructor. */
+		JPanel newPanel;
+		JPanel cancelPanel;
+		JPanel modifyPanel;
+		
 		public BookingsMenu(){
+			/* Creates the buttons that redirect to each manager window. */
+			CreateButton("New Booking",Color.white,"Books a given flight",15,60,200,200,30);
+			CreateButton("Cancel Booking",Color.white,"Cancels a booking",15,60,250,200,30);
+			CreateButton("Modify Booking",Color.white,"Changes a booking to another flight",15,60,300,200,30);
 			
+			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
+			 
+			/* Creates the subpanels that are displayed accordingly to the user's choice. */
+			newPanel = new JPanel();
+			cancelPanel = new JPanel();
+			modifyPanel = new JPanel();
+			
+			/* Defines the subpanels. */
+			newPanel.setLayout(null);
+			newPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			newPanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			cancelPanel.setLayout(null);
+			cancelPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			cancelPanel.add(CreateButton("cancel",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			modifyPanel.setLayout(null);
+			modifyPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			modifyPanel.add(CreateButton("Go",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			/* Adds the subpanels to the main panel. */
+			panel.add(newPanel);
+			panel.add(cancelPanel);
+			panel.add(modifyPanel);
+			
+			newPanel.setVisible(false);
+			cancelPanel.setVisible(false);
+			modifyPanel.setVisible(false);
 		}
 		
-		/* The option buttons that can be selected by the user. */
+		/* This function is used when the user enters this menu.
+		 * We need to set true the right menu and one of its subpanels.
+		 */
+		public void entry(){
+			setVisible(true);
+			/* As default, we have the Buy Plane Menu. */
+			newPanel.setVisible(true);
+		}
+		
 		public void mouseReleased(MouseEvent e){
-			if(e.getComponent().getName().equals("Iniciar")){
-
+			if(e.getComponent().getName().equals("New Booking")){
+				newPanel.setVisible(true);
+				cancelPanel.setVisible(false);
+				modifyPanel.setVisible(false);
 			}
-			else if(e.getComponent().getName().equals("Opções")){
-
+			else if(e.getComponent().getName().equals("Cancel Booking")){
+				newPanel.setVisible(false);
+				cancelPanel.setVisible(true);
+				modifyPanel.setVisible(false);
 			}
-			else if (e.getComponent().getName().equals("Sair")){
-
+			else if(e.getComponent().getName().equals("Modify Booking")){
+				newPanel.setVisible(false);
+				cancelPanel.setVisible(false);
+				modifyPanel.setVisible(true);
+			}
+			else if (e.getComponent().getName().equals("Return")){
+				newPanel.setVisible(false);
+				cancelPanel.setVisible(false);
+				modifyPanel.setVisible(false);
+				
+				bookingsMenu.setVisible(false);
+				menu.setVisible(true);
 			}
 		}
 	}
 	
 	@SuppressWarnings("serial")
 	private class SendFeedBackMenu extends Window{
-		/* The constructor. */
+		JPanel positivePanel;
+		JPanel negativePanel;
+		
 		public SendFeedBackMenu(){
+			/* Creates the buttons that redirect to each manager window. */
+			CreateButton("Positive Feedback",Color.white,"Read positive critics sent by clients",15,60,200,200,30);
+			CreateButton("Negative Feedback",Color.white,"Read negative messages sent by clients",15,60,250,200,30);
+			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
+			
+			/* Creates the subpanels that are displayed accordingly to the user's choice. */
+			positivePanel = new JPanel();
+			negativePanel = new JPanel();
+			
+			/* Defines the subpanels. */
+			positivePanel.setLayout(null);
+			positivePanel.setBounds(new Rectangle(400, 40, 400, 400));
+			positivePanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			negativePanel.setLayout(null);
+			negativePanel.setBounds(new Rectangle(400, 40, 400, 400));
+			negativePanel.add(CreateButton("re",Color.white,"Search for a flight",15,60,100,200,30));
+			
+			/* Adds the subpanels to the main panel. */
+			panel.add(positivePanel);
+			panel.add(negativePanel);
+			
+			negativePanel.setVisible(false);
+			positivePanel.setVisible(false);
 			
 		}
 		
-		/* The option buttons that can be selected by the user. */
+		public void entry(){
+			setVisible(true);
+			/* As default, we have the Buy Plane Menu. */
+			positivePanel.setVisible(true);
+		}
+		
 		public void mouseReleased(MouseEvent e){
-			if(e.getComponent().getName().equals("Iniciar")){
-
+			if(e.getComponent().getName().equals("Positive Feedback")){
+				negativePanel.setVisible(false);
+				positivePanel.setVisible(true);
 			}
-			else if(e.getComponent().getName().equals("Opções")){
-
+			else if(e.getComponent().getName().equals("Negative Feedback")){
+				negativePanel.setVisible(true);
+				positivePanel.setVisible(false);
 			}
-			else if (e.getComponent().getName().equals("Sair")){
-
+			else if (e.getComponent().getName().equals("Return")){
+				negativePanel.setVisible(false);
+				positivePanel.setVisible(false);
+				
+				sendFeedBackMenu.setVisible(false);
+				menu.setVisible(true);
 			}
 		}
 	}
 	
 	@SuppressWarnings("serial")
 	private class SearchMenu extends Window{
-		/* The constructor. */
 		public SearchMenu(){
-			
+			/* Creates the buttons that redirect to each manager window. */
+			CreateButton("Statistics 1",Color.white,"Manage Airplanes",15,60,200,150,30);
+			CreateButton("Statistics 2",Color.white,"Manage Flights",15,60,250,150,30);
+
+			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 		}
 		
-		/* The option buttons that can be selected by the user. */
+		/* This function is used when the user enters this menu.
+		 * We need to set true the right menu and one of its subpanels.
+		 */
+		public void entry(){
+			setVisible(true);
+			/* As default, we have the Buy Plane Menu. */
+			//buyPanel.setVisible(true);
+		}
+		
 		public void mouseReleased(MouseEvent e){
-			if(e.getComponent().getName().equals("Iniciar")){
-
+			if(e.getComponent().getName().equals("Statistics 1")){
+				
 			}
-			else if(e.getComponent().getName().equals("Opções")){
-
+			else if(e.getComponent().getName().equals("Statistics 2")){
+				
 			}
-			else if (e.getComponent().getName().equals("Sair")){
-
+			else if (e.getComponent().getName().equals("Return")){
+				searchMenu.setVisible(false);
+				menu.setVisible(true);
 			}
 		}
 	}
-	
-	@SuppressWarnings("serial")
-	private class PrintTicketsMenu extends Window{
-		/* The constructor. */
-		public PrintTicketsMenu(){
-			
-		}
-		
-		/* The option buttons that can be selected by the user. */
-		public void mouseReleased(MouseEvent e){
-			if(e.getComponent().getName().equals("Iniciar")){
-
-			}
-			else if(e.getComponent().getName().equals("Opções")){
-
-			}
-			else if (e.getComponent().getName().equals("Sair")){
-
-			}
-		}
-	}
-	
-	@SuppressWarnings("serial")
-	private class ModifyBookingMenu extends Window{
-		/* The constructor. */
-		public ModifyBookingMenu(){
-			
-		}
-		
-		/* The option buttons that can be selected by the user. */
-		public void mouseReleased(MouseEvent e){
-			if(e.getComponent().getName().equals("Iniciar")){
-
-			}
-			else if(e.getComponent().getName().equals("Opções")){
-
-			}
-			else if (e.getComponent().getName().equals("Sair")){
-
-			}
-		}
-	}
-
 }

@@ -21,7 +21,7 @@ public class FlightsManager {
 		
 	}
 	
-	/* Search a fligh */
+	/* Search a flight */
 	public Flight searchFlight(){
 		return null;
 	}

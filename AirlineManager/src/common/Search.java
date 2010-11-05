@@ -20,7 +20,13 @@ public class Search {
 	}
 	
 	/* A method to search for a flight by plane. */
-	public Airplane searchFlight(int planeId){
+	public Flight searchFlight(int planeId){
+		
+		return null;
+	}
+	
+	/* A method to search for a plane. */
+	public Airplane searchPlane(int planeId){
 		Iterator<Airplane> it = planesManager.getPlanesList().iterator();
 		
 		while (it.hasNext()){
