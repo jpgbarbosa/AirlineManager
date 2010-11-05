@@ -27,8 +27,17 @@ public class StatisticsManager {
 		return output.toString();
 	}
 	
-	public String generate(GregorianCalendar begining, GregorianCalendar end){
+	public String generate(GregorianCalendar beginning, GregorianCalendar end){
 		StringBuilder output = new StringBuilder();
+		
+		output.append("Estatisticas:\n\nNumero de Avioes Disponiveis: "+planesManager.getNumPlanes(beginning, end));
+		output.append("\nNumero de Voos Registados: "+flightsManager.getNumFlights(beginning, end)); // falta implementar
+		output.append("\nNumero de Voos Cancelados: "+flightsManager.getNumCancelled(beginning, end)); //falta implementar
+		output.append("\nTaxa de Ocupacao dos Voos: "+flightsManager.getOccupation(beginning, end));
+		output.append("\n\nNumero de Feedbacks Positivos: "+feedBackManager.getNumPositive(beginning, end));
+		output.append("\nNumero de Feedbacks Negativos: "+feedBackManager.getNumNegative(beginning, end));
+		output.append("\n");
+		
 		return output.toString();
 	}
 }

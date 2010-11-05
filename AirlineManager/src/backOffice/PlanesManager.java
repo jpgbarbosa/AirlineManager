@@ -1,6 +1,7 @@
 package backOffice;
 
 
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import common.Airplane;
@@ -35,6 +36,16 @@ public class PlanesManager {
 	
 	public int getNumPlanes(){
 		return planesList.size();
+	}
+	
+	public int getNumPlanes(GregorianCalendar beginning, GregorianCalendar end){
+		int num = 0;
+		
+		for(Airplane a:planesList)
+			if(a.getDate().after(beginning) && a.getDate().before(end))
+				num++;
+		
+		return num;
 	}
 	
 }

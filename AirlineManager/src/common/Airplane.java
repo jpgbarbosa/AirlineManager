@@ -1,5 +1,6 @@
 package common;
 
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
 public class Airplane {
@@ -14,6 +15,7 @@ public class Airplane {
 	private Vector <Flight> flights;
 	private String company, model;
 	private int id;
+	private GregorianCalendar date;
 	
 	//TODO: This is temporary!
 	public static int idCreator = 0;
@@ -83,6 +85,10 @@ public class Airplane {
 
 	public void setModel(String model) {
 		this.model = model;
+	}
+	
+	public GregorianCalendar getDate(){
+		return date;
 	}
 	
 }
