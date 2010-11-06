@@ -27,6 +27,8 @@ import common.Airplane;
 import common.BackOfficeRemoteInterface;
 import common.Constants;
 import common.Flight;
+import common.FrontOfficeRemoteInterface;
+import common.Operator;
 import common.Search;
 import common.Window;
 
@@ -44,6 +46,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	private FlightsManager flightsManager;
 	private PlanesManager planesManager;
 	private StatisticsManager statisticsManager;
+	private OperatorManager operatorManager;
 	private Search search;
 	
 	private Menu menu;
@@ -53,12 +56,15 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	private StatisticsManagerMenu statisticsManagerMenu;
 	private LoginMenu loginMenu;
 	
+	private Vector<Operator> operatorList;
+	
 	/* The main constructor. */
 	public BackOffice() throws RemoteException{
 		super();
 		feedBackManager = new FeedBackManager();
 		flightsManager = new FlightsManager();
 		planesManager = new PlanesManager();
+		operatorManager = new OperatorManager();
 		statisticsManager = new StatisticsManager(feedBackManager, flightsManager, planesManager);
 		search = new Search(flightsManager, planesManager);
 		
@@ -814,7 +820,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	
 	/*
 	 * 
-	 * Inserts negative feedback provided by a client app in the apropriate structure in the FeedbackManager
+	 * Inserts negative feedback provided by a client app in the appropriate structure in the FeedbackManager
 	 * @see common.BackOfficeRemoteInterface#sendNegativeFeedback(messages.Feedback)
 	 */
 	@Override
@@ -824,7 +830,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	}
 	/*
 	 * 
-	 * Inserts positive feedback provided by a client app in the apropriate structure in the FeedbackManager
+	 * Inserts positive feedback provided by a client app in the appropriate structure in the FeedbackManager
 	 * @see common.BackOfficeRemoteInterface#sendNegativeFeedback(messages.Feedback)
 	 */
 	@Override
@@ -832,5 +838,21 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		feedBackManager.insertPositiveFeedback(feedback);
 		
 	}
+
+	
+	/* Check if username is already in use and register operator */
+	@Override
+	public void registerOperator(String comp, String name, String addr, String phone, String mail,String password, FrontOfficeRemoteInterface f) throws RemoteException {
+		operatorManager.registerOperator(comp, name, addr, phone, mail, password);		
+	}
+
+	
+	/* Check if the username and password are correct */
+	@Override
+	public void loginOperator(String user, String pass, FrontOfficeRemoteInterface f) throws RemoteException {
+		operatorManager.loginOperator(user,pass);
+		
+	}
+	
 	
 }
