@@ -2,33 +2,21 @@ package backOffice;
 
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Iterator;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
-import javax.imageio.ImageIO;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
-import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import common.Airplane;
 import common.Constants;
+import common.Flight;
 import common.Search;
 import common.Window;
 
@@ -85,6 +73,74 @@ public class BackOffice {
 			return true;
 		}
 		return false;
+	}
+	
+	//TODO: Make sure this function works correctly.
+	public GregorianCalendar checkDate(int year, int month, int day, int hour, int minute){
+		
+		/* A non-positive year. */
+		if (year < 0){
+			return null;
+		}
+		/* An invalid month. */
+		else if (month < 1 || month > 12){
+			return null;
+		}
+		/* An invalid day. */
+		else if (day < 1 ||
+			(day > 31 && (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)) ||
+			(day > 30 && (month == 4 || month == 6 || month == 9 || month == 11))){
+			return null;
+		}
+		/* Invalid hour. */
+		else if (hour < 0 || hour > 23){
+			return null;
+		}
+		/* Invalid minute. */
+		else if (minute < 0 || minute > 59){
+			return null;
+		}
+		
+		/* It's February, so we ought to check if we are in a leap year or not. */
+		if (month == 2){
+			boolean leapYear;
+			
+			/* Verifires whether we are in a leap year or not. */
+			if (year % 400 == 0){
+				leapYear = true;
+			}
+			else if (year % 100 == 0){
+				leapYear = false;
+			}
+			else if (year % 4 == 0){
+				leapYear = true;
+			}
+			else{
+				leapYear = false;
+			}
+			
+			/* Acts accordingly to the result collected above. */
+			if (leapYear){
+				if (day > 29){
+					return null;
+				}
+			}
+			else{
+				if (day > 28){
+					return null;
+				}
+			}
+		}
+		
+		GregorianCalendar now = new GregorianCalendar();
+		GregorianCalendar date = new GregorianCalendar(year,month,day,hour,minute);
+		
+		/* This is an old date. */
+		if (now.after(date)){
+			return null;
+		}
+		
+		return date;
 	}
 	
 	
@@ -243,10 +299,30 @@ public class BackOffice {
 	
 	@SuppressWarnings("serial")
 	private class FlightsManagerMenu extends Window{
-		JPanel schedulePanel;
-		JPanel reschedulePanel;
-		JPanel cancelPanel;
-		JPanel findPanel;
+		private JPanel schedulePanel;
+		private JPanel reschedulePanel;
+		private JPanel cancelPanel;
+		private JPanel findPanel;
+		
+		/* SCHEDULEPANEL */
+		private JTextField dayField;
+		private JTextField monthField;
+		private JTextField yearField;
+		private JTextField idPlaneScheduleField;
+		private JTextField hourField;
+		private JTextField minuteField;
+		private JTextField destinyField;
+		
+		private JTextArea logInfo;
+		private String menuIdentifier;
+		
+		/* RESCHEDULEPANEL */
+		
+		/* CANCELPANEL */
+		
+		/* FINDPANEL */
+		
+		
 		
 		public FlightsManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
@@ -257,6 +333,8 @@ public class BackOffice {
 			
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			 
+			logInfo = CreateText(10,10,400,500,275,50);
+			
 			/* Creates the subpanels that are displayed accordingly to the user's choice. */
 			schedulePanel = new JPanel();
 			reschedulePanel = new JPanel();
@@ -266,7 +344,21 @@ public class BackOffice {
 			/* Defines the subpanels. */
 			schedulePanel.setLayout(null);
 			schedulePanel.setBounds(new Rectangle(400, 40, 400, 400));
-			schedulePanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,100,200,30));
+			schedulePanel.add(CreateTitle("DD:",Color.black,15,20,100,70,20));
+			schedulePanel.add(dayField = CreateBoxInt(20,50,100,20,20, 0));
+			schedulePanel.add(CreateTitle("MM:",Color.black,15,75,100,70,20));
+			schedulePanel.add(monthField = CreateBoxInt(20,105,100,20,20, 0));
+			schedulePanel.add(CreateTitle("YYYY:",Color.black,15,130,100,70,20));
+			schedulePanel.add(yearField = CreateBoxInt(20,175,100,35,20, 0));
+			schedulePanel.add(CreateTitle("TIME:",Color.black,15,230,100,70,20));
+			schedulePanel.add(hourField = CreateBoxInt(20,270,100,20,20, 0));
+			schedulePanel.add(CreateTitle("h",Color.black,15,292,100,70,20));
+			schedulePanel.add(minuteField = CreateBoxInt(20,305,100,20,20, 0));
+			schedulePanel.add(CreateTitle("ID Plane",Color.black,15,100,130,70,20));
+			schedulePanel.add(idPlaneScheduleField = CreateBoxInt(20,175,130,50,20, 0));
+			schedulePanel.add(CreateTitle("Destiny:",Color.black,15,100,160,70,20));
+			schedulePanel.add(destinyField = CreateBoxText(20,175,160,110,20));
+			schedulePanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,330,100,30));
 			
 			reschedulePanel.setLayout(null);
 			reschedulePanel.setBounds(new Rectangle(400, 40, 400, 400));
@@ -299,6 +391,8 @@ public class BackOffice {
 			setVisible(true);
 			/* As default, we have the Buy Plane Menu. */
 			schedulePanel.setVisible(true);
+			
+			menuIdentifier = "schedulePanel";
 		}
 		
 		public void mouseReleased(MouseEvent e){
@@ -307,24 +401,83 @@ public class BackOffice {
 				cancelPanel.setVisible(false);
 				findPanel.setVisible(false);
 				schedulePanel.setVisible(true);
+				
+				menuIdentifier = "schedulePanel";
 			}
 			else if(e.getComponent().getName().equals("Reschedule Flight")){
 				reschedulePanel.setVisible(true);
 				cancelPanel.setVisible(false);
 				findPanel.setVisible(false);
 				schedulePanel.setVisible(false);
+				
+				menuIdentifier = "reschedulePanel";
 			}
 			else if(e.getComponent().getName().equals("Cancel Flight")){
 				reschedulePanel.setVisible(false);
 				cancelPanel.setVisible(true);
 				findPanel.setVisible(false);
 				schedulePanel.setVisible(false);
+				
+				menuIdentifier = "cancelPanel";
 			}
 			else if(e.getComponent().getName().equals("Find Flight")){
 				reschedulePanel.setVisible(false);
 				cancelPanel.setVisible(false);
 				findPanel.setVisible(true);
 				schedulePanel.setVisible(false);
+				
+				menuIdentifier = "findPanel";
+			}
+			else if(e.getComponent().getName().equals("Submit")){
+				/* We are inside one of the filling forms. */
+				if (menuIdentifier.equals("schedulePanel")){
+					/*TODO: Naturalmente, temos de fazer isto melhor.
+					 * Não podemos deixar introduzir o voo simplesmente, temos de ver
+					 * se há concordância no avião, se não há outro voo para o mesmo
+					 * avião demasiado ao pé e coisas do género.
+					 */
+					
+					try{
+						int day = Integer.parseInt(dayField.getText());
+						int month = Integer.parseInt(monthField.getText());
+						int year = Integer.parseInt(yearField.getText());
+						int hour = Integer.parseInt(hourField.getText());
+						int minute = Integer.parseInt(minuteField.getText());
+						int idPlane = Integer.parseInt(idPlaneScheduleField.getText());
+						String destiny = destinyField.getText();
+						
+						Airplane airplane = search.searchPlane(idPlane);
+						
+						if (airplane != null){
+							GregorianCalendar date;
+							if (!destinyField.equals("") && (date = checkDate(year, month, day, hour, minute)) != null){
+								Flight flight = flightsManager.scheduleFlight(airplane, date, destiny);
+								
+								logInfo.setText("Flight schedule with ID " + flight.getId() + "!");
+							}
+							else{
+								logInfo.setText("Invalid data.");
+							}
+							
+						}
+						else{
+							logInfo.setText("Plane not found.");
+						}
+					} catch (Exception e1){
+						logInfo.setText("Invalid data.");
+					}
+					
+					
+				}
+				else if (menuIdentifier.equals("reschedulePanel")){
+					
+				}
+				else if (menuIdentifier.equals("cancelPanel")){
+					
+				}
+				else if (menuIdentifier.equals("findPanel")){
+					
+				}
 			}
 			else if (e.getComponent().getName().equals("Return")){
 				reschedulePanel.setVisible(false);

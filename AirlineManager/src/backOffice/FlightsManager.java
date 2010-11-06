@@ -18,8 +18,12 @@ public class FlightsManager {
 	}
 	
 	/* Schedules a new flight. */
-	public void scheduleFlight(Airplane plane, GregorianCalendar date){
-		flightsList.add(new Flight(plane, date));
+	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String destiny){
+		Flight flight;
+		flightsList.add(flight = new Flight(plane, date, destiny));
+		plane.getFlights().add(flight);
+		
+		return flight;
 	}
 	
 	/* Search a flight by Date and plane*/

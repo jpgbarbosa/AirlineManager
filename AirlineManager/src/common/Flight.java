@@ -13,13 +13,20 @@ public class Flight {
 	/* The airplane associated to this flight. */
 	private Airplane airplane;
 	private GregorianCalendar date;
+	private String destiny;
 	private int id;
 	
+	//TODO: This is temporary!
+	public static int idCreator = 0;
+	
 	/* The constructor. */
-	public Flight(Airplane plane, GregorianCalendar data){
+	public Flight(Airplane plane, GregorianCalendar data, String dest){
 		airplane = plane;
+		destiny = dest;
 		seats = new Vector <Booking>();
 		date = data;
+		
+		id = idCreator++;
 	}
 	
 	/* Adds a new booking to the flight. */
@@ -58,6 +65,10 @@ public class Flight {
 	public int getId() {
 		return id;
 	}
+	
+	public String getDestiny() {
+		return destiny;
+	}
 
 	public void setSeats(Vector <Booking> seats) {
 		this.seats = seats;
@@ -73,6 +84,10 @@ public class Flight {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public void setDestiny(String destiny) {
+		this.destiny= destiny;
 	}
 	
 	/* Checks whether is flight is full or not. */
