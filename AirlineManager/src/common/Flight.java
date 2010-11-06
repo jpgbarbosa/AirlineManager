@@ -1,5 +1,6 @@
 package common;
 
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
@@ -60,6 +61,13 @@ public class Flight {
 
 	public GregorianCalendar getDate() {
 		return date;
+	}
+	
+	public Date getData() {
+		String day, month, year, hour, minute;
+		
+		
+		return date.getTime();
 	}
 
 	public int getId() {

@@ -1,14 +1,12 @@
 package backOffice;
 
 import java.util.GregorianCalendar;
-import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
 import messages.Feedback;
-import messages.Notification;
 
 import common.Client;
 import common.FileManager;

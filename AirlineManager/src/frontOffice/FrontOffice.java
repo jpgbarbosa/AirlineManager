@@ -26,6 +26,11 @@ import common.Window;
 
 
 public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemoteInterface {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/* The main panel. */
 	private JPanel panel = new JPanel();
 	
@@ -49,6 +54,7 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 			b = (BackOfficeRemoteInterface) Naming.lookup("rmi://localhost:2000/AirlineManager");
 			
 		} catch (Exception e) {
+			//TODO: Quem foi o engraçadinho? :P
 			System.out.println("Deu bode!");
 			System.exit(0);
 		}
@@ -209,7 +215,18 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 					if(pass.equals(conf)){
 						/*TODO: invocarMetodo(username.getText(),pass);*/
 						try {
-							b.loginOperator(user.getText(), new String(pwd.getPassword()), (FrontOfficeRemoteInterface) this);
+							String userName= user.getText();
+							String passWord = new String(pwd.getPassword());
+							
+							/* The fields are empty. */
+							if (userName.equals("") || passWord.equals("")){
+								JOptionPane.showMessageDialog(null,"Empty fields!");
+								continue;
+							}
+							else{
+								b.loginOperator(userName, passWord, (FrontOfficeRemoteInterface) this);
+							}
+							
 						} catch (RemoteException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

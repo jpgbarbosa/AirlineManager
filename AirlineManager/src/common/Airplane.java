@@ -30,8 +30,21 @@ public class Airplane {
 		id = idCreator++;
 	}
 
-	public void associateFlight(Flight flight){
-		flights.add(flight);
+	public boolean associateFlight(Flight flight){
+		int i;
+		for (i = 0; i < flights.size(); i++){
+			if (flights.get(i).getDate().after(flight.getDate())){
+				flights.add(i, flight);
+			}
+		}
+		/* We insert it in the last position. */
+		if (i == flights.size()){
+			flights.add(i,flight);
+		}
+		
+		//TODO: Later, we have to confirm that we can associate this flight to this plane.
+		//		A reason for failing is that we have two flights too close to each other.
+		return true;
 	}
 	
 	public void removeFlight (Flight flight){

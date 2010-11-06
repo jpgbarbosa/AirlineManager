@@ -19,11 +19,31 @@ public class FlightsManager {
 	
 	/* Schedules a new flight. */
 	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String destiny){
-		Flight flight;
-		flightsList.add(flight = new Flight(plane, date, destiny));
-		plane.getFlights().add(flight);
+		Flight flight = new Flight(plane, date, destiny);
+		int i;
+		boolean completed;
 		
-		return flight;
+		/* First, we check if we can insert in this specific plane. */
+		completed = plane.associateFlight(flight);
+		
+		if (completed){
+			/* Inserts the flight ordered by date. */
+			for (i = 0; i < flightsList.size(); i++){
+				if (flightsList.get(i).getDate().after(flight.getDate())){
+					flightsList.add(i, flight);
+				}
+			}
+			
+			/* We insert it in the last position. */
+			if (i == flightsList.size()){
+				flightsList.add(i,flight);
+			}
+			
+			return flight;
+		}
+		else{
+			return null;
+		}
 	}
 	
 	/* Search a flight by Date and plane*/
