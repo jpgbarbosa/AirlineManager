@@ -20,9 +20,8 @@ public class Search {
 	}
 	
 	/* A method to search for a flight by plane. */
-	public Flight searchFlight(int planeId){
-		
-		return null;
+	public Flight searchFlightById(int flightId){
+		return flightsManager.searchFlightById(flightId);
 	}
 	
 	/* A method to search for a plane. */

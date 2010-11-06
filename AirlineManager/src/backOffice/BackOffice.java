@@ -133,10 +133,12 @@ public class BackOffice {
 		}
 		
 		GregorianCalendar now = new GregorianCalendar();
-		GregorianCalendar date = new GregorianCalendar(year,month,day,hour,minute);
+		GregorianCalendar date = new GregorianCalendar(year,month - 1,day,hour,minute);
 		
 		/* This is an old date. */
 		if (now.after(date)){
+			//TODO: remove this
+			System.out.println("OLD DATA!!!");
 			return null;
 		}
 		
@@ -319,7 +321,7 @@ public class BackOffice {
 		/* RESCHEDULEPANEL */
 		
 		/* CANCELPANEL */
-		
+		private JTextField idFlightCancelPanel;
 		/* FINDPANEL */
 		
 		
@@ -366,7 +368,9 @@ public class BackOffice {
 			
 			cancelPanel.setLayout(null);
 			cancelPanel.setBounds(new Rectangle(400, 40, 400, 400));
-			cancelPanel.add(CreateButton("cancel",Color.white,"Search for a flight",15,60,100,200,30));
+			cancelPanel.add(CreateTitle("Flight's ID:",Color.black,15,100,100,70,20));
+			cancelPanel.add(idFlightCancelPanel = CreateBoxInt(20,175,100,50,20, 0));
+			cancelPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,330,100,30));
 			
 			findPanel.setLayout(null);
 			findPanel.setBounds(new Rectangle(400, 40, 400, 400));
@@ -473,7 +477,25 @@ public class BackOffice {
 					
 				}
 				else if (menuIdentifier.equals("cancelPanel")){
+					//TODO: Eventualmente protecções.
+					Flight flight = null;
+					int id = -1;
+					try{
+						id = Integer.parseInt(idFlightCancelPanel.getText());
+						
+						flight = flightsManager.searchFlightById(id);
+						
+					} catch (Exception e1){
+						logInfo.setText("Invalid data.");
+					}
 					
+					if (flight != null && id != -1){
+						flightsManager.cancelFlight(flight);
+						logInfo.setText("Flight successfully canceled!");
+					}
+					else if (flight == null){
+						logInfo.setText("Flight not found.");
+					}
 				}
 				else if (menuIdentifier.equals("findPanel")){
 					
