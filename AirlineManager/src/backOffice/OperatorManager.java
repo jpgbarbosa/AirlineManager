@@ -35,7 +35,7 @@ public class OperatorManager {
 	/* Tries to register a new operator */
 	public String registerOperator(String comp, String name, String addr, String phone, String mail,String password){
 		Operator op = searchOperator(name);
-		if(op!=null){
+		if(op==null){
 			addOperator(new Operator(comp, name, addr, phone, mail, password));
 			return "Registration was successful";
 		}
@@ -43,7 +43,10 @@ public class OperatorManager {
 	}
 	/* Tries to authenticate the operator */
 	public String loginOperator(String name, String password){
-		Operator op = searchOperator(name); 
+		Operator op = searchOperator(name);
+		if(op==null){
+			System.out.println("OLA");
+		}
 		if(op != null && op.getPassword().equals(password)){
 			return "Login successful";
 		}

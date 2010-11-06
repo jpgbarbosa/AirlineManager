@@ -6,9 +6,10 @@ public class Operator extends Client{
 	private String password;
 	
 	/* The constructor. */
-	public Operator(String comp, String name, String addr, String phone, String mail,String password){
+	public Operator(String comp, String name, String addr, String phone, String mail,String pass){
 		super(name,addr,phone,mail);
 		company = comp;
+		password = pass;
 	}
 
 	/* Getters and setters. */

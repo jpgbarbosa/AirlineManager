@@ -27,7 +27,6 @@ import common.Airplane;
 import common.BackOfficeRemoteInterface;
 import common.Constants;
 import common.Flight;
-import common.FrontOfficeRemoteInterface;
 import common.Operator;
 import common.Search;
 import common.Window;
@@ -842,15 +841,15 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	
 	/* Check if username is already in use and register operator */
 	@Override
-	public void registerOperator(String comp, String name, String addr, String phone, String mail,String password, FrontOfficeRemoteInterface f) throws RemoteException {
-		operatorManager.registerOperator(comp, name, addr, phone, mail, password);		
+	public String registerOperator(String comp, String name, String addr, String phone, String mail,String password) throws RemoteException {
+		return operatorManager.registerOperator(comp, name, addr, phone, mail, password);		
 	}
 
 	
 	/* Check if the username and password are correct */
 	@Override
-	public void loginOperator(String user, String pass, FrontOfficeRemoteInterface f) throws RemoteException {
-		operatorManager.loginOperator(user,pass);
+	public String loginOperator(String user, String pass) throws RemoteException {
+		return operatorManager.loginOperator(user,pass);
 		
 	}
 	
