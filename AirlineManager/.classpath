@@ -8,5 +8,11 @@
 	<classpathentry kind="lib" path="E:/Ivo/FCTUC/3º Ano/ES/Projectos/AirLines/AirlineManager/AirlineManager/javamail-1.4.3/lib/mailapi.jar"/>
 	<classpathentry kind="lib" path="E:/Ivo/FCTUC/3º Ano/ES/Projectos/AirLines/AirlineManager/AirlineManager/javamail-1.4.3/lib/pop3.jar"/>
 	<classpathentry kind="lib" path="E:/Ivo/FCTUC/3º Ano/ES/Projectos/AirLines/AirlineManager/AirlineManager/javamail-1.4.3/lib/smtp.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniela/Documents/ES/AirlineManager/AirlineManager/AirlineManager/javamail-1.4.3/lib/dsn.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniela/Documents/ES/AirlineManager/AirlineManager/AirlineManager/javamail-1.4.3/lib/imap.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniela/Documents/ES/AirlineManager/AirlineManager/AirlineManager/javamail-1.4.3/lib/mailapi.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniela/Documents/ES/AirlineManager/AirlineManager/AirlineManager/javamail-1.4.3/lib/pop3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniela/Documents/ES/AirlineManager/AirlineManager/AirlineManager/javamail-1.4.3/lib/smtp.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniela/Documents/ES/AirlineManager/AirlineManager/AirlineManager/javamail-1.4.3/mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

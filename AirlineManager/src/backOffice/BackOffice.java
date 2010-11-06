@@ -6,7 +6,10 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
 import java.util.GregorianCalendar;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import java.util.Vector;
@@ -17,6 +20,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import messages.Feedback;
 
 import common.Airplane;
 import common.BackOfficeRemoteInterface;
@@ -70,7 +75,15 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 
 		
 		BackOffice backOffice = new BackOffice();
-		
+		try {
+    	
+			Registry r = LocateRegistry.createRegistry(2000);
+			r.rebind("AirlineManager", backOffice);
+			System.out.println("RMI ready.");
+		} catch (RemoteException re) {
+			System.out.println("There's already another instance running in this port: The system will shutdown. Please restart specifying another port.");
+			System.exit(0);
+		}
 		backOffice.executeGraphics();
 
 	}
@@ -797,6 +810,27 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				System.exit( 0 );
 			}
 		}
+	}
+	
+	/*
+	 * 
+	 * Inserts negative feedback provided by a client app in the apropriate structure in the FeedbackManager
+	 * @see common.BackOfficeRemoteInterface#sendNegativeFeedback(messages.Feedback)
+	 */
+	@Override
+	public void sendNegativeFeedback(Feedback feedback) throws RemoteException {
+		feedBackManager.insertNegativeFeedback(feedback);
+		
+	}
+	/*
+	 * 
+	 * Inserts positive feedback provided by a client app in the apropriate structure in the FeedbackManager
+	 * @see common.BackOfficeRemoteInterface#sendNegativeFeedback(messages.Feedback)
+	 */
+	@Override
+	public void sendPositiveFeedback(Feedback feedback) throws RemoteException {
+		feedBackManager.insertPositiveFeedback(feedback);
+		
 	}
 	
 }

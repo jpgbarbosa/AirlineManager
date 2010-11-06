@@ -3,6 +3,9 @@ package frontOffice;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -11,6 +14,7 @@ import javax.swing.JPasswordField;
 
 import messages.Feedback;
 
+import common.BackOfficeRemoteInterface;
 import common.Constants;
 import common.Flight;
 import common.Search;
@@ -31,9 +35,18 @@ public class FrontOffice {
 	//TODO: Think about this! The constructor accepts a flight and a plane manager, so
 	// 		we will need to eventually invoke an RMI command when we want to access this class.
 	private Search search;
-	
+	private BackOfficeRemoteInterface b;
 	/* The main constructor. */
 	public FrontOffice(){
+		
+		try {
+
+			b = (BackOfficeRemoteInterface) Naming.lookup("rmi://localhost:2000/AirlineManager");
+
+		} catch (Exception e) {
+			System.out.println("Deu bode!");
+			System.exit(0);
+		}
 		menu = new Menu();
 		bookingsMenu = new BookingsMenu();
 		sendFeedBackMenu = new SendFeedBackMenu();
@@ -51,6 +64,26 @@ public class FrontOffice {
 	/* Sends some feedback to the BackOffice, about a specific flight. */
 	public void sendFeedBack(Flight flight, Feedback message){
 		
+	}
+	
+	/* Sends positive feedback to the BackOffice.*/
+	public String sendPositiveFeedBack(Feedback message){
+		try {
+			b.sendPositiveFeedback(message);
+		} catch (RemoteException e) {
+			return "It was not possible to reach the system.";
+		}
+		return "Message sent.";
+	}
+	
+	/* Sends negative feedback to the BackOffice.*/
+	public String sendNegativeFeedBack(Feedback message){
+		try {
+			b.sendNegativeFeedback(message);
+		} catch (RemoteException e) {
+			return "It was not possible to reach the system.";
+		}
+		return "Message sent.";
 	}
 	
 	// / / / / / / / / / / / / / / / / / / / / / GRAPHIC INTERFACE  / / / / / / / / / / / / / / / / / /
