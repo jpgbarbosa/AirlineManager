@@ -9,6 +9,8 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -28,11 +30,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import common.Airplane;
+import common.BackOfficeRemoteInterface;
 import common.Constants;
 import common.Search;
 import common.Window;
 
-public class BackOffice {
+public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteInterface{
 	/* The main panel. */
 	private JPanel panel = new JPanel();
 	
@@ -51,7 +54,8 @@ public class BackOffice {
 	private LoginMenu loginMenu;
 	
 	/* The main constructor. */
-	public BackOffice(){
+	public BackOffice() throws RemoteException{
+		super();
 		feedBackManager = new FeedBackManager();
 		flightsManager = new FlightsManager();
 		planesManager = new PlanesManager();
