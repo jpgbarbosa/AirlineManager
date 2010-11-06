@@ -1,310 +1,63 @@
 package backOffice;
 
-
-/*esta classe contém uma API para envio de emails. REVER*/
-import java.net.*;
 import java.io.*;
-import java.util.*;
+import javax.mail.*;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
+import javax.activation.*;
+    
+public class SendEmail {
+  
+    public static void send(String smtpHost, int smtpPort,
+                            String from, String to,
+                            String subject, String content)
+                throws AddressException, MessagingException {
 
-/**
- * <P>
- * This class is used to construct and send a simple email, using the SMTP protocol.
- * This class is special, since the connection can be left open to send multiple
- * emails on one connection sitting.
- * <P>
- * <BR> Date:   December 1997
- *
- * @version      1.0
- * @author      Alan Willamson (alan@n-ary.com)
- * @since      JDK1.1.4
- */
-public class SendEmail extends java.lang.Object{
+        // Create a mail session
+        java.util.Properties props = new java.util.Properties();
+        props.put("mail.smtp.host", smtpHost);
+        props.put("mail.smtp.port", ""+smtpPort);
+        props.put("mail.smtp.auth", "true");
 
-    private Socket smtpHost;
-    private BufferedReader In;
-    private DataOutputStream Out;
+        Authenticator auth = new SMTPAuthenticator();
+        Session session = Session.getDefaultInstance(props, auth);
 
-   /**
-    * <P>
-    * Creates a new connection to the mail host on port 25
-    * <P>
-    * @param _Host         The host name where the mail server resides.
-    *
-    */
-    public SendEmail(String _Host)
-    {
-        try {
-            smtpHost = new Socket( _Host, 25 );
-            Out = new DataOutputStream( smtpHost.getOutputStream() );
-            In  = new BufferedReader( new InputStreamReader(smtpHost.getInputStream()) );
-
-            //- Read Welcome message from server
-            String LineIn = In.readLine();
-            if ( LineIn.indexOf("220")==-1 ) throw new Exception("Bad Server");
-
-            if ( In.ready() )
-                LineIn = In.readLine();
-
-            //- Introduce ourselves to the server
-            Out.writeBytes( "HELO n-ary.com\r\n" );
-            LineIn = In.readLine();
-            if ( LineIn.indexOf("250")==-1 ) throw new Exception("No response from Server");
-        }
-        catch( Exception E ){
-            smtpHost = null;
-        }
+        session.setDebug(false);
+     
+    
+        // Construct the message
+        Message msg = new MimeMessage(session);
+        msg.setFrom(new InternetAddress(from));
+        msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+        msg.setSubject(subject);
+        msg.setText(content);
+    
+        // Send the message
+        Transport.send(msg);
     }
-
-    public boolean bOk(){
-        if ( smtpHost == null )
-            return false;
-        else
-            return true;
+    
+    public static void main(String[] args) throws Exception {
+        // Send a test message
+        send("smtp.sapo.pt", 25, "airlinemanager@lalala.com", "danielafilipa@gmail.com",
+             "Hello", "Hello, \n\n How are you ?");
     }
-
-   /**
-    * <P>
-    * Sends a new email message to the specified addressee
-    * <P>
-    * @param _to         The email address that will receive the email
-    * @param _from       The email address that will send the email
-    * @param _subject    The email subject
-    * @param _body       The email body
-    * @return boolean    Returns a <code>true</code> if the mail was sent successfully
-    *
-    */
-    public boolean send( String _to, String _from, String _subject, String _body ){
-        //- Send One Email
-        if ( smtpHost == null ) return false;
-
-        try{
-            String LineIn;
-
-            //- Set the FROM
-            Out.writeBytes( "MAIL FROM:<" + _from + ">\r\n" );
-            LineIn = In.readLine();
-            if ( LineIn.indexOf("250")==-1 ) throw new Exception("Bad MAIL FROM:");
-
-            //- Set the TO field
-            Out.writeBytes( "RCPT TO:<" + transform(_to) + ">\r\n" );
-            LineIn = In.readLine();
-            if ( LineIn.indexOf("250")==-1 ) throw new Exception("Bad RCPT TO:");
-
-            //- Set the DATA field
-            Out.writeBytes( "DATA\r\n" );
-            LineIn = In.readLine();
-            if ( LineIn.indexOf("354")==-1 ) throw new Exception("Bad DATA");
-            Out.writeBytes( "From: "+_from+"\r\nSubject: " + _subject +"\r\n");
-            Out.writeBytes( "To: "+_to+"\r\n");
-
-            Out.writeBytes( _body );
-            Out.writeBytes( "\r\n.\r\n" );
-
-            LineIn = In.readLine();
-            if ( LineIn.indexOf("250")==-1 ) throw new Exception("Bad End of Data");
-
-        }catch(Exception E){
-            return false;
-        }
-
-        return true;
-    }
-
-    public boolean sendStart( String _to, String _from, String _subject )
-    {
-        //- Send One Email
-        if ( smtpHost == null ) return false;
-
-        String LineIn="";
-        try{
-
-            //- Set the FROM
-            Out.writeBytes( "MAIL FROM:<" + _from + ">\r\n" );
-            LineIn = In.readLine();
-            if ( LineIn.indexOf("250")==-1 ) throw new Exception("Bad MAIL FROM:");
-
-            //- Set the TO field
-            Out.writeBytes( "RCPT TO:<" + transform(_to) + ">\r\n" );
-            LineIn = In.readLine();
-            if ( LineIn.indexOf("250")==-1 ) throw new Exception("Bad RCPT TO:");
-
-            //- Set the DATA field
-            Out.writeBytes( "DATA\r\n" );
-
-            LineIn = In.readLine();
-            if ( LineIn.indexOf("354")==-1 ) throw new Exception("Bad DATA");
-            Out.writeBytes( "From: "+_from+"\r\nSubject: " + _subject +"\r\n");
-            Out.writeBytes( "To: "+_to+"\r\n");
-
-        }catch(Exception E){
-            return false;
-        }
-
-        return true;
-    }
-
-    public boolean sendStart( String _to[], String _from, String _subject )
-    {
-        //- Send One Email
-        if ( smtpHost == null || _to.length == 0 ) return false;
-
-        String LineIn="";
-        try{
-
-            //- Set the FROM
-            Out.writeBytes( "MAIL FROM:<" + _from + ">\r\n" );
-            LineIn = In.readLine();
-            if ( LineIn.indexOf("250") == -1 ) throw new Exception("Bad MAIL FROM:");
-
-            //- Set the TO field
-            for ( int x=0; x < _to.length; x++ ){
-                Out.writeBytes( "RCPT TO:<" + transform(_to[x]) + ">\r\n" );
-                LineIn = In.readLine();
-                if ( LineIn.indexOf("250")==-1 ) throw new Exception("Bad RCPT TO:");
-            }
-
-            //- Set the DATA field
-            Out.writeBytes( "DATA\r\n" );
-
-            LineIn = In.readLine();
-            if ( LineIn.indexOf("354")==-1 ) throw new Exception("Bad DATA");
-            Out.writeBytes( "From: "+_from+"\r\nSubject: " + _subject +"\r\n");
-            Out.writeBytes( "To: "+_to[0]+"\r\n");
-
-        }catch(Exception E){
-            return false;
-        }
-
-        return true;
-    }
-
-    public boolean sendBodyLine( String _line )
-    {
-        try{
-            Out.writeBytes( _line + "\n" );
-            return true;
-        }catch(Exception E){}
-        return false;
-    }
-
-    public boolean sendEnd()
-    {
-        try{
-            Out.writeBytes( "\r\n.\r\n" );
-            String LineIn = In.readLine();
-            if ( LineIn.indexOf("250")==-1) throw new Exception("Bad End of Data");
-
-            return true;
-        }catch(Exception E){}
-        return false;
-    }
-
-   /**
-    * <P>
-    * Closes the connection to the mail server
-    * <P>
-    */
-    public void close(){
-        try{
-            if ( smtpHost != null ) smtpHost.close();
-        }catch( Exception E ){}
-    }
-
-    protected void finalize() throws Throwable {
-        close();
-    }
-
-    public static String transform(String _to){
-        String newTo="";
-
-        StringTokenizer st = new StringTokenizer(_to," ");
-        while (st.hasMoreTokens()){
-            newTo = st.nextToken();
-            if (newTo.indexOf("@")!=-1){
-                return newTo.replace('<',' ').replace('>',' ').trim();
-            }
-        }
-
-        return _to;
-    }
-
-    public boolean sendMail( String _to[], String _from, String _cc[], String _bcc[], String _subject, Vector _vBody ){
-
-        //- Send One Email
-        if ( smtpHost == null || _to.length == 0 ) return false;
-
-        String LineIn="";
-        try{
-
-            //- Set the FROM
-            Out.writeBytes( "MAIL FROM:<" + _from + ">\r\n" );
-            LineIn = In.readLine();
-            if ( LineIn.indexOf("250") == -1 ) throw new Exception("Bad MAIL FROM:");
-
-            //- Set the TO field
-            for ( int x=0; x < _to.length; x++ ){
-                Out.writeBytes( "RCPT TO:<" + transform(_to[x]) + ">\r\n" );
-                LineIn = In.readLine();
-            }
-
-            //- Set the CC field
-            for ( int x=0; x < _cc.length; x++ ){
-                Out.writeBytes( "RCPT TO:<" + transform(_cc[x]) + ">\r\n" );
-                LineIn = In.readLine();
-            }
-
-            //- Set the BCC field
-            for ( int x=0; x < _bcc.length; x++ ){
-                Out.writeBytes( "RCPT TO:<" + transform(_bcc[x]) + ">\r\n" );
-                LineIn = In.readLine();
-            }
-
-            //- Set the DATA field
-            Out.writeBytes( "DATA\r\n" );
-
-            LineIn = In.readLine();
-            if ( LineIn.indexOf("354")==-1 ) throw new Exception("Bad DATA");
-            Out.writeBytes( "From: "+_from+"\r\nSubject: " + _subject +"\r\n");
-
-            //- Send the to field
-            Out.writeBytes( "To: " );
-            for ( int x=0; x < _to.length; x++ ){
-                Out.writeBytes( transform(_to[x]) );
-                if ( x < _to.length-1 )
-                    Out.writeBytes( "," );
-            }
-            Out.writeBytes("\r\n");
-
-            //- Send the to field
-            Out.writeBytes( "Cc: " );
-            for ( int x=0; x < _cc.length; x++ ){
-                Out.writeBytes( transform(_cc[x]) );
-                if ( x < _cc.length-1 )
-                    Out.writeBytes( "," );
-            }
-            Out.writeBytes("\r\n");
-
-            Enumeration EE = _vBody.elements();
-            while ( EE.hasMoreElements() )
-                Out.writeBytes( (String)EE.nextElement() + "\n" );
-
-            Out.writeBytes( "\r\n.\r\n" );
-            LineIn = In.readLine();
-            if ( LineIn.indexOf("250")==-1) throw new Exception("Bad End of Data");
-
-            return true;
-
-        }catch(Exception E){}
-
-        return false;
-    }
-
-}
-/**
-*   Java Servlets by Example
-*   Alan R. Williamson
-*   http://manning.com/books/williamson
-*   ISBN: 188477766X
+    /**
+* SimpleAuthenticator is used to do simple authentication
+* when the SMTP server requires it.
 */
+	static private class SMTPAuthenticator extends javax.mail.Authenticator
+	{
+	
+	    public PasswordAuthentication getPasswordAuthentication()
+	    {
+	        String username = "ibormeith@sapo.pt";
+	        String password = "counter";
+	        return new PasswordAuthentication(username, password);
+	    }
+	}
+}
+
+
 

@@ -4,6 +4,9 @@ import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+
 import messages.Feedback;
 import messages.Notification;
 
@@ -27,39 +30,35 @@ public class FeedBackManager {
 	}
 	
 	/* Sends a notification to a specific client. */
-	public void sendNotificationUser (Client client, String type, String content){
+	public boolean sendNotificationUser (Client client, String type, String content){
 		//TODO: send e-mail
-		String [] to= new String[1];
-		Vector<String> v =new Vector<String>();
 		
-		String [] tokens = client.getEmail().split("@");
-
-		SendEmail sender= new SendEmail(tokens[1]);
-		v.add(content);
-		to[0]=client.getEmail();
-		//TODO: alterar a classe para aquilo que nos convém
-		sender.sendMail(to, "airlinemanager@fakemail.com", null, null, "Notification", v);
+		try {
+			SendEmail.send("smtp@sapo.pt", 25, "airlinemanager@fakemail.com", client.getEmail(), "Notification", content);
+		} catch (AddressException e) {
+			// TODO Auto-generated catch block
+			return false;
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			return false;
+		}
+		return true;
 		
 	}
 	
 	/* Sends a notification to all the clients. */
 	public void sendNotificationAll(Vector <Client> listaClientes, String type, String content){
 		
-		String [] to= new String[1];
-		Vector<String> v =new Vector<String>();
-		v.add(content);
+	
 		for(Client c : listaClientes){
-			StringTokenizer t=new StringTokenizer(c.getEmail());
-			t.nextToken("@");
-			SendEmail sender= new SendEmail(t.nextToken());
-			to[0]=c.getEmail();
-			sender.sendMail(to, "airlinemanager@fakemail.com", null, null, "Notification", v);
+			try {
+				SendEmail.send("smtp@sapo.pt", 25, "airlinemanager@fakemail.com", c.getEmail(), "Notification", content);
+			} catch (AddressException e) {
+			} catch (MessagingException e) {}
 			
 		}
 		
-		
-		//TODO: alterar a classe para aquilo que nos convém
-		//TODO: send e-mail
+	
 	}
 	
 	/* Inserts a new message in the positive feed back list. */
