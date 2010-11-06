@@ -1,7 +1,7 @@
 package common;
 
 public class Operator extends Client{
-	/* That company that this turistic operator represents. */
+	/* That company that the operator represents. */
 	private String company;
 	
 	/* The constructor. */

@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
@@ -108,6 +109,7 @@ public class FrontOffice {
 			CreateButton("Bookings",Color.white,"Check Your Bookings",15,60,200,150,30);
 			CreateButton("Find Flights",Color.white,"Find all the Flights Available",15,60,250,150,30);
 			CreateButton("Feedback",Color.white,"Send Feedback",15,60,300,150,30);
+			CreateButton("Operator",Color.white,"Login and Register",15,60,350,150,30);
 			CreateButton("Exit",Color.white,"Leave the application",15,60,500,150,30);
 		}
 		
@@ -123,6 +125,38 @@ public class FrontOffice {
 			else if(e.getComponent().getName().equals("Feedback")){
 				menu.setVisible(false);
 				sendFeedBackMenu.entry();
+			}
+			else if(e.getComponent().getName().equals("Operator")){
+				String [] possibilities = {"Login","Register"};
+				String user,pass,confPass;
+				int count=0;
+				int op =JOptionPane.showOptionDialog(null,"Options","Operator",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,possibilities,"");
+				System.out.println(op);
+			    JPasswordField pwd = new JPasswordField(20);
+				if(op==0){
+				    	while(count++!=3){
+				    		user = (String)JOptionPane.showInputDialog(null,"Username:");
+				    		JOptionPane.showConfirmDialog(null, pwd,"Enter Password",JOptionPane.PLAIN_MESSAGE);
+				    		pass = new String(pwd.getPassword());
+				    		pwd.setText("");
+				    		/*TODO: Create Operator list to login and make charter flights available*/
+				    		break;
+				    	}
+				    	count=0;
+				}
+				else if(op==1){
+					while(true){
+						user = (String)JOptionPane.showInputDialog(null,"Username:");
+						JOptionPane.showConfirmDialog(null, pwd,"Enter Password",JOptionPane.PLAIN_MESSAGE);
+						pass = new String(pwd.getPassword());
+						pwd.setText("");
+			    		JOptionPane.showConfirmDialog(null, pwd,"Confirm Password",JOptionPane.PLAIN_MESSAGE);
+			    		confPass = new String(pwd.getPassword());
+			    		/*TODO: Check if Operator already exists and make charter flights available*/
+			    		break;
+			    		
+					}
+				}
 			}
 			else if (e.getComponent().getName().equals("Exit")){
 				/* The user is leaving the application. */
