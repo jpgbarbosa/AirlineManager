@@ -11,6 +11,7 @@ import messages.Feedback;
 import messages.Notification;
 
 import common.Client;
+import common.FileManager;
 
 
 public class FeedBackManager {
@@ -24,9 +25,10 @@ public class FeedBackManager {
 	/* The constructor. */
 	public FeedBackManager(){
 		//TODO: Later, we have to read it from a file.
-
-		positiveFeedBackList = new Vector <Feedback>();
-		negativeFeedBackList = new Vector <Feedback>();
+		if(FileManager.loadObjectFromFile("positiveFeedBackList", positiveFeedBackList) == null)
+			positiveFeedBackList = new Vector <Feedback>();
+		if(FileManager.loadObjectFromFile("negativeFeedBackList", negativeFeedBackList) == null)
+			negativeFeedBackList = new Vector <Feedback>();
 	}
 	
 	/* Sends a notification to a specific client. */

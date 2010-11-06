@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import common.Airplane;
+import common.FileManager;
 
 public class PlanesManager {
 	/* The list of registered planes. */
@@ -12,7 +13,8 @@ public class PlanesManager {
 	
 	/* The constructor. */
 	public PlanesManager(){
-		planesList = new Vector<Airplane>();
+		if(FileManager.loadObjectFromFile("planesList", planesList) == null)
+			planesList = new Vector<Airplane>();
 	}
 	
 	/* Adds a new plane to the system. */
