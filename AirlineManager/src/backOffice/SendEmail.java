@@ -52,8 +52,8 @@ public class SendEmail {
 	
 	    public PasswordAuthentication getPasswordAuthentication()
 	    {
-	        String username = "ibormeith@sapo.pt";
-	        String password = "counter";
+	    	String username = "airplanemanager@sapo.pt";
+	        String password = "1olaadeus";
 	        return new PasswordAuthentication(username, password);
 	    }
 	}

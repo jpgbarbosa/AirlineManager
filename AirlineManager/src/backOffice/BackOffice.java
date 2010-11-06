@@ -4,7 +4,11 @@ package backOffice;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+
 import java.util.GregorianCalendar;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
 import java.util.Vector;
 
 import javax.swing.JDialog;
@@ -15,12 +19,18 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import common.Airplane;
+import common.BackOfficeRemoteInterface;
 import common.Constants;
 import common.Flight;
 import common.Search;
 import common.Window;
 
-public class BackOffice {
+public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteInterface{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/* The main panel. */
 	private JPanel panel = new JPanel();
 	
@@ -39,7 +49,8 @@ public class BackOffice {
 	private LoginMenu loginMenu;
 	
 	/* The main constructor. */
-	public BackOffice(){
+	public BackOffice() throws RemoteException{
+		super();
 		feedBackManager = new FeedBackManager();
 		flightsManager = new FlightsManager();
 		planesManager = new PlanesManager();
@@ -55,7 +66,7 @@ public class BackOffice {
 		
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws RemoteException {
 
 		
 		BackOffice backOffice = new BackOffice();
