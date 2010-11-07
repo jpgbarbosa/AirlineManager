@@ -20,10 +20,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import bookings.Booking;
+
 import messages.Feedback;
 
 import common.Airplane;
 import common.BackOfficeRemoteInterface;
+import common.Client;
 import common.Constants;
 import common.Flight;
 import common.Operator;
@@ -257,12 +260,19 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		JPanel positivePanel;
 		JPanel negativePanel;
 		JPanel sendPanel;
+		JPanel toPanel;
 		/* Positive Pannel Message Area */
 		private	JTextArea posMsgArea;
 		/* Negative Pannel Message Area */
 		private	JTextArea negMsgArea;
 		/*Message to Send Text Area*/
 		private	JTextArea messageToSend;
+		/*Message to Send Text Area*/
+		private	JTextArea display;
+		/*Message to Send Text Area*/
+		private	JTextArea email;
+		/*Message to Send Text Area*/
+		private	JTextArea flight;
 		public FeedBackManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
 			CreateButton("Positive Feedback",Color.white,"Read positive critics sent by clients",15,60,200,200,30);
@@ -276,6 +286,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			positivePanel = new JPanel();
 			negativePanel = new JPanel();
 			sendPanel = new JPanel();
+			toPanel = new JPanel();
 			
 			/* Defines the subpanels. */
 			positivePanel.setLayout(null);
@@ -295,16 +306,35 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			sendPanel.setLayout(null);
 			sendPanel.setBounds(new Rectangle(400, 40, 500, 400));
-			sendPanel.add(CreateButton("cancel",Color.white,"Search for a flight",15,60,100,200,30));
+			sendPanel.add(CreateButton("Send To...",Color.white,"Select the client",15,60,300,200,30));
+			sendPanel.add(CreateTitle("Notification:",Color.black,15,20,20,100,20));
+			sendPanel.add(messageToSend = CreateText(10,50,40,60,300,200));
+			
+			
+			toPanel.setLayout(null);
+			toPanel.setBounds(new Rectangle(400, 40, 500, 400));
+			toPanel.add(CreateButton("Send",Color.white,"Send to client",15,150,50,200,30));
+			toPanel.add(CreateTitle("Enter the client's email address:",Color.black,15,20,20,250,20));
+			toPanel.add(email = CreateText(10,50,270,20,200,20));
+			toPanel.add(CreateButton("Send To All",Color.white,"Send To All",15,150,150,200,30));
+			toPanel.add(CreateTitle("Enter the flightID to send to all client's with bookings:",Color.black,15,20,100,350,20));
+			toPanel.add(flight = CreateText(10,50,370,100,100,20));
+			toPanel.add(CreateButton("Send To Turistic Operators",Color.white,"Send To Turistic Operators",15,130,260,220,30));
+			toPanel.add(display = CreateText(10,50,40,300,300,130));
+			display.enableInputMethods(false);
+			
+			
 			
 			/* Adds the subpanels to the main panel. */
 			panel.add(positivePanel);
 			panel.add(negativePanel);
 			panel.add(sendPanel);
+			panel.add(toPanel);
 			
 			negativePanel.setVisible(false);
 			sendPanel.setVisible(false);
 			positivePanel.setVisible(false);
+			toPanel.setVisible(false);
 			
 		}
 		
@@ -319,22 +349,25 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				negativePanel.setVisible(false);
 				sendPanel.setVisible(false);
 				positivePanel.setVisible(true);
+				toPanel.setVisible(false);
 			}
 			else if(e.getComponent().getName().equals("Negative Feedback")){
 				negativePanel.setVisible(true);
 				sendPanel.setVisible(false);
 				positivePanel.setVisible(false);
+				toPanel.setVisible(false);
 			}
 			else if(e.getComponent().getName().equals("Send Notifications")){
 				negativePanel.setVisible(false);
 				sendPanel.setVisible(true);
 				positivePanel.setVisible(false);
+				toPanel.setVisible(false);
 			}
 			else if (e.getComponent().getName().equals("Return")){
 				negativePanel.setVisible(false);
 				sendPanel.setVisible(false);
 				positivePanel.setVisible(false);
-				
+				toPanel.setVisible(false);
 				feedBackManagerMenu.setVisible(false);
 				menu.setVisible(true);
 			}else if(e.getComponent().getName().equals("List ")){
@@ -347,8 +380,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				for(Feedback f: negaList){
 					negMsgArea.append(f.getMessageContents()+"\n--------------------------\n");
 				}
-			}else if(e.getComponent().getName().equals("List ")){
-				//Negative List Button
+			}else if(e.getComponent().getName().equals("List")){
+				//Positive List Button
 				Vector <Feedback> posiList = feedBackManager.getPositiveFeedBackList();
 				
 				posMsgArea.setText("");
@@ -357,9 +390,50 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				for(Feedback f: posiList){
 					negMsgArea.append(f.getMessageContents()+"\n--------------------------\n");
 				}
+			
+			}else if(e.getComponent().getName().equals("Send To...")){
 				
+				negativePanel.setVisible(false);
+				sendPanel.setVisible(false);
+				positivePanel.setVisible(false);
+				toPanel.setVisible(true);
 				
 			
+			}else if(e.getComponent().getName().equals("Send To Turistic Operators")){
+				display.setText("");
+				feedBackManager.sendNotificationAll(operatorManager.getOperatorList(), "Notification", messageToSend.getText());
+				display.setText("Mensagem enviada.");
+			
+			}else if(e.getComponent().getName().equals("Send to client")){
+				boolean status=false; 
+				display.setText("");
+				if(!email.getText().equals(""))
+					status=feedBackManager.sendNotificationUser(new Client("", "", "", email.getText()), "Notification", messageToSend.getText());
+				if(status)	
+					display.setText("Your Notification was sent to "+email.getText()+".\n");
+				else
+					display.setText("Error : Could not send the message.");
+				
+			}else if(e.getComponent().getName().equals("Send To All")){
+				boolean status=false;
+				Flight f=null;
+				display.setText("");
+				if(!flight.getText().equals("")){
+					f=flightsManager.searchFlightById(Integer.parseInt(flight.getText()));
+					if(f!=null){
+						status=true;
+						display.setText("Your Notification was sent to \n");
+						for(Booking r: f.getSeats()){
+							if(feedBackManager.sendNotificationUser(r.getClient(), "Notification", messageToSend.getText()))
+								display.append(r.getClient().getEmail()+"\n");
+						}
+						
+					}
+				
+				}
+				if(!status)	
+					display.setText("Error : Could not send the message.");
+				
 			}
 		}
 	}

@@ -1,15 +1,17 @@
 package backOffice;
 
 import java.util.Vector;
+
+import common.Client;
 import common.Operator;
 
 public class OperatorManager {
 	/* The list of all operators in the system */
-	private Vector<Operator> operatorList;
+	private Vector<Client> operatorList;
 	
 	/* Constructor */
 	public OperatorManager(){
-		operatorList = new Vector<Operator>();
+		operatorList = new Vector<Client>();
 	}
 	
 	/* Adds a new operator to the system after checking if it already exists */
@@ -27,7 +29,7 @@ public class OperatorManager {
 	public Operator searchOperator(String name){
 		for(int i = 0; i < operatorList.size(); i++){
 			if(operatorList.get(i).getName().equals(name)){
-				return operatorList.get(i);
+				return (Operator) operatorList.get(i);
 			}
 		}
 		
@@ -55,6 +57,14 @@ public class OperatorManager {
 			return "Login successful";
 		}
 		return "Login was unsuccessful";
+	}
+
+	public Vector<Client> getOperatorList() {
+		return operatorList;
+	}
+
+	public void setOperatorList(Vector<Client> operatorList) {
+		this.operatorList = operatorList;
 	}	
 	
 }

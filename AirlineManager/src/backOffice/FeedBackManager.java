@@ -49,7 +49,7 @@ public class FeedBackManager {
 	/* Sends a notification to all the clients. */
 	public void sendNotificationAll(Vector <Client> listaClientes, String type, String content){
 		
-	
+		
 		for(Client c : listaClientes){
 			try {
 				SendEmail.send("smtp.sapo.pt", 25, "airlinemanager@fakemail.com", c.getEmail(), "Notification", content);
