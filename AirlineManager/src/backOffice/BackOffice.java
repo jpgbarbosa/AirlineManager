@@ -404,7 +404,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				feedBackManager.sendNotificationAll(operatorManager.getOperatorList(), "Notification", messageToSend.getText());
 				display.setText("Mensagem enviada.");
 			
-			}else if(e.getComponent().getName().equals("Send to client")){
+			}else if(e.getComponent().getName().equals("Send")){
 				boolean status=false; 
 				display.setText("");
 				if(!email.getText().equals(""))

@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import messages.Feedback;
@@ -60,7 +61,7 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 		}
 		menu = new Menu();
 		bookingsMenu = new BookingsMenu();
-		sendFeedBackMenu = new SendFeedBackMenu();
+		sendFeedBackMenu = new SendFeedBackMenu(this);
 		searchMenu = new SearchMenu();
 	}
 	
@@ -350,27 +351,44 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 	
 	@SuppressWarnings("serial")
 	private class SendFeedBackMenu extends Window{
+		FrontOffice frontOffice;
 		JPanel positivePanel;
 		JPanel negativePanel;
-		
-		public SendFeedBackMenu(){
+		/* Positive Pannel Message Area */
+		private	JTextArea posMsgArea;
+		/* Negative Pannel Message Area */
+		private	JTextArea negMsgArea;
+		private JTextArea displayN;
+		private JTextArea displayP;
+		public SendFeedBackMenu(FrontOffice f){
+			frontOffice=f;
 			/* Creates the buttons that redirect to each manager window. */
-			CreateButton("Positive Feedback",Color.white,"Read positive critics sent by clients",15,60,200,200,30);
-			CreateButton("Negative Feedback",Color.white,"Read negative messages sent by clients",15,60,250,200,30);
+			CreateButton("Positive Feedback",Color.white,"Send a positive Sugestion",15,60,200,200,30);
+			CreateButton("Negative Feedback",Color.white,"Send a reclamation",15,60,250,200,30);
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			
 			/* Creates the subpanels that are displayed accordingly to the user's choice. */
 			positivePanel = new JPanel();
 			negativePanel = new JPanel();
 			
+			
+			
 			/* Defines the subpanels. */
 			positivePanel.setLayout(null);
-			positivePanel.setBounds(new Rectangle(400, 40, 400, 400));
-			positivePanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,100,200,30));
+			positivePanel.setBounds(new Rectangle(400, 40, 500, 400));
+			positivePanel.add(CreateButton("Send",Color.white,"Search for a flight",15,275,20,200,30));
+			positivePanel.add(CreateTitle("Message:",Color.black,15,20,20,200,20));
+			positivePanel.add(posMsgArea = CreateText(10,50,40,60,350,300));
+			displayP=CreateText(10,50,40,375,150,20);
+			positivePanel.add(displayP);
 			
 			negativePanel.setLayout(null);
-			negativePanel.setBounds(new Rectangle(400, 40, 400, 400));
-			negativePanel.add(CreateButton("re",Color.white,"Search for a flight",15,60,100,200,30));
+			negativePanel.setBounds(new Rectangle(400, 40, 500, 400));
+			negativePanel.add(CreateButton("Send ",Color.white,"Search for a flight",15,275,20,200,30));
+			negativePanel.add(CreateTitle("Message:",Color.black,15,20,20,200,20));
+			negativePanel.add(negMsgArea = CreateText(10,50,40,60,350,300));
+			displayN=CreateText(10,50,40,375,150,20);
+			negativePanel.add(displayN);
 			
 			/* Adds the subpanels to the main panel. */
 			panel.add(positivePanel);
@@ -403,6 +421,14 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 				sendFeedBackMenu.setVisible(false);
 				menu.setVisible(true);
 			}
+			else if (e.getComponent().getName().equals("Send")){
+				System.out.println(posMsgArea.getText());
+				displayP.setText(frontOffice.sendPositiveFeedBack(new Feedback("Positive",posMsgArea.getText())));	
+			}
+			else if (e.getComponent().getName().equals("Send ")){
+				displayN.setText(frontOffice.sendNegativeFeedBack(new Feedback("Negative",posMsgArea.getText())));
+			}
+			
 		}
 	}
 	
