@@ -30,7 +30,6 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	/* The main panel. */
 	private JPanel panel = new JPanel();
 	
@@ -44,15 +43,16 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 	//TODO: Think about this! The constructor accepts a flight and a plane manager, so
 	// 		we will need to eventually invoke an RMI command when we want to access this class.
 	private Search search;
-	private BackOfficeRemoteInterface b;
-	private FrontOfficeRemoteInterface f;
+	private BackOfficeRemoteInterface backOffice;
+	private boolean loggedIn = false;
+	
 	/* The main constructor. */
 	public FrontOffice() throws RemoteException{
 		
 		try {
 			
-			b = (BackOfficeRemoteInterface) Naming.lookup("rmi://localhost:2000/AirlineManager");
-			
+			backOffice = (BackOfficeRemoteInterface) Naming.lookup("rmi://localhost:2000/AirlineManager");
+
 		} catch (Exception e) {
 			//TODO: Quem foi o engraçadinho? :P
 			System.out.println("Deu bode!");
@@ -64,7 +64,7 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 		searchMenu = new SearchMenu();
 	}
 	
-	public static void main(String[] args) throws RemoteException {
+	public static void main(String[] args) throws RemoteException{
 		FrontOffice frontOffice;
 		
 		frontOffice = new FrontOffice();
@@ -77,10 +77,16 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 		
 	}
 	
+	@Override
+	public void sendMessage(String message) throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	/* Sends positive feedback to the BackOffice.*/
 	public String sendPositiveFeedBack(Feedback message){
 		try {
-			b.sendPositiveFeedback(message);
+			backOffice.sendPositiveFeedback(message);
 		} catch (RemoteException e) {
 			return "It was not possible to reach the system.";
 		}
@@ -90,7 +96,7 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 	/* Sends negative feedback to the BackOffice.*/
 	public String sendNegativeFeedBack(Feedback message){
 		try {
-			b.sendNegativeFeedback(message);
+			backOffice.sendNegativeFeedback(message);
 		} catch (RemoteException e) {
 			return "It was not possible to reach the system.";
 		}
@@ -147,6 +153,7 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 			if(e.getComponent().getName().equals("Bookings")){
 				menu.setVisible(false);
 				bookingsMenu.entry();
+				/*TODO: Precisamos de definir como é comprado o charter*/
 			}
 			else if(e.getComponent().getName().equals("Find Flights")){
 				menu.setVisible(false);
@@ -170,9 +177,8 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 		}
 		public void operator(){
 			final String [] possibilities = {"Login","Register"};
-			int count;
 			int op;
-			String pass,conf;
+			String pass, conf, answer = "";
 		    JPasswordField pwd = new JPasswordField(20);
 		    JPasswordField pwd2 = new JPasswordField(20);
 		    JLabel title;
@@ -181,67 +187,86 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
     		final JLabel passcode = new JLabel("Enter password: ");
     		final JLabel passcode2 = new JLabel("Confirm password: ");
     		
-    		count = 0;
-    		op =JOptionPane.showOptionDialog(null,"Options","Operator",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,possibilities,"");
-    		
-			if(op==0){
-				title = new JLabel("<html><h3> Login </h3></html>");
-	    		Object [] jop = {title,username,user,passcode,pwd};
-			    	while(count++!=3){
-			    		JOptionPane.showConfirmDialog(null, jop,"Please enter your information",
-			    				JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE);
-			    		/*TODO: invocarMetodo(user.getText(),new String(pwd.getPassword()); */
-			    		try {
-							b.registerOperator("Ola", user.getText(), "rua", "239", " mail", new String(pwd.getPassword()),  ( FrontOfficeRemoteInterface) this);
-						} catch (RemoteException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-			    		pwd.setText("");
-			    		break;
-			    	}
-			    	count=0;
-		    		user.setText("");
-			}
-			else if(op==1){
-				title = new JLabel("<html><h3> Register </h3></html>");
-				Object [] jop = {title,username,user,passcode,pwd,passcode2,pwd2};
-				while(true){
-					JOptionPane.showConfirmDialog(null, jop,"Please enter your information",
-			    				JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE);
-					 
-					pass = new String(pwd.getPassword());
-					conf = new String(pwd2.getPassword());
-					if(pass.equals(conf)){
-						/*TODO: invocarMetodo(username.getText(),pass);*/
-						try {
-							String userName= user.getText();
-							String passWord = new String(pwd.getPassword());
-							
-							/* The fields are empty. */
-							if (userName.equals("") || passWord.equals("")){
-								JOptionPane.showMessageDialog(null,"Empty fields!");
-								continue;
+    		int count = 0;   		
+    		if(!loggedIn){
+	    		op = JOptionPane.showOptionDialog(null,"Options","Operator",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,possibilities,"");
+				if(op == 0){
+					title = new JLabel("<html><h3> Login </h3></html>");
+		    		Object [] jop = {title,username,user,passcode,pwd};
+				    	while(count++!=3 && !loggedIn){
+				    		JOptionPane.showConfirmDialog(null, jop,"Please enter your information",
+				    				JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE);
+				    		try {
+				    			
+				    			String userName= user.getText();
+								String passWord = new String(pwd.getPassword());
+								
+								/* The fields are empty. */
+								if (userName.equals("") || passWord.equals("")){
+									JOptionPane.showMessageDialog(null,"Empty fields!");
+									continue;
+								}
+								else{
+									answer = backOffice.loginOperator(userName, passWord);
+								}
+				    			
+							} catch (RemoteException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
-							else{
-								b.loginOperator(userName, passWord, (FrontOfficeRemoteInterface) this);
+							if(answer.equals("Login successful")){
+								loggedIn = true;
+							}
+							JOptionPane.showMessageDialog(null,answer);
+				    		pwd.setText("");
+				    	}
+				    	count=0;
+			    		user.setText("");
+				}
+				else if(op == 1){
+					title = new JLabel("<html><h3> Register </h3></html>");
+					Object [] jop = {title,username,user,passcode,pwd,passcode2,pwd2};
+					
+					while(!loggedIn){
+						JOptionPane.showConfirmDialog(null, jop,"Please enter your information",
+				    				JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE);
+						 
+						pass = new String(pwd.getPassword());
+						conf = new String(pwd2.getPassword());
+						if(pass.equals(conf)){
+							try {
+								/* The fields are empty. */
+								if (user.getText().equals("") || pass.equals("")){
+									JOptionPane.showMessageDialog(null,"Empty fields!");
+									continue;
+								}
+								else{
+									answer = backOffice.registerOperator("Ola", user.getText(), "rua", "239", " mail", pass);
+								}
+								
+							} catch (RemoteException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
 							
-						} catch (RemoteException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							if(answer.equals("Registration was successful")){
+								loggedIn = true;
+								JOptionPane.showMessageDialog(null,answer);
+							}
 						}
-						break;
-					}
-					else{
-						JOptionPane.showMessageDialog(null,"The passwords don't match, please try again");
-						//break;
+						else{
+							JOptionPane.showMessageDialog(null,"The passwords don't match, please try again");
+							//break;
+						}
+						pwd.setText("");
+						pwd2.setText("");
 					}
 					user.setText("");
-					pwd.setText("");
-					pwd2.setText("");
 				}
-			}
+    		}
+    		else{
+    			JOptionPane.showMessageDialog(null,"You are already logged in");
+    		}
 		}
 	}
 	
@@ -412,11 +437,5 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 				menu.setVisible(true);
 			}
 		}
-	}
-
-	@Override
-	public void sendMessage(String message) throws RemoteException {
-		// TODO Auto-generated method stub
-		
 	}
 }

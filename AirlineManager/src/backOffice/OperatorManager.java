@@ -25,25 +25,32 @@ public class OperatorManager {
 	
 	/* Search operator to avoid operators with the same login name */
 	public Operator searchOperator(String name){
-		for(int i=0; i<operatorList.size(); i++){
-			if(operatorList.get(i).getName().equals(name))
+		for(int i = 0; i < operatorList.size(); i++){
+			if(operatorList.get(i).getName().equals(name)){
 				return operatorList.get(i);
+			}
 		}
+		
 		return null;
 	}
 	
 	/* Tries to register a new operator */
 	public String registerOperator(String comp, String name, String addr, String phone, String mail,String password){
 		Operator op = searchOperator(name);
-		if(op!=null){
+		
+		/* We haven't found any operator in the list. */
+		if(op == null){
 			addOperator(new Operator(comp, name, addr, phone, mail, password));
 			return "Registration was successful";
 		}
 		return "Registration was unsuccessful";
 	}
+	
 	/* Tries to authenticate the operator */
 	public String loginOperator(String name, String password){
-		Operator op = searchOperator(name); 
+		Operator op = searchOperator(name);
+		
+		/* The operator was found and has introduced a correct password. */
 		if(op != null && op.getPassword().equals(password)){
 			return "Login successful";
 		}
