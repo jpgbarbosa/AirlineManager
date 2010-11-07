@@ -34,7 +34,7 @@ public class FeedBackManager {
 		//TODO: send e-mail
 		
 		try {
-			SendEmail.send("smtp@sapo.pt", 25, "airlinemanager@fakemail.com", client.getEmail(), "Notification", content);
+			SendEmail.send("smtp.sapo.pt", 25, "airlinemanager@fakemail.com", client.getEmail(), "Notification", content);
 		} catch (AddressException e) {
 			// TODO Auto-generated catch block
 			return false;
@@ -52,7 +52,7 @@ public class FeedBackManager {
 	
 		for(Client c : listaClientes){
 			try {
-				SendEmail.send("smtp@sapo.pt", 25, "airlinemanager@fakemail.com", c.getEmail(), "Notification", content);
+				SendEmail.send("smtp.sapo.pt", 25, "airlinemanager@fakemail.com", c.getEmail(), "Notification", content);
 			} catch (AddressException e) {
 			} catch (MessagingException e) {}
 			

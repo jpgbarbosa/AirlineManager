@@ -108,7 +108,7 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 		
 		JFrame f = new JFrame();
 		f.setSize(Constants.DIM_H,Constants.DIM_V);
-		f.setTitle("Móveis PIB");
+		f.setTitle("AirlineManager");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		panel.setLayout(null);

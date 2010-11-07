@@ -12,5 +12,13 @@ public class Notification extends Message{
 		super(contents, new GregorianCalendar());
 		notificationType = type;
 	}
+
+	public String getNotificationType() {
+		return notificationType;
+	}
+
+	public void setNotificationType(String notificationType) {
+		this.notificationType = notificationType;
+	}
 	
 }

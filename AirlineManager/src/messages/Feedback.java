@@ -11,4 +11,12 @@ public class Feedback extends Message{
 		super(contents, new GregorianCalendar());
 		feedBackType = type;
 	}
+
+	public String getFeedBackType() {
+		return feedBackType;
+	}
+
+	public void setFeedBackType(String feedBackType) {
+		this.feedBackType = feedBackType;
+	}
 }

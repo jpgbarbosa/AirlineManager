@@ -257,13 +257,20 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		JPanel positivePanel;
 		JPanel negativePanel;
 		JPanel sendPanel;
-		
+		/* Positive Pannel Message Area */
+		private	JTextArea posMsgArea;
+		/* Negative Pannel Message Area */
+		private	JTextArea negMsgArea;
+		/*Message to Send Text Area*/
+		private	JTextArea messageToSend;
 		public FeedBackManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
 			CreateButton("Positive Feedback",Color.white,"Read positive critics sent by clients",15,60,200,200,30);
 			CreateButton("Negative Feedback",Color.white,"Read negative messages sent by clients",15,60,250,200,30);
 			CreateButton("Send Notifications",Color.white,"Notificate clients about a special event",15,60,300,200,30);
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
+			
+			
 			
 			/* Creates the subpanels that are displayed accordingly to the user's choice. */
 			positivePanel = new JPanel();
@@ -273,11 +280,18 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			/* Defines the subpanels. */
 			positivePanel.setLayout(null);
 			positivePanel.setBounds(new Rectangle(400, 40, 500, 400));
-			positivePanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,100,200,30));
+			positivePanel.add(CreateButton("List",Color.white,"Search for a flight",15,275,20,200,30));
+			positivePanel.add(CreateTitle("Positive Feedback Messages:",Color.black,15,20,20,200,20));
+			positivePanel.add(posMsgArea = CreateText(10,50,40,60,350,320));
+			posMsgArea.enableInputMethods(false);
 			
 			negativePanel.setLayout(null);
 			negativePanel.setBounds(new Rectangle(400, 40, 500, 400));
-			negativePanel.add(CreateButton("re",Color.white,"Search for a flight",15,60,100,200,30));
+			negativePanel.add(CreateButton("List ",Color.white,"Search for a flight",15,275,20,200,30));
+			negativePanel.add(CreateTitle("Negative Feedback Messages:",Color.black,15,20,20,200,20));
+			negativePanel.add(negMsgArea = CreateText(10,50,40,60,350,320));
+			negMsgArea.enableInputMethods(false);
+			
 			
 			sendPanel.setLayout(null);
 			sendPanel.setBounds(new Rectangle(400, 40, 500, 400));
@@ -323,6 +337,29 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				
 				feedBackManagerMenu.setVisible(false);
 				menu.setVisible(true);
+			}else if(e.getComponent().getName().equals("List ")){
+				//Negative List Button
+				Vector <Feedback> negaList = feedBackManager.getNegativeFeedBackList();
+				
+				negMsgArea.setText("");
+				
+				
+				for(Feedback f: negaList){
+					negMsgArea.append(f.getMessageContents()+"\n--------------------------\n");
+				}
+			}else if(e.getComponent().getName().equals("List ")){
+				//Negative List Button
+				Vector <Feedback> posiList = feedBackManager.getPositiveFeedBackList();
+				
+				posMsgArea.setText("");
+				
+				
+				for(Feedback f: posiList){
+					negMsgArea.append(f.getMessageContents()+"\n--------------------------\n");
+				}
+				
+				
+			
 			}
 		}
 	}

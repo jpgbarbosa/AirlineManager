@@ -17,4 +17,16 @@ public abstract class Message {
 	public GregorianCalendar getDate(){
 		return date;
 	}
+
+	public String getMessageContents() {
+		return messageContents;
+	}
+
+	public void setMessageContents(String messageContents) {
+		this.messageContents = messageContents;
+	}
+
+	public void setDate(GregorianCalendar date) {
+		this.date = date;
+	}
 }
