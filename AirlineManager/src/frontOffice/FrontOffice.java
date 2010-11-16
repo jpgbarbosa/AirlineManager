@@ -21,12 +21,11 @@ import messages.Feedback;
 import common.BackOfficeRemoteInterface;
 import common.Constants;
 import common.Flight;
-import common.FrontOfficeRemoteInterface;
 import common.Search;
 import common.Window;
 
 
-public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemoteInterface {
+public class FrontOffice extends UnicastRemoteObject{
 	/**
 	 * 
 	 */
@@ -55,7 +54,7 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 			backOffice = (BackOfficeRemoteInterface) Naming.lookup("rmi://localhost:2000/AirlineManager");
 
 		} catch (Exception e) {
-			//TODO: Quem foi o engraçadinho? :P
+			//TODO: Quem foi o engraçadinho? :P Foi a daniela lol
 			System.out.println("Deu bode!");
 			System.exit(0);
 		}
@@ -75,12 +74,6 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 	
 	/* Sends some feedback to the BackOffice, about a specific flight. */
 	public void sendFeedBack(Flight flight, Feedback message){
-		
-	}
-	
-	@Override
-	public void sendMessage(String message) throws RemoteException {
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -181,12 +174,21 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 			int op;
 			String pass, conf, answer = "";
 		    JPasswordField pwd = new JPasswordField(20);
-		    JPasswordField pwd2 = new JPasswordField(20);
+		    JPasswordField confirmPwd = new JPasswordField(20);
 		    JLabel title;
     		final JLabel username = new JLabel("Enter username: ");
     		JTextField user = new JTextField();
     		final JLabel passcode = new JLabel("Enter password: ");
-    		final JLabel passcode2 = new JLabel("Confirm password: ");
+    		final JLabel confirmPassword = new JLabel("Confirm password: ");
+    		final JLabel company = new JLabel("Company:");
+    		final JLabel address = new JLabel("Address:");
+    		final JLabel telephone = new JLabel("Telephone:");
+    		final JLabel email = new JLabel("Email:");
+    		
+    		JTextField companyText = new JTextField();
+    		JTextField addressText = new JTextField();
+    		JTextField telephoneText = new JTextField();
+    		JTextField emailText = new JTextField();
     		
     		int count = 0;   		
     		if(!loggedIn){
@@ -226,41 +228,50 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 				}
 				else if(op == 1){
 					title = new JLabel("<html><h3> Register </h3></html>");
-					Object [] jop = {title,username,user,passcode,pwd,passcode2,pwd2};
+					Object [] jop = {title,username,user,passcode,pwd,confirmPassword,confirmPwd,
+							email,emailText,telephone,telephoneText,company,companyText,
+							address,addressText};
 					
 					while(!loggedIn){
 						JOptionPane.showConfirmDialog(null, jop,"Please enter your information",
 				    				JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE);
 						 
 						pass = new String(pwd.getPassword());
-						conf = new String(pwd2.getPassword());
-						if(pass.equals(conf)){
-							try {
-								/* The fields are empty. */
-								if (user.getText().equals("") || pass.equals("")){
-									JOptionPane.showMessageDialog(null,"Empty fields!");
-									continue;
-								}
-								else{
-									answer = backOffice.registerOperator("Ola", user.getText(), "rua", "239", " mail", pass);
+						conf = new String(confirmPwd.getPassword());
+						if(!user.getText().equals("") && !emailText.getText().equals("") && 
+								!telephoneText.getText().equals("") && !companyText.getText().equals("")
+								&& !addressText.getText().equals("")){
+							if(pass.equals(conf)){
+								try {
+									/* The fields are empty. */
+									if (user.getText().equals("") || pass.equals("")){
+										JOptionPane.showMessageDialog(null,"Empty fields!");
+										continue;
+									}
+									else{
+										answer = backOffice.registerOperator(companyText.getText(), user.getText(), addressText.getText(), telephoneText.getText(), emailText.getText(), pass);
+									}
+									
+								} catch (RemoteException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}
 								
-							} catch (RemoteException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								if(answer.equals("Registration was successful")){
+									loggedIn = true;
+									JOptionPane.showMessageDialog(null,answer);
+								}
 							}
-							
-							if(answer.equals("Registration was successful")){
-								loggedIn = true;
-								JOptionPane.showMessageDialog(null,answer);
+							else{
+								JOptionPane.showMessageDialog(null,"The passwords don't match, please try again");
+								//break;
 							}
 						}
 						else{
-							JOptionPane.showMessageDialog(null,"The passwords don't match, please try again");
-							//break;
+							JOptionPane.showMessageDialog(null,"You have to fill all the information in order to register");
 						}
 						pwd.setText("");
-						pwd2.setText("");
+						confirmPwd.setText("");
 					}
 					user.setText("");
 				}
@@ -320,6 +331,9 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 			setVisible(true);
 			/* As default, we have the Buy Plane Menu. */
 			newPanel.setVisible(true);
+			if(loggedIn){
+				/*TODO: SABER COMO SE RESERVA UM CHARTER */
+			}
 		}
 		
 		public void mouseReleased(MouseEvent e){

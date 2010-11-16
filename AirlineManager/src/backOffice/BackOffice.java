@@ -5,7 +5,6 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
 import java.util.GregorianCalendar;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -695,6 +694,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		private JTextArea listArea;
 		
 		/* FINDPANEL VARIABLES */
+		private JTextField idSearchField;
+		private JTextArea searchArea;
 		
 		public PlanesManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
@@ -737,7 +738,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			findPanel.setLayout(null);
 			findPanel.setBounds(new Rectangle(400, 40, 500, 400));
-			findPanel.add(CreateButton("Go",Color.white,"Search for a flight",15,60,100,200,30));
+			findPanel.add(CreateTitle("Plane's ID:",Color.black,15,100,70,70,20));
+			findPanel.add(idSearchField = CreateBoxInt(20,175,70,50,20,0));
+			findPanel.add(listArea = CreateText(10,50,60,100,320,150));
+			findPanel.add(CreateButton("Go",Color.white,"Search for a flight",15,100,300,200,30));
 			
 			/* Adds the subpanels to the main panel. */
 			panel.add(buyPanel);
