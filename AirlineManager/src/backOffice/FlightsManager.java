@@ -126,13 +126,31 @@ public class FlightsManager {
 	}
 	
 	public int getOccupation(){
-		
-		return 0;
+		int sum = 0;
+		int total = flightsList.size();
+		for(Flight f:flightsList){
+			sum+=f.getOccupiedSeats()/f.getAirplane().getNoSeats()*100;
+		}
+		return sum/total;
 	}
 	
 	public int getOccupation(GregorianCalendar beginning, GregorianCalendar end){
+		int sum=0;
+		int total=0;
+		Flight aux;
 		
-		return 0;
+		for(int i=0; i<flightsList.size() ;i++){
+			aux = flightsList.get(i);
+			if(aux.getDate().before(beginning)){
+				
+			} else if(aux.getDate().after(beginning) && aux.getDate().before(end)){
+				total++;
+				sum+=aux.getOccupiedSeats()/aux.getAirplane().getNoSeats()*100;
+			} else {
+				
+			}
+		}
+		return sum/total;
 	}
 	
 }
