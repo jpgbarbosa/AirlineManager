@@ -16,7 +16,6 @@ public class Flight {
 	private GregorianCalendar date;
 	private String destiny;
 	private int id;
-	private int occupiedSeats;
 	
 	//TODO: This is temporary!
 	public static int idCreator = 0;
@@ -111,14 +110,7 @@ public class Flight {
 	}
 
 	public int getOccupiedSeats() {
-		return occupiedSeats;
+		return seats.size();
 	}
-	
-	
-
-	public void setOccupiedSeats(int occupiedSeats) {
-		this.occupiedSeats = occupiedSeats;
-	}
-	
 	
 }
