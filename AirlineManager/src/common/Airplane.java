@@ -10,6 +10,7 @@ public class Airplane {
 	 */
 	
 	/* The flight associated with this airplane. */
+	private int noSeats;
 	private Vector <Flight> flights;
 	private String company, model;
 	private int id;
@@ -65,6 +66,14 @@ public class Airplane {
 
 	public String getModel() {
 		return model;
+	}
+	
+	public int getNoSeats() {
+		return noSeats;
+	}
+	
+	public void setNoSeats(int noSeats) {
+		this.noSeats = noSeats;
 	}
 
 	public void setFlights(Vector <Flight> flights) {

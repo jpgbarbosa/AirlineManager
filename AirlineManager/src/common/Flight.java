@@ -16,7 +16,7 @@ public class Flight {
 	private GregorianCalendar date;
 	private String destiny;
 	private int id;
-	private int noSeats, occupiedSeats;
+	private int occupiedSeats;
 	
 	//TODO: This is temporary!
 	public static int idCreator = 0;
@@ -102,25 +102,19 @@ public class Flight {
 	/* Checks whether is flight is full or not. */
 	public boolean isFull(){
 		/* We have no more seats on this flight. */
-		if (getNoSeats() - seats.size() == 0){
+		if (airplane.getNoSeats() - seats.size() == 0){
 			return true;
 		}
 		
 		/* We still have at least one empty seat. */
 		return false;
 	}
-	
-	public int getNoSeats() {
-		return noSeats;
-	}
 
 	public int getOccupiedSeats() {
 		return occupiedSeats;
 	}
 	
-	public void setNoSeats(int noSeats) {
-		this.noSeats = noSeats;
-	}
+	
 
 	public void setOccupiedSeats(int occupiedSeats) {
 		this.occupiedSeats = occupiedSeats;
