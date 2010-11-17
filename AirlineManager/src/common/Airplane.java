@@ -9,8 +9,6 @@ public class Airplane {
 	 * the list of clients in this flight.
 	 */
 	
-	//TODO: Um voo pode ter mais do que um flight, logo, estas variáveis não podem ficar associadas ao avião.
-	private int noSeats, occupiedSeats;
 	/* The flight associated with this airplane. */
 	private Vector <Flight> flights;
 	private String company, model;
@@ -22,7 +20,6 @@ public class Airplane {
 	
 	/* The constructor. */
 	public Airplane(int number, String company, String model){
-		noSeats = number;
 		this.company = company;
 		this.model = model;
 		this.flights = new Vector <Flight>();
@@ -52,13 +49,7 @@ public class Airplane {
 	}
 	
 	/* Getters and setters. */
-	public int getNoSeats() {
-		return noSeats;
-	}
-
-	public int getOccupiedSeats() {
-		return occupiedSeats;
-	}
+	
 
 	public Vector <Flight> getFlights() {
 		return flights;
@@ -74,14 +65,6 @@ public class Airplane {
 
 	public String getModel() {
 		return model;
-	}
-
-	public void setNoSeats(int noSeats) {
-		this.noSeats = noSeats;
-	}
-
-	public void setOccupiedSeats(int occupiedSeats) {
-		this.occupiedSeats = occupiedSeats;
 	}
 
 	public void setFlights(Vector <Flight> flights) {

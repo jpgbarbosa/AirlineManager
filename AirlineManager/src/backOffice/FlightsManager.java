@@ -10,6 +10,7 @@ import common.FileManager;
 public class FlightsManager {
 	/* The list of all(?) the flights in the system. */
 	private Vector<Flight> flightsList;
+	private GregorianCalendar[] cancelledFlights;
 	
 	/* The constructor. */
 	public FlightsManager(){
