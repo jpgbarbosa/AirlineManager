@@ -31,6 +31,14 @@ public class Client {
 		
 	}
 	
+	public boolean equals(Object c){
+		if(((Client) c).getName().equals(this.name)&&((Client) c).getAddress().equals(this.address))
+			return true;
+		
+		return false;
+		
+	}
+	
 	/**GETTERS & SETTERS**/
 
 	public Vector <Booking> getBookingsList() {

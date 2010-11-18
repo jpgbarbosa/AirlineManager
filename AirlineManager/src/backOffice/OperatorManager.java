@@ -1,39 +1,53 @@
 package backOffice;
 
+import java.util.Date;
 import java.util.Vector;
+import org.prevayler.*;
 
+import common.Airplane;
 import common.Client;
 import common.Operator;
 
 public class OperatorManager {
 	/* The list of all operators in the system */
 	private Vector<Client> operatorList;
-	
+	private Prevayler prevayler;
+	public Prevayler getPrevayler() {
+		return prevayler;
+	}
 	/* Constructor */
 	public OperatorManager(){
-		operatorList = new Vector<Client>();
+		super();
+		
+		try {
+			prevayler = PrevaylerFactory.createPrevayler(new Vector<Client>(), "OperatorsList");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Something went really bad!");
+			System.exit(0);
+		} 
+		operatorList=(Vector <Client>) (prevayler.prevalentSystem());
+		
+		//operatorList = new Vector<Client>();
 	}
+	
+	/**
+	 * 
+	 * Write Transactions
+	 */
 	
 	/* Adds a new operator to the system after checking if it already exists */
 	public void addOperator(Operator operator){
-		operatorList.add(operator);
+		prevayler.execute(new addOperator(operator));
+		//operatorList.add(operator);
 		
 	}
 	
 	/* Deletes an operator from the system */
 	public void removeOperator(Operator operator){
-		operatorList.remove(operator);
-	}
-	
-	/* Search operator to avoid operators with the same login name */
-	public Operator searchOperator(String name){
-		for(int i = 0; i < operatorList.size(); i++){
-			if(operatorList.get(i).getName().equals(name)){
-				return (Operator) operatorList.get(i);
-			}
-		}
-		
-		return null;
+		prevayler.execute(new removeOperator(operator));
+		//operatorList.remove(operator);
 	}
 	
 	/* Tries to register a new operator */
@@ -47,6 +61,24 @@ public class OperatorManager {
 		}
 		return "Registration was unsuccessful";
 	}
+	
+	/**
+	 * 
+	 * Read Transactions
+	 */
+	
+	/* Search operator to avoid operators with the same login name */
+	public Operator searchOperator(String name){
+		for(int i = 0; i < operatorList.size(); i++){
+			if(operatorList.get(i).getName().equals(name)){
+				return (Operator) operatorList.get(i);
+			}
+		}
+		
+		return null;
+	}
+	
+	
 	
 	/* Tries to authenticate the operator */
 	public String loginOperator(String name, String password){
@@ -62,9 +94,61 @@ public class OperatorManager {
 	public Vector<Client> getOperatorList() {
 		return operatorList;
 	}
+	
+	
+}
 
-	public void setOperatorList(Vector<Client> operatorList) {
-		this.operatorList = operatorList;
-	}	
+
+class addOperator implements Transaction{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private Operator operator;
+	
+
+
+	public addOperator(Operator operator){
+		this.operator=operator;
+		
+	}
+	
+	@Override
+	public void executeOn(Object arg0, Date arg1) {
+		
+		((Vector<Client>)arg0).add(operator);
+	}
+	
+	
+}
+
+class removeOperator implements Transaction{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private Operator operator;
+	
+
+
+	public removeOperator(Operator operator){
+		this.operator=operator;
+		
+	}
+	
+	@Override
+	public void executeOn(Object arg0, Date arg1) {
+		
+		((Vector<Client>)arg0).remove(operator);
+	}
+	
 	
 }
