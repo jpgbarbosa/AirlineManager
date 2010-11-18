@@ -21,16 +21,14 @@ public class Airplane implements Serializable{
 	private int id;
 	private GregorianCalendar date;
 	
-	//TODO: This is temporary!
-	public static int idCreator = 0;
+	
 	
 	/* The constructor. */
 	public Airplane(int number, String company, String model){
 		this.company = company;
 		this.model = model;
 		this.flights = new Vector <Flight>();
-		
-		id = idCreator++;
+		id = 0;
 	}
 	
 	/*

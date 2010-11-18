@@ -12,6 +12,7 @@ public class PlanesManager {
 	/* The list of registered planes. */
 	private Vector <Airplane> planesList;
 	private Prevayler prevayler;
+	private static int idCreator=0;
 	public Prevayler getPrevayler() {
 		return prevayler;
 	}
@@ -29,6 +30,9 @@ public class PlanesManager {
 		} 
 		planesList=(Vector <Airplane>) (prevayler.prevalentSystem());
 		
+		if(planesList.size()>0){
+			idCreator=getLastID();
+		}
 		
 		/*if(FileManager.loadObjectFromFile("planesList", planesList) == null)
 			planesList = new Vector<Airplane>();
@@ -44,8 +48,9 @@ public class PlanesManager {
 	
 	/* Adds a new plane to the system. */
 	public void addPlane(Airplane airplane){
+		airplane.setId(idCreator);
 		prevayler.execute(new addPlane(airplane));
-		
+		idCreator++;
 		//planesList.add(airplane);
 	}
 	
@@ -78,6 +83,16 @@ public class PlanesManager {
 				num++;
 		
 		return num;
+	}
+	
+	private int getLastID(){
+		int id=0;
+		for(Airplane a:planesList)
+			if(a.getId()>id){
+				id=a.getId();
+			}
+		id++;
+		return id;
 	}
 	
 	
