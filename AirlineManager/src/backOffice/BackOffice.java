@@ -135,7 +135,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		if (month == 2){
 			boolean leapYear;
 			
-			/* Verifires whether we are in a leap year or not. */
+			/* Verifies whether we are in a leap year or not. */
 			if (year % 400 == 0){
 				leapYear = true;
 			}

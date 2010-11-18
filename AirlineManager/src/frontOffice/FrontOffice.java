@@ -3,10 +3,16 @@ package frontOffice;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,6 +29,8 @@ import common.Constants;
 import common.Flight;
 import common.Search;
 import common.Window;
+
+import com.toedter.calendar.JCalendar;;
 
 
 public class FrontOffice extends UnicastRemoteObject{
@@ -45,7 +53,7 @@ public class FrontOffice extends UnicastRemoteObject{
 	private Search search;
 	private BackOfficeRemoteInterface backOffice;
 	private boolean loggedIn = false;
-	
+	private JFrame f; 
 	/* The main constructor. */
 	public FrontOffice() throws RemoteException{
 		
@@ -100,11 +108,10 @@ public class FrontOffice extends UnicastRemoteObject{
 	// / / / / / / / / / / / / / / / / / / / / / GRAPHIC INTERFACE  / / / / / / / / / / / / / / / / / /
 	public void executeGraphics(){
 		
-		JFrame f = new JFrame();
+		f = new JFrame();
 		f.setSize(Constants.DIM_H,Constants.DIM_V);
 		f.setTitle("AirlineManager");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		panel.setLayout(null);
 		panel.setBackground(Color.lightGray);
 		panel.setVisible(true);
@@ -147,7 +154,6 @@ public class FrontOffice extends UnicastRemoteObject{
 			if(e.getComponent().getName().equals("Bookings")){
 				menu.setVisible(false);
 				bookingsMenu.entry();
-				/*TODO: Precisamos de definir como é comprado o charter*/
 			}
 			else if(e.getComponent().getName().equals("Find Flights")){
 				menu.setVisible(false);
@@ -170,8 +176,9 @@ public class FrontOffice extends UnicastRemoteObject{
 			}
 		}
 		public void operator(){
+			/* Initialize variables */
 			final String [] possibilities = {"Login","Register"};
-			int op;
+			int op, status;
 			String pass, conf, answer = "";
 		    JPasswordField pwd = new JPasswordField(20);
 		    JPasswordField confirmPwd = new JPasswordField(20);
@@ -190,17 +197,27 @@ public class FrontOffice extends UnicastRemoteObject{
     		JTextField telephoneText = new JTextField();
     		JTextField emailText = new JTextField();
     		
+    		
     		int count = 0;   		
     		if(!loggedIn){
 	    		op = JOptionPane.showOptionDialog(null,"Options","Operator",JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,possibilities,"");
 				if(op == 0){
 					title = new JLabel("<html><h3> Login </h3></html>");
 		    		Object [] jop = {title,username,user,passcode,pwd};
-				    	while(count++!=3 && !loggedIn){
-				    		JOptionPane.showConfirmDialog(null, jop,"Please enter your information",
+		    		
+		    		/* User has 3 opportunities to finish login process*/
+				    	while(!loggedIn && count++!=3){
+				    		
+				    		/* Pop-up to ask for the login information */
+				    		status = JOptionPane.showConfirmDialog(null, jop,"Please enter your information",
 				    				JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE);
+				    		
+				    		/* If "X" was clicked the login process terminates */
+				    		if(status==-1)
+				    			return;
 				    		try {
 				    			
+				    			/* Get the information from the TextField and PasswordField */
 				    			String userName= user.getText();
 								String passWord = new String(pwd.getPassword());
 								
@@ -214,16 +231,17 @@ public class FrontOffice extends UnicastRemoteObject{
 								}
 				    			
 							} catch (RemoteException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								JOptionPane.showMessageDialog(null,"The server is down, please try again later");
+								return;
 							}
+							
+							/* Login was successful, loggedIn is now true so operator can book charters */ 
 							if(answer.equals("Login successful")){
 								loggedIn = true;
 							}
 							JOptionPane.showMessageDialog(null,answer);
 				    		pwd.setText("");
 				    	}
-				    	count=0;
 			    		user.setText("");
 				}
 				else if(op == 1){
@@ -231,13 +249,19 @@ public class FrontOffice extends UnicastRemoteObject{
 					Object [] jop = {title,username,user,passcode,pwd,confirmPassword,confirmPwd,
 							email,emailText,telephone,telephoneText,company,companyText,
 							address,addressText};
-					
-					while(!loggedIn){
-						JOptionPane.showConfirmDialog(null, jop,"Please enter your information",
+					/* User has 3 opportunities to finish register process*/
+					while(!loggedIn && count++!=3){
+						status = JOptionPane.showConfirmDialog(null, jop,"Please enter your information",
 				    				JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE);
-						 
+			    		/* If "X" was clicked the register process terminates */
+						if(status==-1)
+							return;
+						
+						/* Get the information from the PasswordFields */
 						pass = new String(pwd.getPassword());
 						conf = new String(confirmPwd.getPassword());
+						
+						/* Check if the fields are empty. */
 						if(!user.getText().equals("") && !emailText.getText().equals("") && 
 								!telephoneText.getText().equals("") && !companyText.getText().equals("")
 								&& !addressText.getText().equals("")){
@@ -253,10 +277,10 @@ public class FrontOffice extends UnicastRemoteObject{
 									}
 									
 								} catch (RemoteException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									JOptionPane.showMessageDialog(null,"The server is down, please try again later");
+									return;
 								}
-								
+								/* Registration was successful, loggedIn is now true so operator can book charters */
 								if(answer.equals("Registration was successful")){
 									loggedIn = true;
 									JOptionPane.showMessageDialog(null,answer);
@@ -264,7 +288,6 @@ public class FrontOffice extends UnicastRemoteObject{
 							}
 							else{
 								JOptionPane.showMessageDialog(null,"The passwords don't match, please try again");
-								//break;
 							}
 						}
 						else{
@@ -283,28 +306,41 @@ public class FrontOffice extends UnicastRemoteObject{
 	}
 	
 	@SuppressWarnings("serial")
-	private class BookingsMenu extends Window{
-		JPanel newPanel;
-		JPanel cancelPanel;
-		JPanel modifyPanel;
+	private class BookingsMenu extends Window implements PropertyChangeListener{
+		private JPanel newPanel;
+		private JPanel cancelPanel;
+		private JPanel modifyPanel;
+		private JPanel charterPanel;
+		private JButton charterButton;
+		private JCalendar jCalendar;
+		private GregorianCalendar calendar;
+		private JTextField dateField;
 		
 		public BookingsMenu(){
 			/* Creates the buttons that redirect to each manager window. */
 			CreateButton("New Booking",Color.white,"Books a given flight",15,60,200,200,30);
 			CreateButton("Cancel Booking",Color.white,"Cancels a booking",15,60,250,200,30);
 			CreateButton("Modify Booking",Color.white,"Changes a booking to another flight",15,60,300,200,30);
+			charterButton = CreateButton("Book Charter",Color.white,"Book a Charter Flight",15,60,350,200,30);
+			charterButton.setVisible(false);
 			
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			 
-			/* Creates the subpanels that are displayed accordingly to the user's choice. */
+			/* Creates the sub panels that are displayed accordingly to the user's choice. */
 			newPanel = new JPanel();
 			cancelPanel = new JPanel();
 			modifyPanel = new JPanel();
+			charterPanel = new JPanel();
 			
-			/* Defines the subpanels. */
+			/* Defines the sub panels. */
 			newPanel.setLayout(null);
 			newPanel.setBounds(new Rectangle(400, 40, 400, 400));
-			newPanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,100,200,30));
+			newPanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
+			newPanel.add(dateField = CreateBoxText(20,100,20,80,20));
+			dateField.setText("0/0/0");
+			newPanel.add(CreateButton("Choose Date",Color.white,"Choose flight date",15,60,50,120,30));
+			newPanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,350,120,30));
+			
 			
 			cancelPanel.setLayout(null);
 			cancelPanel.setBounds(new Rectangle(400, 40, 400, 400));
@@ -314,52 +350,89 @@ public class FrontOffice extends UnicastRemoteObject{
 			modifyPanel.setBounds(new Rectangle(400, 40, 400, 400));
 			modifyPanel.add(CreateButton("Go",Color.white,"Search for a flight",15,60,100,200,30));
 			
-			/* Adds the subpanels to the main panel. */
+			charterPanel.setLayout(null);
+			charterPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			charterPanel.add(CreateButton("Create",Color.white,"Book Charter",15,60,100,200,30));
+			
+			/* Adds the sub panels to the main panel. */
 			panel.add(newPanel);
 			panel.add(cancelPanel);
 			panel.add(modifyPanel);
+			panel.add(charterPanel);
+			
+			
 			
 			newPanel.setVisible(false);
 			cancelPanel.setVisible(false);
 			modifyPanel.setVisible(false);
+			charterPanel.setVisible(false);
 		}
 		
 		/* This function is used when the user enters this menu.
-		 * We need to set true the right menu and one of its subpanels.
+		 * We need to set true the right menu and one of its sub panels.
 		 */
 		public void entry(){
 			setVisible(true);
 			/* As default, we have the Buy Plane Menu. */
 			newPanel.setVisible(true);
+			/* If the operator is logged in, we set the Charter button visible */
 			if(loggedIn){
-				/*TODO: SABER COMO SE RESERVA UM CHARTER */
+				charterButton.setVisible(true);
 			}
 		}
 		
 		public void mouseReleased(MouseEvent e){
+			
 			if(e.getComponent().getName().equals("New Booking")){
 				newPanel.setVisible(true);
 				cancelPanel.setVisible(false);
 				modifyPanel.setVisible(false);
+				charterPanel.setVisible(false);
 			}
 			else if(e.getComponent().getName().equals("Cancel Booking")){
 				newPanel.setVisible(false);
 				cancelPanel.setVisible(true);
 				modifyPanel.setVisible(false);
+				charterPanel.setVisible(false);
 			}
 			else if(e.getComponent().getName().equals("Modify Booking")){
 				newPanel.setVisible(false);
 				cancelPanel.setVisible(false);
 				modifyPanel.setVisible(true);
+				charterPanel.setVisible(false);
+			}
+			else if(e.getComponent().getName().equals("Book Charter")){
+				newPanel.setVisible(false);
+				cancelPanel.setVisible(false);
+				modifyPanel.setVisible(false);
+				charterPanel.setVisible(true);
+			}
+			else if(e.getComponent().getName().equals("Choose Date")){
+				JFrame date = new JFrame("Calendar");
+				jCalendar = new JCalendar();
+				
+				date.getContentPane().add(jCalendar);
+				date.pack();
+				date.setVisible(true);
+				jCalendar.addPropertyChangeListener(this);
 			}
 			else if (e.getComponent().getName().equals("Return")){
 				newPanel.setVisible(false);
 				cancelPanel.setVisible(false);
 				modifyPanel.setVisible(false);
+				charterPanel.setVisible(false);
 				
 				bookingsMenu.setVisible(false);
 				menu.setVisible(true);
 			}
+		}
+
+		/* Every time the user selects a new date, an event is generated*/
+		public void propertyChange(PropertyChangeEvent evt) {
+			Calendar cal = jCalendar.getCalendar();
+			calendar = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+			dateField.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
+			
 		}
 	}
 	
