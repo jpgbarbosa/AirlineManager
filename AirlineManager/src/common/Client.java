@@ -1,11 +1,16 @@
 package common;
 
+import java.io.Serializable;
 import java.util.Vector;
 import bookings.Booking;
 import messages.Message;
 
 
-public class Client {
+public class Client implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/* The list of bookings related to this client. */
 	private Vector <Booking> bookingsList;
 	/* The list of messages received by this client. */

@@ -1,6 +1,10 @@
 package common;
 
 public class Operator extends Client{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/* That company that the operator represents. */
 	private String company;
 	private String password;

@@ -3,6 +3,7 @@ package backOffice;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import java.util.GregorianCalendar;
 import java.rmi.RemoteException;
@@ -31,6 +32,8 @@ import common.Flight;
 import common.Operator;
 import common.Search;
 import common.Window;
+
+import org.prevayler.*;
 
 public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteInterface{
 	/**
@@ -75,6 +78,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		statisticsManagerMenu = new StatisticsManagerMenu();
 		loginMenu = new LoginMenu();
 		
+		
+		SnapshotTimer s=new SnapshotTimer(planesManager.getPrevayler(),flightsManager.getPrevayler());
 	}
 	
 	public static void main(String[] args) throws RemoteException {
@@ -988,3 +993,30 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	
 	
 }
+
+
+
+class SnapshotTimer extends Thread {
+    Prevayler planesPrevayler,flightsPrevayler; 
+ 
+    public SnapshotTimer(Prevayler planesPrevayler, Prevayler flightsPrevayler) {
+       this.planesPrevayler = planesPrevayler;
+       this.flightsPrevayler=flightsPrevayler;
+    } 
+ 
+    public void run() { 
+       super.run(); 
+ 
+       try {
+           while (true) { 
+               Thread.sleep(2000); // makes snapshots to the DB every 2 seconds
+               planesPrevayler.takeSnapshot();
+               flightsPrevayler.takeSnapshot();
+           }
+       } catch (InterruptedException e) { 
+    	   System.out.println("Deu Bode"); 
+       } catch (IOException e) {
+           System.out.println("Deu Bode"); 
+       }
+    } 
+ }

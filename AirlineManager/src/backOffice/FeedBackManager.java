@@ -69,7 +69,6 @@ public class FeedBackManager {
 	/* Inserts a new message in the negative feed back list. */
 	public void insertNegativeFeedback(Feedback feedBack) {
 		negativeFeedBackList.add(feedBack);
-		
 	}
 	
 	/* Reads the positive feed back provided by the clients. */

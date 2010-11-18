@@ -22,6 +22,7 @@ public class PlanesManager {
 		
 		try {
 			prevayler = PrevaylerFactory.createPrevayler(new Vector<Airplane>(), "PlanesList");
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
