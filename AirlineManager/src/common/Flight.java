@@ -108,6 +108,9 @@ public class Flight {
 		/* We still have at least one empty seat. */
 		return false;
 	}
-	
+
+	public int getOccupiedSeats() {
+		return seats.size();
+	}
 	
 }
