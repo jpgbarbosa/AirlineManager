@@ -1,0 +1,9 @@
+org.prevayler
+org.prevayler.foundation.serialization
+org.prevayler.implementation
+org.prevayler.implementation.clock
+org.prevayler.implementation.journal
+org.prevayler.implementation.publishing
+org.prevayler.implementation.publishing.censorship
+org.prevayler.implementation.replication
+org.prevayler.implementation.snapshot
