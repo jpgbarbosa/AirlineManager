@@ -8,11 +8,13 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -125,6 +127,14 @@ public abstract class Window extends JPanel implements MouseListener{
 		add(text);
 		
 		return text;
+	}
+	
+	public JComboBox CreateComboBox(int x,int y, int x1, int y1,Vector<String> dest){
+		JComboBox comb = new JComboBox(dest);
+		comb.setBounds(new Rectangle(x,y,x1,y1));
+		add(comb);
+		return comb;
+		
 	}
 	
 	public JLabel CreateImage(String path, String toolTip,int x,int y,int x1,int y1){

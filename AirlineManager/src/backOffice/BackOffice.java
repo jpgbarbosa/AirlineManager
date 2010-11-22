@@ -61,6 +61,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	
 	private Vector<Operator> operatorList;
 	
+	private Vector<String> destinations;
+	
 	/* The main constructor. */
 	public BackOffice() throws RemoteException{
 		super();
@@ -80,6 +82,16 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		
 		SnapshotTimer s=new SnapshotTimer(planesManager.getPrevayler(),flightsManager.getPrevayler());
+		
+		/* TODO This is only temporary, we need to create a list of destinations */
+		destinations = new Vector<String>();
+		destinations.add("Lisbon");
+		destinations.add("Porto");
+		destinations.add("Faro");
+		destinations.add("London");
+		destinations.add("Paris");
+		destinations.add("Milan");
+		
 	}
 	
 	public static void main(String[] args) throws RemoteException {
@@ -96,6 +108,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			System.exit(0);
 		}
 		backOffice.executeGraphics();
+		
 
 	}
 
@@ -989,6 +1002,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	public String loginOperator(String user, String pass) throws RemoteException {
 		return operatorManager.loginOperator(user,pass);
 		
+	}
+
+	@Override
+	public Vector<String> getDestinations() throws RemoteException {
+		return destinations;
 	}
 	
 	

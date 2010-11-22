@@ -11,8 +11,10 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -53,7 +55,10 @@ public class FrontOffice extends UnicastRemoteObject{
 	private Search search;
 	private BackOfficeRemoteInterface backOffice;
 	private boolean loggedIn = false;
-	private JFrame f; 
+	private JFrame f;
+	
+	private Vector<String> destinations;
+	
 	/* The main constructor. */
 	public FrontOffice() throws RemoteException{
 		
@@ -314,9 +319,25 @@ public class FrontOffice extends UnicastRemoteObject{
 		private JButton charterButton;
 		private JCalendar jCalendar;
 		private GregorianCalendar calendar;
-		private JTextField dateField;
+		
+		private JTextField dateNew;
+		private JTextField seatsNew;
+		private JComboBox originNew;
+		private JComboBox destinationNew;
+		private JTextArea confirmActionNew;		
+		
+		private JTextField cancelFlightID;
+		private JTextField cancelFlightSeat;
+		private JTextArea confirmActionCancel;
+		
+		private JTextField modifyFlightID;
+		private JTextField modifyFlightSeat;
+		private JComboBox destinationModify;
+		private JTextArea confirmActionModify;
 		
 		public BookingsMenu(){
+			
+			
 			/* Creates the buttons that redirect to each manager window. */
 			CreateButton("New Booking",Color.white,"Books a given flight",15,60,200,200,30);
 			CreateButton("Cancel Booking",Color.white,"Cancels a booking",15,60,250,200,30);
@@ -336,19 +357,47 @@ public class FrontOffice extends UnicastRemoteObject{
 			newPanel.setLayout(null);
 			newPanel.setBounds(new Rectangle(400, 40, 400, 400));
 			newPanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
-			newPanel.add(dateField = CreateBoxText(20,100,20,80,20));
-			dateField.setText("0/0/0");
+			newPanel.add(dateNew = CreateBoxText(20,100,20,80,20));
+			dateNew.setText("0/0/0");
 			newPanel.add(CreateButton("Choose Date",Color.white,"Choose flight date",15,60,50,120,30));
-			newPanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,350,120,30));
+			newPanel.add(CreateTitle("Origin:",Color.black,15,60,90,70,20));
+			try {
+				destinations = backOffice.getDestinations();
+				newPanel.add(originNew = CreateComboBox(120,90,120,20,destinations));
+				newPanel.add(CreateTitle("Destination:",Color.black,15,60,120,100,20));
+				newPanel.add(destinationNew = CreateComboBox(150,120,120,20,destinations));
+			} catch (RemoteException e) {
+				JOptionPane.showMessageDialog(null,"The back office is not available, please try again later");
+				newPanel.setVisible(false);
+				bookingsMenu.setVisible(false);
+				menu.setVisible(true);
+				
+			}
+			newPanel.add(CreateTitle("Seats:",Color.black,15,60,150,50,20));
+			newPanel.add(seatsNew = CreateBoxInt(20,120,150,50,20,0));
+			newPanel.add(confirmActionNew = CreateText(300,150,60,180,300,150));
+			newPanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,350,120,20));
 			
 			
 			cancelPanel.setLayout(null);
 			cancelPanel.setBounds(new Rectangle(400, 40, 400, 400));
-			cancelPanel.add(CreateButton("cancel",Color.white,"Search for a flight",15,60,100,200,30));
+			cancelPanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
+			cancelPanel.add(cancelFlightID = CreateBoxInt(20,140,20,80,20,0));
+			cancelPanel.add(CreateTitle("Flight seat:",Color.black,15,60,50,100,20));
+			cancelPanel.add(cancelFlightSeat = CreateBoxInt(20,140,50,80,20,0));
+			cancelPanel.add(confirmActionCancel = CreateText(300,150,60,90,300,150));
+			cancelPanel.add(CreateButton("Cancel Booking",Color.white,"Cancel Booking",15,60,260,200,30));
 			
 			modifyPanel.setLayout(null);
 			modifyPanel.setBounds(new Rectangle(400, 40, 400, 400));
-			modifyPanel.add(CreateButton("Go",Color.white,"Search for a flight",15,60,100,200,30));
+			modifyPanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
+			modifyPanel.add(modifyFlightID = CreateBoxInt(20,140,20,80,20,0));
+			modifyPanel.add(CreateTitle("Flight seat:",Color.black,15,60,50,100,20));
+			modifyPanel.add(modifyFlightSeat = CreateBoxInt(20,140,50,80,20,0));
+			modifyPanel.add(CreateTitle("New destination:",Color.black,15,60,80,120,20));
+			modifyPanel.add(destinationModify = CreateComboBox(170,80,120,20,destinations));
+			modifyPanel.add(confirmActionModify = CreateText(300,150,60,120,300,150));
+			modifyPanel.add(CreateButton("Confirm modification",Color.white,"Modify a booking",15,60,290,200,30));
 			
 			charterPanel.setLayout(null);
 			charterPanel.setBounds(new Rectangle(400, 40, 400, 400));
@@ -361,11 +410,12 @@ public class FrontOffice extends UnicastRemoteObject{
 			panel.add(charterPanel);
 			
 			
-			
 			newPanel.setVisible(false);
 			cancelPanel.setVisible(false);
 			modifyPanel.setVisible(false);
 			charterPanel.setVisible(false);
+			
+			
 		}
 		
 		/* This function is used when the user enters this menu.
@@ -431,7 +481,7 @@ public class FrontOffice extends UnicastRemoteObject{
 		public void propertyChange(PropertyChangeEvent evt) {
 			Calendar cal = jCalendar.getCalendar();
 			calendar = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
-			dateField.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
+			dateNew.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
 			
 		}
 	}

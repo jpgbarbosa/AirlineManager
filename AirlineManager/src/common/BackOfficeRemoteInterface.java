@@ -1,6 +1,7 @@
 package common;
 
 import java.rmi.*;
+import java.util.Vector;
 
 import messages.Feedback;
 
@@ -13,6 +14,8 @@ public interface BackOfficeRemoteInterface extends Remote{
 	abstract String registerOperator(String comp, String name, String addr, String phone, String mail,String password) throws RemoteException;
 	
 	abstract String loginOperator(String user, String pass) throws RemoteException;
+	
+	abstract Vector<String> getDestinations() throws RemoteException;
 	
 	
 }
