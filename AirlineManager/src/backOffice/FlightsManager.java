@@ -146,8 +146,8 @@ public class FlightsManager {
 			} else if(aux.getDate().after(beginning) && aux.getDate().before(end)){
 				total++;
 				sum+=aux.getOccupiedSeats()/aux.getAirplane().getNoSeats()*100;
-			} else {
-				
+			} else if(aux.getDate().after(end)) {
+				break;
 			}
 		}
 		return sum/total;
