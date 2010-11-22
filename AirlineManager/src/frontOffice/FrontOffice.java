@@ -26,16 +26,12 @@ import javax.swing.JTextField;
 
 import messages.Feedback;
 
-import common.BackOfficeRemoteInterface;
-import common.Constants;
-import common.Flight;
-import common.Search;
-import common.Window;
+import common.*;
 
 import com.toedter.calendar.JCalendar;;
 
 
-public class FrontOffice extends UnicastRemoteObject{
+public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemoteInterface{
 	/**
 	 * 
 	 */
@@ -563,7 +559,7 @@ public class FrontOffice extends UnicastRemoteObject{
 				displayP.setText(frontOffice.sendPositiveFeedBack(new Feedback("Positive",posMsgArea.getText())));	
 			}
 			else if (e.getComponent().getName().equals("Send ")){
-				displayN.setText(frontOffice.sendNegativeFeedBack(new Feedback("Negative",posMsgArea.getText())));
+				displayN.setText(frontOffice.sendNegativeFeedBack(new Feedback("Negative",negMsgArea.getText())));
 			}
 			
 		}
@@ -600,5 +596,12 @@ public class FrontOffice extends UnicastRemoteObject{
 				menu.setVisible(true);
 			}
 		}
+	}
+
+	@Override
+	public void sendMessage(String message) throws RemoteException {
+		// TODO Auto-generated method stub
+		System.out.println(message);
+		
 	}
 }
