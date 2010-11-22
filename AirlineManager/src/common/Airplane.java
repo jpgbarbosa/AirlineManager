@@ -1,14 +1,19 @@
 package common;
 
+import java.io.Serializable;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
-public class Airplane {
+public class Airplane implements Serializable{
 	/* The total amount of seats and the number of occupied seats.
 	 * This last parameter may be replaced by finding the size of
 	 * the list of clients in this flight.
 	 */
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/* The flight associated with this airplane. */
 	private int noSeats;
 	private Vector <Flight> flights;
@@ -16,16 +21,24 @@ public class Airplane {
 	private int id;
 	private GregorianCalendar date;
 	
-	//TODO: This is temporary!
-	public static int idCreator = 0;
+	
 	
 	/* The constructor. */
 	public Airplane(int number, String company, String model){
 		this.company = company;
 		this.model = model;
 		this.flights = new Vector <Flight>();
-		
-		id = idCreator++;
+		id = 0;
+	}
+	
+	/*
+	 * Override
+	 * */
+	public boolean equals(Object a){
+		if(((Airplane) a).getId()==this.id){
+			return true;
+		}
+		return false;
 	}
 
 	public boolean associateFlight(Flight flight){

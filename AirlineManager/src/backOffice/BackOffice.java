@@ -3,8 +3,10 @@ package backOffice;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 import java.util.GregorianCalendar;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -23,14 +25,9 @@ import bookings.Booking;
 
 import messages.Feedback;
 
-import common.Airplane;
-import common.BackOfficeRemoteInterface;
-import common.Client;
-import common.Constants;
-import common.Flight;
-import common.Operator;
-import common.Search;
-import common.Window;
+import common.*;
+
+import org.prevayler.*;
 
 public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteInterface{
 	/**
@@ -75,6 +72,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		statisticsManagerMenu = new StatisticsManagerMenu();
 		loginMenu = new LoginMenu();
 		
+		
+		SnapshotTimer s=new SnapshotTimer(planesManager.getPrevayler(),flightsManager.getPrevayler());
 	}
 	
 	public static void main(String[] args) throws RemoteException {
@@ -82,7 +81,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		BackOffice backOffice = new BackOffice();
 		try {
-    	
+			System.getProperties().put("java.security.policy", "policy.all");
+    		System.setSecurityManager(new RMISecurityManager());
+    		
 			Registry r = LocateRegistry.createRegistry(2000);
 			r.rebind("AirlineManager", backOffice);
 			System.out.println("RMI ready.");
@@ -135,7 +136,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		if (month == 2){
 			boolean leapYear;
 			
-			/* Verifires whether we are in a leap year or not. */
+			/* Verifies whether we are in a leap year or not. */
 			if (year % 400 == 0){
 				leapYear = true;
 			}
@@ -290,14 +291,12 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			/* Defines the subpanels. */
 			positivePanel.setLayout(null);
 			positivePanel.setBounds(new Rectangle(400, 40, 500, 400));
-			positivePanel.add(CreateButton("List",Color.white,"Search for a flight",15,275,20,200,30));
 			positivePanel.add(CreateTitle("Positive Feedback Messages:",Color.black,15,20,20,200,20));
 			positivePanel.add(posMsgArea = CreateText(10,50,40,60,350,320));
 			posMsgArea.enableInputMethods(false);
 			
 			negativePanel.setLayout(null);
 			negativePanel.setBounds(new Rectangle(400, 40, 500, 400));
-			negativePanel.add(CreateButton("List ",Color.white,"Search for a flight",15,275,20,200,30));
 			negativePanel.add(CreateTitle("Negative Feedback Messages:",Color.black,15,20,20,200,20));
 			negativePanel.add(negMsgArea = CreateText(10,50,40,60,350,320));
 			negMsgArea.enableInputMethods(false);
@@ -349,12 +348,24 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				sendPanel.setVisible(false);
 				positivePanel.setVisible(true);
 				toPanel.setVisible(false);
+				//Positive List Button
+				posMsgArea.setText("");
+				
+				for(Feedback f: feedBackManager.getPositiveFeedBackList()){
+					posMsgArea.append(f.getMessageContents()+"\n--------------------------\n");
+				}
 			}
 			else if(e.getComponent().getName().equals("Negative Feedback")){
 				negativePanel.setVisible(true);
 				sendPanel.setVisible(false);
 				positivePanel.setVisible(false);
 				toPanel.setVisible(false);
+				negMsgArea.setText("");
+				
+				
+				for(Feedback f: feedBackManager.getNegativeFeedBackList()){
+					negMsgArea.append(f.getMessageContents()+"\n--------------------------\n");
+				}
 			}
 			else if(e.getComponent().getName().equals("Send Notifications")){
 				negativePanel.setVisible(false);
@@ -369,26 +380,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				toPanel.setVisible(false);
 				feedBackManagerMenu.setVisible(false);
 				menu.setVisible(true);
-			}else if(e.getComponent().getName().equals("List ")){
-				//Negative List Button
-				Vector <Feedback> negaList = feedBackManager.getNegativeFeedBackList();
-				
-				negMsgArea.setText("");
-				
-				
-				for(Feedback f: negaList){
-					negMsgArea.append(f.getMessageContents()+"\n--------------------------\n");
-				}
-			}else if(e.getComponent().getName().equals("List")){
-				//Positive List Button
-				Vector <Feedback> posiList = feedBackManager.getPositiveFeedBackList();
-				
-				posMsgArea.setText("");
-				
-				
-				for(Feedback f: posiList){
-					negMsgArea.append(f.getMessageContents()+"\n--------------------------\n");
-				}
 			
 			}else if(e.getComponent().getName().equals("Send To...")){
 				
@@ -957,6 +948,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	 */
 	@Override
 	public void sendNegativeFeedback(Feedback feedback) throws RemoteException {
+		System.out.println(" "+feedback.getMessageContents());
+		
 		feedBackManager.insertNegativeFeedback(feedback);
 		
 	}
@@ -967,6 +960,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	 */
 	@Override
 	public void sendPositiveFeedback(Feedback feedback) throws RemoteException {
+		System.out.println(" "+feedback.getMessageContents());
 		feedBackManager.insertPositiveFeedback(feedback);
 		
 	}
@@ -982,9 +976,37 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	/* Check if the username and password are correct */
 	@Override
 	public String loginOperator(String user, String pass) throws RemoteException {
+		
 		return operatorManager.loginOperator(user,pass);
 		
 	}
 	
 	
 }
+
+
+
+class SnapshotTimer extends Thread {
+    Prevayler planesPrevayler,flightsPrevayler; 
+ 
+    public SnapshotTimer(Prevayler planesPrevayler, Prevayler flightsPrevayler) {
+       this.planesPrevayler = planesPrevayler;
+       this.flightsPrevayler=flightsPrevayler;
+    } 
+ 
+    public void run() { 
+       super.run(); 
+ 
+       try {
+           while (true) { 
+               Thread.sleep(2000); // makes snapshots to the DB every 2 seconds
+               planesPrevayler.takeSnapshot();
+               flightsPrevayler.takeSnapshot();
+           }
+       } catch (InterruptedException e) { 
+    	   System.out.println("Deu Bode"); 
+       } catch (IOException e) {
+           System.out.println("Deu Bode"); 
+       }
+    } 
+ }
