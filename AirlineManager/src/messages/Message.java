@@ -1,8 +1,13 @@
 package messages;
 
+import java.io.Serializable;
 import java.util.GregorianCalendar;
 
-public abstract class Message {
+public abstract class Message implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/* The contents of the message. */
 	protected String messageContents;
 	protected GregorianCalendar date;
