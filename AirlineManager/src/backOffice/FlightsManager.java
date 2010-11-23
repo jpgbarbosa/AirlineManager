@@ -1,9 +1,12 @@
 package backOffice;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 import org.prevayler.*;
+
+import bookings.Booking;
 
 import common.Airplane;
 import common.Flight;
@@ -91,8 +94,18 @@ public class FlightsManager {
 	/* Cancels a specific flight.  */
 	public void cancelFlight(Flight flight){
 		/*
-		 * TODO: Change and Warn passengers!!
+		 * DONE: Change and Warn passengers!!
 		 */
+		GregorianCalendar calendar=flight.getDate();
+		for(Booking r: flight.getSeats()){
+			FeedBackManager.sendNotificationUser(r.getClient(), "Notification", 
+					"The Flight "+flight.getId()+" with destination to "+ flight.getDestiny()+", in "+ 
+					calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
+					calendar.get(Calendar.HOUR_OF_DAY)+":"+(calendar.get(Calendar.MINUTE)+1)+ 
+					", was cancelled.\nWe are deeply sorry for all the trouble that might incur.");
+				
+		}
+			
 		
 		this.removeFlight(flight);
 	}

@@ -40,7 +40,7 @@ public class FeedBackManager {
 	}
 	
 	/* Sends a notification to a specific client. */
-	public boolean sendNotificationUser (Client client, String type, String content){
+	public static boolean sendNotificationUser (Client client, String type, String content){
 		//TODO: send e-mail
 		
 		try {
@@ -57,7 +57,7 @@ public class FeedBackManager {
 	}
 	
 	/* Sends a notification to all the clients. */
-	public void sendNotificationAll(Vector <Client> listaClientes, String type, String content){
+	public static void sendNotificationAll(Vector <Client> listaClientes, String type, String content){
 		
 		
 		for(Client c : listaClientes){
