@@ -1,5 +1,6 @@
 package common;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Vector;
@@ -28,6 +29,19 @@ public class Flight {
 		date = data;
 		
 		id = idCreator++;
+	}
+	
+	/*Override .equals()*/
+	public boolean equals(Object obj){
+		Flight f=(Flight) obj;
+		if(airplane.getId()==f.getAirplane().getId()&&destiny.equals(f.getDestiny())){
+			if(date.get(Calendar.DAY_OF_YEAR)==f.getDate().get(Calendar.DAY_OF_YEAR)&&
+					date.get(Calendar.YEAR)==f.getDate().get(Calendar.YEAR)&&
+					date.get(Calendar.HOUR)==f.getDate().get(Calendar.HOUR))
+				return true;
+		}
+		
+		return false;
 	}
 	
 	/* Adds a new booking to the flight. */

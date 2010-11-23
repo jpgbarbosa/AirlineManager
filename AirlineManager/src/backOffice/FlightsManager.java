@@ -16,10 +16,12 @@ public class FlightsManager {
 	/* The list of all(?) the flights in the system. */
 	private Vector<Flight> flightsList;
 	private GregorianCalendar[] cancelledFlights;
+	public static int idCreator = 0;
 	private Prevayler prevayler;
 	public Prevayler getPrevayler() {
 		return prevayler;
 	}
+	
 	/* The constructor. */
 	public FlightsManager(){
 		super();
@@ -33,14 +35,12 @@ public class FlightsManager {
 			System.exit(0);
 		} 
 		flightsList=(Vector <Flight>) (prevayler.prevalentSystem());
-		
-		
-		
-		/*
-		 * if(FileManager.loadObjectFromFile("flightsList", flightsList) == null)
-		 		flightsList = new Vector<Flight>();
-		 		
-		 */
+		if(flightsList.size()>0)
+			for(Flight f : flightsList){
+				if(f.getId()>idCreator)
+					idCreator=f.getId()+1;
+			}
+	
 	}
 	
 	/**
@@ -52,13 +52,14 @@ public class FlightsManager {
 	 * Adds a flight in the flight list
 	 */
 	private void addFlight(int index, Flight flight){
-		
+		prevayler.execute(new addFlight(index,flight));
 	}
 	
 	/*
 	 * Removes a flight from the flight list
 	 */
 	private void removeFlight(Flight flight){
+		prevayler.execute(new removeFlight(flight));
 		
 	}
 	
@@ -68,6 +69,7 @@ public class FlightsManager {
 		int i;
 		boolean completed;
 		
+		flight.setId(idCreator++);
 		/* First, we check if we can insert in this specific plane. */
 		completed = plane.associateFlight(flight);
 		
