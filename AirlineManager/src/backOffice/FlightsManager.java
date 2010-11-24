@@ -1,22 +1,27 @@
 package backOffice;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 import org.prevayler.*;
 
+import bookings.Booking;
+
 import common.Airplane;
 import common.Flight;
-import common.FileManager;
 
 public class FlightsManager {
 	/* The list of all(?) the flights in the system. */
+	
 	private Vector<Flight> flightsList;
-	private GregorianCalendar[] cancelledFlights;
+	private Vector<Flight> finishedFlights;
+	public static int idCreator = 0;
 	private Prevayler prevayler;
 	public Prevayler getPrevayler() {
 		return prevayler;
 	}
+	
 	/* The constructor. */
 	public FlightsManager(){
 		super();
@@ -30,14 +35,12 @@ public class FlightsManager {
 			System.exit(0);
 		} 
 		flightsList=(Vector <Flight>) (prevayler.prevalentSystem());
-		
-		
-		
-		/*
-		 * if(FileManager.loadObjectFromFile("flightsList", flightsList) == null)
-		 		flightsList = new Vector<Flight>();
-		 		
-		 */
+		if(flightsList.size()>0)
+			for(Flight f : flightsList){
+				if(f.getId()>idCreator)
+					idCreator=f.getId()+1;
+			}
+	
 	}
 	
 	/**
@@ -49,22 +52,24 @@ public class FlightsManager {
 	 * Adds a flight in the flight list
 	 */
 	private void addFlight(int index, Flight flight){
-		
+		prevayler.execute(new addFlight(index,flight));
 	}
 	
 	/*
 	 * Removes a flight from the flight list
 	 */
 	private void removeFlight(Flight flight){
+		prevayler.execute(new removeFlight(flight));
 		
 	}
 	
 	/* Schedules a new flight. */
-	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String destiny){
-		Flight flight = new Flight(plane, date, destiny);
+	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String destination, boolean isRegular){
+		Flight flight = new Flight(plane, date, destination, isRegular);
 		int i;
 		boolean completed;
 		
+		flight.setId(idCreator++);
 		/* First, we check if we can insert in this specific plane. */
 		completed = plane.associateFlight(flight);
 		
@@ -91,8 +96,18 @@ public class FlightsManager {
 	/* Cancels a specific flight.  */
 	public void cancelFlight(Flight flight){
 		/*
-		 * TODO: Change and Warn passengers!!
+		 * DONE: Change and Warn passengers!!
 		 */
+		GregorianCalendar calendar=flight.getDate();
+		for(Booking r: flight.getSeats()){
+			FeedBackManager.sendNotificationUser(r.getClient(), "Notification", 
+					"The Flight "+flight.getId()+" with destination to "+ flight.getDestiny()+", in "+ 
+					calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
+					calendar.get(Calendar.HOUR_OF_DAY)+":"+(calendar.get(Calendar.MINUTE)+1)+ 
+					", was cancelled.\nWe are deeply sorry for all the trouble that might incur.");
+				
+		}
+			
 		
 		this.removeFlight(flight);
 	}

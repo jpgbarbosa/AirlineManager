@@ -1,5 +1,6 @@
 package common;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Vector;
@@ -10,24 +11,40 @@ public class Flight {
 	/* The list of bookings registered for this flight. */
 	private Vector <Booking> seats;
 	/* The list of waiting clients. */
-	private Vector <Booking> waitingList;
+	//private Vector <Booking> waitingList;
 	/* The airplane associated to this flight. */
 	private Airplane airplane;
 	private GregorianCalendar date;
-	private String destiny;
+	private String destination;
+	private boolean isRegular;
+	private boolean wasCancelled;
 	private int id;
 	
 	//TODO: This is temporary!
 	public static int idCreator = 0;
 	
 	/* The constructor. */
-	public Flight(Airplane plane, GregorianCalendar data, String dest){
+	public Flight(Airplane plane, GregorianCalendar data, String dest, boolean isRegular){
 		airplane = plane;
-		destiny = dest;
+		destination = dest;
 		seats = new Vector <Booking>();
 		date = data;
+		this.isRegular = isRegular;
 		
 		id = idCreator++;
+	}
+	
+	/*Override .equals()*/
+	public boolean equals(Object obj){
+		Flight f=(Flight) obj;
+		if(airplane.getId()==f.getAirplane().getId()&&destination.equals(f.getDestiny())){
+			if(date.get(Calendar.DAY_OF_YEAR)==f.getDate().get(Calendar.DAY_OF_YEAR)&&
+					date.get(Calendar.YEAR)==f.getDate().get(Calendar.YEAR)&&
+					date.get(Calendar.HOUR)==f.getDate().get(Calendar.HOUR))
+				return true;
+		}
+		
+		return false;
 	}
 	
 	/* Adds a new booking to the flight. */
@@ -38,16 +55,6 @@ public class Flight {
 	/* Removes a booking from the flight. */
 	public boolean removeBooking (Booking booking){
 		return seats.remove(booking);
-	}
-	
-	/* Adds a new booking to the waiting list. */
-	public void newBookingWaiting (Booking booking){
-		waitingList.add(booking);
-	}
-	
-	/* Removes a booking from the waiting list. */
-	public boolean removeBookingWaiting (Booking booking){
-		return waitingList.remove(booking);
 	}
 
 	/* Getters and setters. */
@@ -75,7 +82,7 @@ public class Flight {
 	}
 	
 	public String getDestiny() {
-		return destiny;
+		return destination;
 	}
 
 	public void setSeats(Vector <Booking> seats) {
@@ -95,7 +102,7 @@ public class Flight {
 	}
 	
 	public void setDestiny(String destiny) {
-		this.destiny= destiny;
+		this.destination= destiny;
 	}
 	
 	/* Checks whether is flight is full or not. */

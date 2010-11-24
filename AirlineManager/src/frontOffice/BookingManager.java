@@ -14,7 +14,6 @@ public class BookingManager {
 	public String bookFlight(Flight flight, Booking booking){
 		/* First, we need to check if we still have space in this flight. */
 		if (flight.isFull()){
-			flight.newBookingWaiting(booking);
 			return "This flight is full, the client was added to the waiting list.\n";
 		}
 		
@@ -28,9 +27,6 @@ public class BookingManager {
 		/* We have to first check */
 		if (flight.removeBooking(booking)){
 			return "The booking was removed from the fligh.\n";
-		}
-		else if (flight.removeBookingWaiting(booking)){
-			return "The booking was removed from waiting list of the fligh.\n";
 		}
 		
 		/* This booking wasn't found in any place. */

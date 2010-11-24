@@ -1,36 +1,46 @@
 package backOffice;
 
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
+import org.prevayler.Prevayler;
+import org.prevayler.PrevaylerFactory;
+import org.prevayler.Transaction;
+
 import messages.Feedback;
 
 import common.Client;
 import common.FileManager;
+import common.Flight;
 
 
 public class FeedBackManager {
-	/* The list messages (feed back) sent by the clients.
-	 * The feed back can be either positive or negative, so we use two lists
-	 * to keep them separated.
-	 */
-	private Vector <Feedback> positiveFeedBackList;
-	private Vector <Feedback> negativeFeedBackList;
+	private FeedBackStorage msgStorage;
+	private Prevayler prevayler;
+	public Prevayler getPrevayler() {
+		return prevayler;
+	}
+	
 	
 	/* The constructor. */
 	public FeedBackManager(){
-		//TODO: Later, we have to read it from a file.
-		if(FileManager.loadObjectFromFile("positiveFeedBackList", positiveFeedBackList) == null)
-			positiveFeedBackList = new Vector <Feedback>();
-		if(FileManager.loadObjectFromFile("negativeFeedBackList", negativeFeedBackList) == null)
-			negativeFeedBackList = new Vector <Feedback>();
+		try {
+			prevayler = PrevaylerFactory.createPrevayler(new FeedBackStorage(), "MessageStorage");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Something went really bad!");
+			System.exit(0);
+		} 
+		msgStorage=(FeedBackStorage) (prevayler.prevalentSystem());
 	}
 	
 	/* Sends a notification to a specific client. */
-	public boolean sendNotificationUser (Client client, String type, String content){
+	public static boolean sendNotificationUser (Client client, String type, String content){
 		//TODO: send e-mail
 		
 		try {
@@ -47,7 +57,7 @@ public class FeedBackManager {
 	}
 	
 	/* Sends a notification to all the clients. */
-	public void sendNotificationAll(Vector <Client> listaClientes, String type, String content){
+	public static void sendNotificationAll(Vector <Client> listaClientes, String type, String content){
 		
 		
 		for(Client c : listaClientes){
@@ -63,52 +73,93 @@ public class FeedBackManager {
 	
 	/* Inserts a new message in the positive feed back list. */
 	public void insertPositiveFeedback(Feedback feedBack){
-		positiveFeedBackList.add(feedBack);
+		prevayler.execute(new insertPositiveFeedback(feedBack));
 	}
 	
 	/* Inserts a new message in the negative feed back list. */
 	public void insertNegativeFeedback(Feedback feedBack) {
-		negativeFeedBackList.add(feedBack);
+		prevayler.execute(new insertNegativeFeedback(feedBack));
 	}
 	
 	/* Reads the positive feed back provided by the clients. */
 	public Vector <Feedback> getPositiveFeedBackList(){
-		return positiveFeedBackList;
+		return msgStorage.getPositiveFeedBackList();
 	}
 	
 	/* Reads the negative feed back provided by the clients. */
 	public Vector <Feedback> getNegativeFeedBackList(){
-		return negativeFeedBackList;
+		return msgStorage.getNegativeFeedBackList();
 	}
 	
 	public int getNumPositive(){
-		return positiveFeedBackList.size();
+		return msgStorage.getNumPositive();
 	}
 	
 	public int getNumPositive(GregorianCalendar beginning, GregorianCalendar end){
-		int num = 0;
-		
-		for(Feedback f:positiveFeedBackList){
-			if(f.getDate().after(beginning) && f.getDate().before(end))
-				num++;
-		}
-		
-		return num;
+		return msgStorage.getNumPositive(beginning, end);
 	}
 	
 	public int getNumNegative(){
-		return negativeFeedBackList.size();
+		return msgStorage.getNumNegative();
 	}
 	
 	public int getNumNegative(GregorianCalendar beginning, GregorianCalendar end){
-		int num = 0;
 		
-		for(Feedback f:negativeFeedBackList){
-			if(f.getDate().after(beginning) && f.getDate().before(end))
-				num++;
-		}
-		
-		return num;
+		return msgStorage.getNumNegative(beginning, end);
 	}
+	
+}
+
+class insertPositiveFeedback implements Transaction{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private Feedback msg;
+
+
+
+	public insertPositiveFeedback(Feedback msg){
+		this.msg=msg;
+		
+	}
+	
+	@Override
+	public void executeOn(Object arg0, Date arg1) {
+		
+		((FeedBackStorage)arg0).insertPositiveFeedback(msg);
+	}
+	
+	
+}
+
+class insertNegativeFeedback implements Transaction{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private Feedback msg;
+
+
+
+	public insertNegativeFeedback(Feedback msg){
+		this.msg=msg;
+		
+	}
+	
+	@Override
+	public void executeOn(Object arg0, Date arg1) {
+		
+		((FeedBackStorage)arg0).insertNegativeFeedback(msg);
+	}
+	
 	
 }
