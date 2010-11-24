@@ -10,12 +10,12 @@ import bookings.Booking;
 
 import common.Airplane;
 import common.Flight;
-import common.FileManager;
 
 public class FlightsManager {
 	/* The list of all(?) the flights in the system. */
+	
 	private Vector<Flight> flightsList;
-	private GregorianCalendar[] cancelledFlights;
+	private Vector<Flight> finishedFlights;
 	public static int idCreator = 0;
 	private Prevayler prevayler;
 	public Prevayler getPrevayler() {
@@ -64,8 +64,8 @@ public class FlightsManager {
 	}
 	
 	/* Schedules a new flight. */
-	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String destiny){
-		Flight flight = new Flight(plane, date, destiny);
+	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String destination, boolean isRegular){
+		Flight flight = new Flight(plane, date, destination, isRegular);
 		int i;
 		boolean completed;
 		

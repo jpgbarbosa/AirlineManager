@@ -612,7 +612,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						if (airplane != null){
 							GregorianCalendar date;
 							if (!destinyField.equals("") && (date = checkDate(year, month, day, hour, minute)) != null){
-								Flight flight = flightsManager.scheduleFlight(airplane, date, destiny);
+								//TODO: Passar um boolean no fim para distinguir voo regular de charter (isRegular)
+								Flight flight = flightsManager.scheduleFlight(airplane, date, destiny,true);
 								
 								if (flight == null){
 									//TODO: Maybe we can inform to which one.
