@@ -17,5 +17,7 @@ public interface BackOfficeRemoteInterface extends Remote{
 	
 	abstract Vector<String> getDestinations() throws RemoteException;
 	
+	abstract double getPrice(String orig, String dest) throws RemoteException;
+	
 	
 }
