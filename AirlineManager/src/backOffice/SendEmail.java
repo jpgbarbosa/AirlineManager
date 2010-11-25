@@ -40,7 +40,7 @@ public class SendEmail {
     
     public static void main(String[] args) throws Exception {
         // Send a test message
-        send("smtp.sapo.pt", 25, "airlinemanager@lalala.com", "danielafilipa@gmail.com",
+        send("smtp.sapo.pt", 25, "airlinemanager@lalala.com", "icorreia@student.dei.uc.pt",
              "Hello", "Hello, \n\n How are you ?");
     }
     /**
