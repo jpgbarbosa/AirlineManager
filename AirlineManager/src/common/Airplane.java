@@ -24,7 +24,8 @@ public class Airplane implements Serializable{
 	
 	
 	/* The constructor. */
-	public Airplane(int number, String company, String model){
+	public Airplane(int seatsNumber, String company, String model){
+		this.noSeats = seatsNumber;
 		this.company = company;
 		this.model = model;
 		this.flights = new Vector <Flight>();
@@ -107,6 +108,10 @@ public class Airplane implements Serializable{
 	
 	public GregorianCalendar getDate(){
 		return date;
+	}
+	
+	public String toString(){
+		return "ID: "+ id +"\nseats:";
 	}
 	
 }

@@ -18,6 +18,7 @@ public class Flight {
 	private String destination;
 	private boolean isRegular;
 	private boolean wasCancelled;
+	private boolean isClosed;
 	private int id;
 	
 	//TODO: This is temporary!
@@ -30,7 +31,8 @@ public class Flight {
 		seats = new Vector <Booking>();
 		date = data;
 		this.isRegular = isRegular;
-		
+		wasCancelled = false;
+		isClosed = false;
 		id = idCreator++;
 	}
 	
@@ -109,6 +111,7 @@ public class Flight {
 	public boolean isFull(){
 		/* We have no more seats on this flight. */
 		if (airplane.getNoSeats() - seats.size() == 0){
+			isClosed = true;
 			return true;
 		}
 		
@@ -119,5 +122,46 @@ public class Flight {
 	public int getOccupiedSeats() {
 		return seats.size();
 	}
+
+	public String getDestination() {
+		return destination;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+
+	public boolean isRegular() {
+		return isRegular;
+	}
+
+	public void setRegular(boolean isRegular) {
+		this.isRegular = isRegular;
+	}
+
+	public boolean isWasCancelled() {
+		return wasCancelled;
+	}
+
+	public void setWasCancelled(boolean wasCancelled) {
+		this.wasCancelled = wasCancelled;
+	}
+
+	public boolean isClosed() {
+		return isClosed;
+	}
+
+	public void setClosed(boolean isClosed) {
+		this.isClosed = isClosed;
+	}
+
+	public static int getIdCreator() {
+		return idCreator;
+	}
+	
+	public String toString(){
+		return "ID: "+ id + "\n";
+	}
+	
 	
 }

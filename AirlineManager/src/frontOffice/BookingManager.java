@@ -13,8 +13,14 @@ public class BookingManager {
 	/* Books a flight. */
 	public String bookFlight(Flight flight, Booking booking){
 		/* First, we need to check if we still have space in this flight. */
+		if(flight.isClosed()){
+			return "This flight is over, please choose another flight";
+		}
+		if(flight.isWasCancelled()){
+			return "This flight was cancelled, please choose another flight";
+		}
 		if (flight.isFull()){
-			return "This flight is full, the client was added to the waiting list.\n";
+			return "This flight is full, please choose another flight.\n";
 		}
 		
 		flight.newBooking(booking);
