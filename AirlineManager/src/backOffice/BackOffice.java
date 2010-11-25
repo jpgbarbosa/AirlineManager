@@ -972,12 +972,25 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	
 	@SuppressWarnings("serial")
 	private class StatisticsManagerMenu extends Window{
+		private JPanel statsPanel;
+		private JTextArea statArea;
 		public StatisticsManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
-			CreateButton("Statistics 1",Color.white,"Manage Airplanes",15,60,200,150,30);
-			CreateButton("Statistics 2",Color.white,"Manage Flights",15,60,250,150,30);
-
+			//CreateButton("Statistics 1",Color.white,"Manage Airplanes",15,60,200,150,30);
+			//CreateButton("Statistics 2",Color.white,"Manage Flights",15,60,250,150,30);
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
+			
+			/* Creates the subpanels */
+			statsPanel=new JPanel();
+			statsPanel.setLayout(null);
+			statsPanel.setBounds(new Rectangle(400, 40, 500, 400));
+			statsPanel.add(CreateTitle("Satistics:",Color.white,15,100,100,70,20));
+			statsPanel.add(statArea = CreateText(10,50,40,60,350,250));
+			statsPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,360,100,30));
+			
+			this.add(statsPanel);
+			
+			
 		}
 		
 		/* This function is used when the user enters this menu.
@@ -985,16 +998,16 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		 */
 		public void entry(){
 			setVisible(true);
-			/* As default, we have the Buy Plane Menu. */
-			//buyPanel.setVisible(true);
+			statsPanel.setVisible(true);
+			
 		}
 		
 		public void mouseReleased(MouseEvent e){
 			if(e.getComponent().getName().equals("Statistics 1")){
 				
 			}
-			else if(e.getComponent().getName().equals("Statistics 2")){
-				
+			else if(e.getComponent().getName().equals("Submit")){
+				statArea.setText(statisticsManager.generate(null, null));
 			}
 			else if (e.getComponent().getName().equals("Return")){
 				statisticsManagerMenu.setVisible(false);

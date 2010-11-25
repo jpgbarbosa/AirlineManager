@@ -210,6 +210,8 @@ public class FlightsManager {
 		for(Flight f:flightsList){
 			sum+=f.getOccupiedSeats()/f.getAirplane().getNoSeats()*100;
 		}
+		if (total==0)
+			return 0;
 		return sum/total;
 	}
 	
@@ -229,6 +231,8 @@ public class FlightsManager {
 				break;
 			}
 		}
+		if (total==0)
+			return 0;
 		return sum/total;
 	}
 	
