@@ -51,6 +51,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	private StatisticsManager statisticsManager;
 	private OperatorManager operatorManager;
 	private Search search;
+	private DestinationsPrices destinationsPrices;
 	
 	private Menu menu;
 	private FeedBackManagerMenu feedBackManagerMenu;
@@ -61,20 +62,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	
 	private Vector<Operator> operatorList;
 	
-	private Vector<String> destinations;
-	
 	/* The main constructor. */
 	public BackOffice() throws RemoteException{
 		super();
-		
-		/* TODO This is only temporary, we need to create a list of destinations */
-		destinations = new Vector<String>();
-		destinations.add("Lisbon");
-		destinations.add("Porto");
-		destinations.add("Faro");
-		destinations.add("London");
-		destinations.add("Paris");
-		destinations.add("Milan");
 		
 		feedBackManager = new FeedBackManager();
 		flightsManager = new FlightsManager();
@@ -82,6 +72,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		operatorManager = new OperatorManager();
 		statisticsManager = new StatisticsManager(feedBackManager, flightsManager, planesManager);
 		search = new Search(flightsManager, planesManager);
+		destinationsPrices = new DestinationsPrices();
 		
 		menu = new Menu();
 		feedBackManagerMenu = new FeedBackManagerMenu();
@@ -92,8 +83,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		
 		SnapshotTimer s=new SnapshotTimer(planesManager.getPrevayler(),flightsManager.getPrevayler());
-		
-		
 	}
 	
 	public static void main(String[] args) throws RemoteException {
@@ -216,10 +205,15 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		panel.add(planesManagerMenu);
 		panel.add(statisticsManagerMenu);
 		
-		/*menu.CreateImage("./src/imagens/furniture.jpg","Visite as nossas exposições!",250,100,500,340);
-		menu.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
+		//menu.CreateImage("./src/imagens/furniture.jpg","Visite as nossas exposições!",250,100,500,340);
+		loginMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		menu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		feedBackManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		flightsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		planesManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		statisticsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		
-		start.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
+		/*start.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
 		setup.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
 		seeds.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);*/
 		
@@ -312,13 +306,13 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			/* Defines the subpanels. */
 			positivePanel.setLayout(null);
 			positivePanel.setBounds(new Rectangle(400, 40, 500, 400));
-			positivePanel.add(CreateTitle("Positive Feedback Messages:",Color.black,15,20,20,200,20));
+			positivePanel.add(CreateTitle("Positive Feedback Messages:",Color.white,15,20,20,200,20));
 			positivePanel.add(posMsgArea = CreateText(10,50,40,60,350,320));
 			posMsgArea.enableInputMethods(false);
 			
 			negativePanel.setLayout(null);
 			negativePanel.setBounds(new Rectangle(400, 40, 500, 400));
-			negativePanel.add(CreateTitle("Negative Feedback Messages:",Color.black,15,20,20,200,20));
+			negativePanel.add(CreateTitle("Negative Feedback Messages:",Color.white,15,20,20,200,20));
 			negativePanel.add(negMsgArea = CreateText(10,50,40,60,350,320));
 			negMsgArea.enableInputMethods(false);
 			
@@ -326,17 +320,17 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			sendPanel.setLayout(null);
 			sendPanel.setBounds(new Rectangle(400, 40, 500, 400));
 			sendPanel.add(CreateButton("Send To...",Color.white,"Select the client",15,60,300,200,30));
-			sendPanel.add(CreateTitle("Notification:",Color.black,15,20,20,100,20));
+			sendPanel.add(CreateTitle("Notification:",Color.white,15,20,20,100,20));
 			sendPanel.add(messageToSend = CreateText(10,50,40,60,300,200));
 			
 			
 			toPanel.setLayout(null);
 			toPanel.setBounds(new Rectangle(400, 40, 500, 400));
 			toPanel.add(CreateButton("Send",Color.white,"Send to client",15,150,50,200,30));
-			toPanel.add(CreateTitle("Enter the client's email address:",Color.black,15,20,20,250,20));
+			toPanel.add(CreateTitle("Enter the client's email address:",Color.white,15,20,20,250,20));
 			toPanel.add(email = CreateText(10,50,270,20,200,20));
 			toPanel.add(CreateButton("Send To All",Color.white,"Send To All",15,150,150,200,30));
-			toPanel.add(CreateTitle("Enter the flightID to send to all client's with bookings:",Color.black,15,20,100,350,20));
+			toPanel.add(CreateTitle("Enter the flightID to send to all client's with bookings:",Color.white,15,20,100,350,20));
 			toPanel.add(flight = CreateText(10,50,370,100,100,20));
 			toPanel.add(CreateButton("Send To Turistic Operators",Color.white,"Send To Turistic Operators",15,130,260,220,30));
 			toPanel.add(display = CreateText(10,50,40,300,300,130));
@@ -351,9 +345,13 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			panel.add(toPanel);
 			
 			negativePanel.setVisible(false);
+			negativePanel.setOpaque(false);
 			sendPanel.setVisible(false);
+			sendPanel.setOpaque(false);
 			positivePanel.setVisible(false);
+			positivePanel.setOpaque(false);
 			toPanel.setVisible(false);
+			toPanel.setOpaque(false);
 			
 		}
 		
@@ -521,9 +519,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			schedulePanel.add(CreateTitle("ID Plane:",Color.black,15,60,120,70,20));
 			schedulePanel.add(idPlaneScheduleField = CreateBoxInt(20,135,120,50,20, 0));			
 			schedulePanel.add(CreateTitle("Origin:",Color.black,15,60,150,70,20));
-			schedulePanel.add(originSchedule = CreateComboBox(120,150,120,20,destinations));
+			schedulePanel.add(originSchedule = CreateComboBox(120,150,120,20,destinationsPrices.getDestinations()));
 			schedulePanel.add(CreateTitle("Destination:",Color.black,15,60,180,100,20));
-			schedulePanel.add(destinationSchedule = CreateComboBox(150,180,120,20,destinations));
+			schedulePanel.add(destinationSchedule = CreateComboBox(150,180,120,20,destinationsPrices.getDestinations()));
 			schedulePanel.add(CreateTitle("Regular Flight:",Color.black,15,60,210,100,20));
 			Vector<String> choice = new Vector<String>();
 			choice.add("Yes");
@@ -549,15 +547,15 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			cancelPanel.setLayout(null);
 			cancelPanel.setBounds(new Rectangle(400, 40, 500, 400));
-			cancelPanel.add(CreateTitle("Flight's ID:",Color.black,15,100,100,70,20));
+			cancelPanel.add(CreateTitle("Flight's ID:",Color.white,15,100,100,70,20));
 			cancelPanel.add(idFlightCancelPanel = CreateBoxInt(20,175,100,50,20, 0));
 			cancelPanel.add(confirmActionCancel = CreateText(400,150,60,150,400,150));
 			cancelPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,330,100,30));
 			
 			listPanel.setLayout(null);
 			listPanel.setBounds(new Rectangle(400, 40, 500, 400));
-			listPanel.add(CreateTitle("LIST OF FLIGHTS:",Color.black,15,20,20,150,20));
-			listPanel.add(CreateTitle("     ID      PLANE        DESTINY                     TIME",Color.black,15,20,40,400,20));
+			listPanel.add(CreateTitle("LIST OF FLIGHTS:",Color.white,15,20,20,150,20));
+			listPanel.add(CreateTitle("     ID      PLANE        DESTINY                     TIME",Color.white,15,20,40,400,20));
 			listPanel.add(listArea = CreateText(10,50,40,60,450,320));
 			
 			/* Adds the subpanels to the main panel. */
@@ -567,9 +565,13 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			panel.add(listPanel);
 			
 			reschedulePanel.setVisible(false);
+			reschedulePanel.setOpaque(false);
 			cancelPanel.setVisible(false);
+			cancelPanel.setOpaque(false);
 			listPanel.setVisible(false);
+			listPanel.setOpaque(false);
 			schedulePanel.setVisible(false);
+			schedulePanel.setOpaque(false);
 		}
 		
 		/* This function is used when the user enters this menu.
@@ -779,29 +781,29 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			/* Defines the subpanels. */
 			buyPanel.setLayout(null);
 			buyPanel.setBounds(new Rectangle(400, 40, 500, 400));
-			buyPanel.add(CreateTitle("No. Seats:",Color.black,15,100,100,70,20));
+			buyPanel.add(CreateTitle("No. Seats:",Color.white,15,100,100,70,20));
 			buyPanel.add(noSeatsField = CreateBoxInt(20,175,100,50,20, 0));
-			buyPanel.add(CreateTitle("Company:",Color.black,15,100,130,70,20));
+			buyPanel.add(CreateTitle("Company:",Color.white,15,100,130,70,20));
 			buyPanel.add(companyField = CreateBoxText(20,175,130,110,20));
-			buyPanel.add(CreateTitle("Model:",Color.black,15,100,160,70,20));
+			buyPanel.add(CreateTitle("Model:",Color.white,15,100,160,70,20));
 			buyPanel.add(modelField = CreateBoxText(20,175,160,110,20));
 			buyPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,330,100,30));
 			
 			sellPanel.setLayout(null);
 			sellPanel.setBounds(new Rectangle(400, 40, 500, 400));
-			sellPanel.add(CreateTitle("Plane's ID:",Color.black,15,100,100,70,20));
+			sellPanel.add(CreateTitle("Plane's ID:",Color.white,15,100,100,70,20));
 			sellPanel.add(idSellField = CreateBoxInt(20,175,100,50,20, 0));
 			sellPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,330,100,30));
 			
 			listPanel.setLayout(null);
 			listPanel.setBounds(new Rectangle(400, 40, 500, 400));
-			listPanel.add(CreateTitle("LIST OF FLIGHTS:",Color.black,15,20,20,150,20));
-			listPanel.add(CreateTitle("     ID    SEATS        COMPANY            MODEL",Color.black,15,20,40,400,20));
+			listPanel.add(CreateTitle("LIST OF FLIGHTS:",Color.white,15,20,20,150,20));
+			listPanel.add(CreateTitle("     ID    SEATS        COMPANY            MODEL",Color.white,15,20,40,400,20));
 			listPanel.add(listArea = CreateText(10,50,40,60,350,320));
 			
 			findPanel.setLayout(null);
 			findPanel.setBounds(new Rectangle(400, 40, 500, 400));
-			findPanel.add(CreateTitle("Plane's ID:",Color.black,15,100,70,70,20));
+			findPanel.add(CreateTitle("Plane's ID:",Color.white,15,100,70,70,20));
 			findPanel.add(idSearchField = CreateBoxInt(20,175,70,50,20,0));
 			findPanel.add(listArea = CreateText(10,50,60,100,320,150));
 			findPanel.add(CreateButton("Go",Color.white,"Search for a flight",15,100,300,200,30));
@@ -813,9 +815,13 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			panel.add(findPanel);
 			
 			buyPanel.setVisible(false);
+			buyPanel.setOpaque(false);
 			sellPanel.setVisible(false);
+			sellPanel.setOpaque(false);
 			listPanel.setVisible(false);
+			listPanel.setOpaque(false);
 			findPanel.setVisible(false);
+			findPanel.setOpaque(false);
 			
 		}
 		
@@ -977,9 +983,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		public LoginMenu(){
 			
 			/* The fields to insert the username and password. */
-			CreateTitle("Username: ",Color.black,15,90,200,90,20);
+			CreateTitle("Username: ",Color.white,15,90,200,90,20);
 			usernameField = CreateBoxText(20,175,200,90,20);
-			CreateTitle("Password: ",Color.black,15,90,230,90,20);
+			CreateTitle("Password: ",Color.white,15,90,230,90,20);
 			passwordField = CreateBoxPassword(20,175,230,90,20);
 			
 			logInfo = CreateText(10,10,500,110,275,150);
@@ -1057,12 +1063,144 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 
 	@Override
 	public Vector<String> getDestinations() throws RemoteException {
-		return destinations;
+		return destinationsPrices.getDestinations();
+	}
+	
+	@Override
+	public double getPrice(String orig, String dest) throws RemoteException {
+		
+		return destinationsPrices.getPrice(orig, dest);
 	}
 	
 	
 }
 
+class DestinationsPrices {
+	private double[][] table= new double[22][22];
+	private Vector<String> destinations;
+	
+	public DestinationsPrices(){
+		/* TODO This is only temporary, we need to create a list of destinations */
+		destinations = new Vector<String>();
+		destinations.add("Lisbon");
+		destinations.add("Porto");
+		destinations.add("Paris");
+		destinations.add("Milan");
+		destinations.add("Rome");
+		destinations.add("Amsterdam");
+		destinations.add("Madrid");
+		destinations.add("Barcelona");
+		destinations.add("Berlin");
+		destinations.add("London");
+		
+		table[0][1] = table[1][0] = 27.5;
+		table[0][2] = table[2][0] = 145.0;
+		table[0][3] = table[3][0] = 167.8;
+		table[0][4] = table[4][0] = 186.8;
+		table[0][5] = table[5][0] = 185.9;
+		table[0][6] = table[6][0] = 50.0;
+		table[0][7] = table[7][0] = 99.4;
+		table[0][8] = table[8][0] = 230.6;
+		table[0][9] = table[9][0] = 158.5;
+		/* * * * * * * * * * * * * * * */
+		table[1][2] = table[2][1] = 121.1;
+		table[1][3] = table[3][1] = 151.3;
+		table[1][4] = table[4][1] = 176.5;
+		table[1][5] = table[5][1] = 160.9;
+		table[1][6] = table[6][1] = 42.1;
+		table[1][7] = table[7][1] = 89.5;
+		table[1][8] = table[8][1] = 208.0;
+		table[1][9] = table[9][1] = 132.1;
+		/* * * * * * * * * * * * * * * */
+		table[2][3] = table[3][2] = 63.8;
+		table[2][4] = table[4][2] = 115.1;
+		table[2][5] = table[5][2] = 42.8;
+		table[2][6] = table[6][2] = 104.9;
+		table[2][7] = table[7][2] = 83.9;
+		table[2][8] = table[8][2] = 87.4;
+		table[2][9] = table[9][2] = 34.2;
+		/* * * * * * * * * * * * * * * */
+		table[3][4] = table[4][3] = 48.6;
+		table[3][5] = table[5][3] = 82.7;
+		table[3][6] = table[6][3] = 118.5;
+		table[3][7] = table[7][3] = 73.4;
+		table[3][8] = table[8][3] = 84.0;
+		table[3][9] = table[9][3] = 95.6;
+		/* * * * * * * * * * * * * * * */
+		table[4][5] = table[5][4] = 130.3;
+		table[4][6] = table[6][4] = 137.3;
+		table[4][7] = table[7][4] = 87.6;
+		table[4][8] = table[8][4] = 118.5;
+		table[4][9] = table[9][4] = 144.1;
+		/* * * * * * * * * * * * * * * */
+		table[5][6] = table[6][5] = 147.6;
+		table[5][7] = table[7][5] = 124.6;
+		table[5][8] = table[8][5] = 57.3;
+		table[5][9] = table[9][5] = 35.4;
+		/* * * * * * * * * * * * * * * */
+		table[6][7] = table[7][6] = 49.7;
+		table[6][8] = table[8][6] = 186.3;
+		table[6][9] = table[9][6] = 120.6;
+		/* * * * * * * * * * * * * * * */
+		table[7][8] = table[8][7] = 150.7;
+		table[7][9] = table[9][7] = 114.6;
+		/* * * * * * * * * * * * * * * */
+		table[8][9] = table[9][8] = 92.6;
+		
+	}
+	
+	public Vector<String> getDestinations(){
+		return destinations;
+	}
+	
+	public double getPrice(String orig, String dest){
+		int dep, arriv;
+		
+		dep = getNumber(orig);
+		arriv = getNumber(dest);
+		
+		if (dep != arriv && dep != -1 && arriv != -1)
+			return table[dep][arriv];
+		
+		return 0;
+	}
+	
+	public int getNumber(String city){
+		
+		if (city.equals("Lisbon")){
+			return 0;
+		}
+		else if (city.equals("Porto")){
+			return 1;
+		}
+		else if (city.equals("Paris")){
+			return 2;
+		}
+		else if (city.equals("Milan")){
+			return 3;
+		}
+		else if (city.equals("Rome")){
+			return 4;
+		}
+		else if (city.equals("Amsterdam")){
+			return 5;
+		}
+		else if (city.equals("Madrid")){
+			return 6;
+		}
+		else if (city.equals("Barcelona")){
+			return 7;
+		}
+		else if (city.equals("Berlin")){
+			return 8;
+		}
+		else if (city.equals("London")){
+			return 9;
+		}
+		
+		return -1;
+	}
+}
 
 
 class SnapshotTimer extends Thread {
