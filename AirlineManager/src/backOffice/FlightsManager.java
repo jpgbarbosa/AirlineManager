@@ -74,6 +74,7 @@ public class FlightsManager {
 		int i;
 		boolean completed;
 		
+		
 		flight.setId(idCreator++);
 		/* First, we check if we can insert in this specific plane. */
 		completed = plane.associateFlight(flight);
@@ -89,6 +90,13 @@ public class FlightsManager {
 			/* We insert it in the last position. */
 			if (i == flightsList.size()){
 				addFlight(i,flight);
+			}
+			
+			if(isRegular){
+				//TODO: Alterar origin
+				String origin = "lulz";
+				RFlight rflight = new RFlight(origin, destination);
+				regularFlights.put(date.DAY_OF_WEEK, rflight);
 			}
 			
 			return flight;
