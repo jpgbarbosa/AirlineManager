@@ -126,10 +126,10 @@ public class FrontOffice extends UnicastRemoteObject{
 		panel.add(sendFeedBackMenu);
 		panel.add(searchMenu);
 		
-		menu.CreateImage("./src/images/takeoff.jpg","",0,0,990,570);
+		/*menu.CreateImage("./src/images/takeoff.jpg","",0,0,990,570);
 		bookingsMenu.CreateImage("./src/images/takeoff.jpg","",0,0,990,570);
 		sendFeedBackMenu.CreateImage("./src/images/takeoff.jpg","",0,0,990,570);
-		searchMenu.CreateImage("./src/images/takeoff.jpg","",0,0,990,570);
+		searchMenu.CreateImage("./src/images/takeoff.jpg","",0,0,990,570);*/
 		
 		/* Sets all the windows invisible, except, naturally, the main menu. */
 		menu.setVisible(true);

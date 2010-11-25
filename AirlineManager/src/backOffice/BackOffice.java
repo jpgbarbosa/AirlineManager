@@ -206,12 +206,12 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		panel.add(statisticsManagerMenu);
 		
 		//menu.CreateImage("./src/imagens/furniture.jpg","Visite as nossas exposições!",250,100,500,340);
-		loginMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		/*loginMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		menu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		feedBackManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		flightsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		planesManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
-		statisticsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		statisticsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);*/
 		
 		/*start.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
 		setup.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
@@ -586,6 +586,14 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		}
 		
 		public void mouseReleased(MouseEvent e){
+			String [] dateFields = null;
+			int day;
+			int month;
+			int year;
+			int hour;
+			int minute;
+			int idPlane;
+			String destination;
 			if(e.getComponent().getName().equals("Schedule Flight")){
 				reschedulePanel.setVisible(false);
 				cancelPanel.setVisible(false);
@@ -656,16 +664,15 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 					 * se há concordância no avião, se não há outro voo para o mesmo
 					 * avião demasiado ao pé e coisas do género.
 					 */
-					System.out.println("OOO");
 					try{
-						String [] dateFields = scheduleDate.getText().split("/");
+						dateFields = scheduleDate.getText().split("/");
 						
-						int day = Integer.parseInt(dateFields[0]);
-						int month = Integer.parseInt(dateFields[1]);
-						int year = Integer.parseInt(dateFields[2]);
-						int hour = Integer.parseInt(hourFieldSchedule.getText());
-						int minute = Integer.parseInt(minuteFieldSchedule.getText());
-						int idPlane = Integer.parseInt(idPlaneScheduleField.getText());
+						day = Integer.parseInt(dateFields[0]);
+						month = Integer.parseInt(dateFields[1]);
+						year = Integer.parseInt(dateFields[2]);
+						hour = Integer.parseInt(hourFieldSchedule.getText());
+						minute = Integer.parseInt(minuteFieldSchedule.getText());
+						idPlane = Integer.parseInt(idPlaneScheduleField.getText());
 						String destiny = destinyFieldSchedule.getText();
 						
 						Airplane airplane = search.searchPlane(idPlane);
@@ -699,7 +706,16 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 					
 				}
 				else if (menuIdentifier.equals("reschedulePanel")){
-					
+					/* TODO: */
+					//flightsManager
+					dateFields = rescheduleDate.getText().split("/");
+					day = Integer.parseInt(dateFields[0]);
+					month = Integer.parseInt(dateFields[1]);
+					year = Integer.parseInt(dateFields[2]);
+					hour = Integer.parseInt(hourFieldSchedule.getText());
+					minute = Integer.parseInt(minuteFieldSchedule.getText());
+					idPlane = Integer.parseInt(idPlaneScheduleField.getText());
+					destination = destinyFieldSchedule.getText();
 				}
 				else if (menuIdentifier.equals("cancelPanel")){
 					//TODO: Eventualmente protecções.
@@ -761,6 +777,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		/* FINDPANEL VARIABLES */
 		private JTextField idSearchField;
 		private JTextArea searchArea;
+		private JTextArea findArea;
 		
 		public PlanesManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
@@ -787,26 +804,26 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			buyPanel.add(companyField = CreateBoxText(20,175,130,110,20));
 			buyPanel.add(CreateTitle("Model:",Color.white,15,100,160,70,20));
 			buyPanel.add(modelField = CreateBoxText(20,175,160,110,20));
-			buyPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,330,100,30));
+			buyPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,330,100,30));
 			
 			sellPanel.setLayout(null);
 			sellPanel.setBounds(new Rectangle(400, 40, 500, 400));
 			sellPanel.add(CreateTitle("Plane's ID:",Color.white,15,100,100,70,20));
 			sellPanel.add(idSellField = CreateBoxInt(20,175,100,50,20, 0));
-			sellPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,330,100,30));
+			sellPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,330,100,30));
 			
 			listPanel.setLayout(null);
 			listPanel.setBounds(new Rectangle(400, 40, 500, 400));
 			listPanel.add(CreateTitle("LIST OF FLIGHTS:",Color.white,15,20,20,150,20));
 			listPanel.add(CreateTitle("     ID    SEATS        COMPANY            MODEL",Color.white,15,20,40,400,20));
-			listPanel.add(listArea = CreateText(10,50,40,60,350,320));
+			listPanel.add(listArea = CreateText(10,50,40,60,350,280));
 			
 			findPanel.setLayout(null);
 			findPanel.setBounds(new Rectangle(400, 40, 500, 400));
 			findPanel.add(CreateTitle("Plane's ID:",Color.white,15,100,70,70,20));
 			findPanel.add(idSearchField = CreateBoxInt(20,175,70,50,20,0));
-			findPanel.add(listArea = CreateText(10,50,60,100,320,150));
-			findPanel.add(CreateButton("Go",Color.white,"Search for a flight",15,100,300,200,30));
+			findPanel.add(findArea = CreateText(10,50,60,100,320,150));
+			findPanel.add(CreateButton("Search Flight",Color.white,"Search for a flight",15,100,300,200,30));
 			
 			/* Adds the subpanels to the main panel. */
 			panel.add(buyPanel);
@@ -880,6 +897,17 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				logInfo.setText("");
 				menuIdentifier = "findPanel";
 			}
+			else if(e.getComponent().getName().equals("Search Flight")){
+				Airplane airplane = null;
+				try{
+					int flightID = Integer.parseInt(idSearchField.getText());
+					airplane = search.searchPlane(flightID);
+					findArea.append(airplane.getId() + "              " + airplane.getNoSeats() + "\t         " + airplane.getCompany() + "\t                   " + airplane.getModel() + "\n");
+					
+				} catch (Exception e1){
+					logInfo.setText("Invalid data.");
+				}
+			}
 			else if ((e.getComponent().getName().equals("Submit"))){
 				/* We are inside one of the filling forms. */
 				if (menuIdentifier.equals("buyPanel")){
@@ -925,9 +953,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 					else if (airplane == null){
 						logInfo.setText("Plane not found.");
 					}
-				}
-				else if (menuIdentifier.equals("findPanel")){
-					
 				}
 			}
 			else if (e.getComponent().getName().equals("Return")){
