@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 import org.prevayler.*;
 
@@ -22,7 +23,7 @@ public class FlightsManager {
 	private Vector<Flight> finishedFlights;
 	public static int idCreator = 0;
 	private Prevayler prevayler;
-	private Hashtable<Integer, RFlight> regularFlights;
+	private Hashtable<Integer, Vector<RFlight>> regularFlights;
 	public Prevayler getPrevayler() {
 		return prevayler;
 	}
@@ -80,6 +81,17 @@ public class FlightsManager {
 		completed = plane.associateFlight(flight);
 		
 		if (completed){
+			if(isRegular){
+				//TODO: Alterar origin
+				RFlight rflight = new RFlight(origin, destination);
+				Vector<RFlight> aux = regularFlights.get(date.DAY_OF_WEEK);
+				for(i=0;i<aux.size();i++){
+					if(aux.get(i).getOrigin()==origin && aux.get(i).getDestination()==destination)
+						return null;
+				}
+				regularFlights.get(date.DAY_OF_WEEK).add(rflight);
+			}
+			
 			/* Inserts the flight ordered by date. */
 			for (i = 0; i < flightsList.size(); i++){
 				if (flightsList.get(i).getDate().after(flight.getDate())){
@@ -90,12 +102,6 @@ public class FlightsManager {
 			/* We insert it in the last position. */
 			if (i == flightsList.size()){
 				addFlight(i,flight);
-			}
-			
-			if(isRegular){
-				//TODO: Alterar origin
-				RFlight rflight = new RFlight(origin, destination);
-				regularFlights.put(date.DAY_OF_WEEK, rflight);
 			}
 			
 			return flight;
