@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 import org.prevayler.*;
 
@@ -22,7 +23,7 @@ public class FlightsManager {
 	private Vector<Flight> finishedFlights;
 	public static int idCreator = 0;
 	private Prevayler prevayler;
-	private Hashtable<Integer, RFlight> regularFlights;
+	private Hashtable<Integer, Vector<RFlight>> regularFlights;
 	public Prevayler getPrevayler() {
 		return prevayler;
 	}
@@ -69,16 +70,28 @@ public class FlightsManager {
 	}
 	
 	/* Schedules a new flight. */
-	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String destination, boolean isRegular){
+	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String origin, String destination, boolean isRegular){
 		Flight flight = new Flight(plane, date, destination, isRegular);
 		int i;
 		boolean completed;
+		
 		
 		flight.setId(idCreator++);
 		/* First, we check if we can insert in this specific plane. */
 		completed = plane.associateFlight(flight);
 		
 		if (completed){
+			if(isRegular){
+				//TODO: Alterar origin
+				RFlight rflight = new RFlight(origin, destination);
+				Vector<RFlight> aux = regularFlights.get(date.DAY_OF_WEEK);
+				for(i=0;i<aux.size();i++){
+					if(aux.get(i).getOrigin()==origin && aux.get(i).getDestination()==destination)
+						return null;
+				}
+				regularFlights.get(date.DAY_OF_WEEK).add(rflight);
+			}
+			
 			/* Inserts the flight ordered by date. */
 			for (i = 0; i < flightsList.size(); i++){
 				if (flightsList.get(i).getDate().after(flight.getDate())){
@@ -119,21 +132,19 @@ public class FlightsManager {
 	
 	/* Changes a flight's information. */
 	public void reScheduleFlight(Flight flight, GregorianCalendar date, Airplane plane){
-		int index;
 		if(date!=null){
 			flight.setDate(date);
+			/* TODO: Warn Clients!! */
+			GregorianCalendar calendar=flight.getDate();
+			for(Booking r: flight.getSeats()){
+				FeedBackManager.sendNotificationUser(r.getClient(), "Notification", 
+						"The Flight "+flight.getId()+" with destination to "+ flight.getDestiny()+", in "+ 
+						calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
+						calendar.get(Calendar.HOUR_OF_DAY)+":"+(calendar.get(Calendar.MINUTE)+1)+ 
+						", was rescheduled.\nWe are deeply sorry for all the trouble that might incur.");
+					
+			}
 		}
-		if(plane != null){
-			flight.getAirplane().getFlights().remove(flight);
-			flight.setAirplane(plane);
-			plane.getFlights().add(flight);
-			/* TODO: Change fields like this may lead to some problems. Check!*/
-			/* TODO: Check!*/
-			/* TODO: Check!*/
-			/* TODO: Check!*/
-		}
-		
-		/* TODO: Warn Clients!! */
 	}
 	
 	/**

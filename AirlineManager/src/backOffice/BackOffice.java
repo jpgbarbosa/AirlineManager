@@ -40,6 +40,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	public static GregorianCalendar now;
 
 	/* The main panel. */
 	private JPanel panel = new JPanel();
@@ -83,6 +85,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		
 		SnapshotTimer s=new SnapshotTimer(planesManager.getPrevayler(),flightsManager.getPrevayler());
+		TimeThread timeThread= new TimeThread(1);
 	}
 	
 	public static void main(String[] args) throws RemoteException {
@@ -173,7 +176,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			}
 		}
 		
-		GregorianCalendar now = new GregorianCalendar();
+		//GregorianCalendar now = new GregorianCalendar();
 		GregorianCalendar date = new GregorianCalendar(year,month - 1,day,hour,minute);
 		
 		/* This is an old date. */
@@ -673,7 +676,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						hour = Integer.parseInt(hourFieldSchedule.getText());
 						minute = Integer.parseInt(minuteFieldSchedule.getText());
 						idPlane = Integer.parseInt(idPlaneScheduleField.getText());
-						String destiny = destinyFieldSchedule.getText();
 						
 						Airplane airplane = search.searchPlane(idPlane);
 						
@@ -681,7 +683,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 							GregorianCalendar date;
 							if (!destinyFieldSchedule.equals("") && (date = checkDate(year, month, day, hour, minute)) != null){
 								//TODO: Passar um boolean no fim para distinguir voo regular de charter (isRegular)
-								Flight flight = flightsManager.scheduleFlight(airplane, date, destiny,true);
+								Flight flight = flightsManager.scheduleFlight(airplane, date, originSchedule.getSelectedItem().toString(), destinationSchedule.getSelectedItem().toString(),regularSchedule.getSelectedItem().toString()=="Yes"?true:false);
 								
 								if (flight == null){
 									//TODO: Maybe we can inform to which one.
@@ -1227,6 +1229,44 @@ class DestinationsPrices {
 	}
 }
 
+class TimeThread extends Thread {
+    private int mult;
+    
+  
+	public TimeThread(int mult) {
+		synchronized(BackOffice.now){
+	    	FileManager.loadObjectFromFile("Calendario", BackOffice.now);
+	    	if(BackOffice.now==null)
+	    		BackOffice.now=new GregorianCalendar();
+		}
+       this.mult=mult;
+       
+       this.start();
+       
+    } 
+ 
+    public void run() { 
+    	while(true){
+    		try {
+				Thread.sleep(1000/mult);
+				synchronized(BackOffice.now){
+					BackOffice.now.set(Calendar.MINUTE, (BackOffice.now.get(Calendar.MINUTE)+1));
+					FileManager.saveObjectToFile("Calendario", BackOffice.now);
+				}
+				
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+      
+    } 
+    
+
+
+	
+    
+ }
 
 class SnapshotTimer extends Thread {
     Prevayler planesPrevayler,flightsPrevayler; 
@@ -1241,7 +1281,7 @@ class SnapshotTimer extends Thread {
  
        try {
            while (true) { 
-               Thread.sleep(2000); // makes snapshots to the DB every 2 seconds
+               Thread.sleep(1000); // makes snapshots to the DB every 2 seconds
                planesPrevayler.takeSnapshot();
                flightsPrevayler.takeSnapshot();
            }
