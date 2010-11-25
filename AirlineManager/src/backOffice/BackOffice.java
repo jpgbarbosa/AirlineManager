@@ -81,11 +81,14 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		destinations = new Vector<String>();
 		destinations.add("Lisbon");
 		destinations.add("Porto");
-		destinations.add("Faro");
-		destinations.add("London");
 		destinations.add("Paris");
 		destinations.add("Milan");
-		
+		destinations.add("Rome");
+		destinations.add("Amsterdam");
+		destinations.add("Madrid");
+		destinations.add("Barcelona");
+		destinations.add("Berlin");
+		destinations.add("London");
 	}
 	
 	public static void main(String[] args) throws RemoteException {
@@ -208,10 +211,15 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		panel.add(planesManagerMenu);
 		panel.add(statisticsManagerMenu);
 		
-		/*menu.CreateImage("./src/imagens/furniture.jpg","Visite as nossas exposições!",250,100,500,340);
-		menu.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
+		//menu.CreateImage("./src/imagens/furniture.jpg","Visite as nossas exposições!",250,100,500,340);
+		loginMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		menu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		feedBackManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		flightsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		planesManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		statisticsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		
-		start.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
+		/*start.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
 		setup.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
 		seeds.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);*/
 		
@@ -612,7 +620,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						if (airplane != null){
 							GregorianCalendar date;
 							if (!destinyField.equals("") && (date = checkDate(year, month, day, hour, minute)) != null){
-								Flight flight = flightsManager.scheduleFlight(airplane, date, destiny);
+								//TODO: Passar um boolean no fim para distinguir voo regular de charter (isRegular)
+								Flight flight = flightsManager.scheduleFlight(airplane, date, destiny,true);
 								
 								if (flight == null){
 									//TODO: Maybe we can inform to which one.
@@ -918,9 +927,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		public LoginMenu(){
 			
 			/* The fields to insert the username and password. */
-			CreateTitle("Username: ",Color.black,15,90,200,90,20);
+			CreateTitle("Username: ",Color.white,15,90,200,90,20);
 			usernameField = CreateBoxText(20,175,200,90,20);
-			CreateTitle("Password: ",Color.black,15,90,230,90,20);
+			CreateTitle("Password: ",Color.white,15,90,230,90,20);
 			passwordField = CreateBoxPassword(20,175,230,90,20);
 			
 			logInfo = CreateText(10,10,500,110,275,150);
@@ -1002,6 +1011,126 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	
 }
 
+class DestinationsPrices {
+	double[][] table= new double[22][22];
+
+	/* Using the list by this order:
+		destinations.add("Lisbon");
+		destinations.add("Porto");
+		destinations.add("Paris");
+		destinations.add("Milan");
+		destinations.add("Rome");
+		destinations.add("Amsterdam");
+		destinations.add("Madrid");
+		destinations.add("Barcelona");
+		destinations.add("Berlin");
+		destinations.add("London");
+	*/
+	public DestinationsPrices(){
+		table[0][1] = table[1][0] = 27.5;
+		table[0][2] = table[2][0] = 145.0;
+		table[0][3] = table[3][0] = 167.8;
+		table[0][4] = table[4][0] = 186.8;
+		table[0][5] = table[5][0] = 185.9;
+		table[0][6] = table[6][0] = 50.0;
+		table[0][7] = table[7][0] = 99.4;
+		table[0][8] = table[8][0] = 230.6;
+		table[0][9] = table[9][0] = 158.5;
+		/* * * * * * * * * * * * * * * */
+		table[1][2] = table[2][1] = 121.1;
+		table[1][3] = table[3][1] = 151.3;
+		table[1][4] = table[4][1] = 176.5;
+		table[1][5] = table[5][1] = 160.9;
+		table[1][6] = table[6][1] = 42.1;
+		table[1][7] = table[7][1] = 89.5;
+		table[1][8] = table[8][1] = 208.0;
+		table[1][9] = table[9][1] = 132.1;
+		/* * * * * * * * * * * * * * * */
+		table[2][3] = table[3][2] = 63.8;
+		table[2][4] = table[4][2] = 115.1;
+		table[2][5] = table[5][2] = 42.8;
+		table[2][6] = table[6][2] = 104.9;
+		table[2][7] = table[7][2] = 83.9;
+		table[2][8] = table[8][2] = 87.4;
+		table[2][9] = table[9][2] = 34.2;
+		/* * * * * * * * * * * * * * * */
+		table[3][4] = table[4][3] = 48.6;
+		table[3][5] = table[5][3] = 82.7;
+		table[3][6] = table[6][3] = 118.5;
+		table[3][7] = table[7][3] = 73.4;
+		table[3][8] = table[8][3] = 84.0;
+		table[3][9] = table[9][3] = 95.6;
+		/* * * * * * * * * * * * * * * */
+		table[4][5] = table[5][4] = 130.3;
+		table[4][6] = table[6][4] = 137.3;
+		table[4][7] = table[7][4] = 87.6;
+		table[4][8] = table[8][4] = 118.5;
+		table[4][9] = table[9][4] = 144.1;
+		/* * * * * * * * * * * * * * * */
+		table[5][6] = table[6][5] = 147.6;
+		table[5][7] = table[7][5] = 124.6;
+		table[5][8] = table[8][5] = 57.3;
+		table[5][9] = table[9][5] = 35.4;
+		/* * * * * * * * * * * * * * * */
+		table[6][7] = table[7][6] = 49.7;
+		table[6][8] = table[8][6] = 186.3;
+		table[6][9] = table[9][6] = 120.6;
+		/* * * * * * * * * * * * * * * */
+		table[7][8] = table[8][7] = 150.7;
+		table[7][9] = table[9][7] = 114.6;
+		/* * * * * * * * * * * * * * * */
+		table[8][9] = table[9][8] = 92.6;
+		
+	}
+	
+	public double getPrice(String departure, String arrival){
+		int dep, arriv;
+		
+		dep = getNumber(departure);
+		arriv = getNumber(arrival);
+		
+		if (dep != arriv && dep != -1 && arriv != -1)
+			return table[dep][arriv];
+		
+		return 0;
+	}
+	
+	public int getNumber(String city){
+		
+		if (city.equals("Lisbon")){
+			return 0;
+		}
+		else if (city.equals("Porto")){
+			return 1;
+		}
+		else if (city.equals("Paris")){
+			return 2;
+		}
+		else if (city.equals("Milan")){
+			return 3;
+		}
+		else if (city.equals("Rome")){
+			return 4;
+		}
+		else if (city.equals("Amsterdam")){
+			return 5;
+		}
+		else if (city.equals("Madrid")){
+			return 6;
+		}
+		else if (city.equals("Barcelona")){
+			return 7;
+		}
+		else if (city.equals("Berlin")){
+			return 8;
+		}
+		else if (city.equals("London")){
+			return 9;
+		}
+		
+		return -1;
+	}
+}
 
 
 class SnapshotTimer extends Thread {

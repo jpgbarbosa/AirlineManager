@@ -31,7 +31,7 @@ import common.*;
 import com.toedter.calendar.JCalendar;;
 
 
-public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemoteInterface{
+public class FrontOffice extends UnicastRemoteObject{
 	/**
 	 * 
 	 */
@@ -122,12 +122,10 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 		panel.add(sendFeedBackMenu);
 		panel.add(searchMenu);
 		
-		/*menu.CreateImage("./src/imagens/furniture.jpg","Visite as nossas exposições!",250,100,500,340);
-		menu.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
-		
-		start.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
-		setup.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
-		seeds.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);*/
+		menu.CreateImage("./src/images/takeoff.jpg","",0,0,990,570);
+		bookingsMenu.CreateImage("./src/images/takeoff.jpg","",0,0,990,570);
+		sendFeedBackMenu.CreateImage("./src/images/takeoff.jpg","",0,0,990,570);
+		searchMenu.CreateImage("./src/images/takeoff.jpg","",0,0,990,570);
 		
 		/* Sets all the windows invisible, except, naturally, the main menu. */
 		menu.setVisible(true);
@@ -331,6 +329,12 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 		private JComboBox destinationModify;
 		private JTextArea confirmActionModify;
 		
+		private JTextField dateCharter;
+		private JTextField seatsCharter;
+		private JComboBox originCharter;
+		private JComboBox destinationCharter;
+		private JTextArea confirmActionCharter;
+		
 		public BookingsMenu(){
 			
 			
@@ -355,7 +359,7 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 			newPanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
 			newPanel.add(dateNew = CreateBoxText(20,100,20,80,20));
 			dateNew.setText("0/0/0");
-			newPanel.add(CreateButton("Choose Date",Color.white,"Choose flight date",15,60,50,120,30));
+			newPanel.add(CreateButton("Booking Date",Color.white,"Choose flight date",15,60,50,120,30));
 			newPanel.add(CreateTitle("Origin:",Color.black,15,60,90,70,20));
 			try {
 				destinations = backOffice.getDestinations();
@@ -397,7 +401,18 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 			
 			charterPanel.setLayout(null);
 			charterPanel.setBounds(new Rectangle(400, 40, 400, 400));
-			charterPanel.add(CreateButton("Create",Color.white,"Book Charter",15,60,100,200,30));
+			charterPanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
+			charterPanel.add(dateCharter = CreateBoxText(20,100,20,80,20));
+			dateCharter.setText("0/0/0");
+			charterPanel.add(CreateButton("Charter Date",Color.white,"Choose flight date",15,60,50,120,30));
+			charterPanel.add(CreateTitle("Origin:",Color.black,15,60,90,70,20));
+			charterPanel.add(originCharter = CreateComboBox(120,90,120,20,destinations));
+			charterPanel.add(CreateTitle("Destination:",Color.black,15,60,120,100,20));
+			charterPanel.add(destinationCharter = CreateComboBox(150,120,120,20,destinations));
+			charterPanel.add(CreateTitle("Seats:",Color.black,15,60,150,50,20));
+			charterPanel.add(seatsCharter = CreateBoxInt(20,120,150,50,20,0));
+			charterPanel.add(confirmActionCharter= CreateText(300,150,60,180,300,150));
+			charterPanel.add(CreateButton("Book Flight",Color.white,"Search for a flight",15,60,350,120,20));
 			
 			/* Adds the sub panels to the main panel. */
 			panel.add(newPanel);
@@ -410,7 +425,6 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 			cancelPanel.setVisible(false);
 			modifyPanel.setVisible(false);
 			charterPanel.setVisible(false);
-			
 			
 		}
 		
@@ -453,10 +467,18 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 				modifyPanel.setVisible(false);
 				charterPanel.setVisible(true);
 			}
-			else if(e.getComponent().getName().equals("Choose Date")){
-				JFrame date = new JFrame("Calendar");
+			else if(e.getComponent().getName().equals("Booking Date")){
+				JFrame date = new JFrame("Booking");
 				jCalendar = new JCalendar();
 				
+				date.getContentPane().add(jCalendar);
+				date.pack();
+				date.setVisible(true);
+				jCalendar.addPropertyChangeListener(this);
+			}
+			else if(e.getComponent().getName().equals("Charter Date")){
+				JFrame date = new JFrame("Charter");
+				jCalendar = new JCalendar();
 				date.getContentPane().add(jCalendar);
 				date.pack();
 				date.setVisible(true);
@@ -475,9 +497,13 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 
 		/* Every time the user selects a new date, an event is generated*/
 		public void propertyChange(PropertyChangeEvent evt) {
-			Calendar cal = jCalendar.getCalendar();
-			calendar = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
-			dateNew.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
+			System.out.println(evt.getPropertyName());
+			if(evt.getPropertyName().equals("")){
+				Calendar cal = jCalendar.getCalendar();
+				
+				calendar = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+				dateNew.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
+			}
 			
 		}
 	}
@@ -596,12 +622,5 @@ public class FrontOffice extends UnicastRemoteObject implements FrontOfficeRemot
 				menu.setVisible(true);
 			}
 		}
-	}
-
-	@Override
-	public void sendMessage(String message) throws RemoteException {
-		// TODO Auto-generated method stub
-		System.out.println(message);
-		
 	}
 }
