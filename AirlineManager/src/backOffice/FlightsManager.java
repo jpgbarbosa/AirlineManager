@@ -132,21 +132,19 @@ public class FlightsManager {
 	
 	/* Changes a flight's information. */
 	public void reScheduleFlight(Flight flight, GregorianCalendar date, Airplane plane){
-		int index;
 		if(date!=null){
 			flight.setDate(date);
+			/* TODO: Warn Clients!! */
+			GregorianCalendar calendar=flight.getDate();
+			for(Booking r: flight.getSeats()){
+				FeedBackManager.sendNotificationUser(r.getClient(), "Notification", 
+						"The Flight "+flight.getId()+" with destination to "+ flight.getDestiny()+", in "+ 
+						calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
+						calendar.get(Calendar.HOUR_OF_DAY)+":"+(calendar.get(Calendar.MINUTE)+1)+ 
+						", was rescheduled.\nWe are deeply sorry for all the trouble that might incur.");
+					
+			}
 		}
-		if(plane != null){
-			flight.getAirplane().getFlights().remove(flight);
-			flight.setAirplane(plane);
-			plane.getFlights().add(flight);
-			/* TODO: Change fields like this may lead to some problems. Check!*/
-			/* TODO: Check!*/
-			/* TODO: Check!*/
-			/* TODO: Check!*/
-		}
-		
-		/* TODO: Warn Clients!! */
 	}
 	
 	/**
