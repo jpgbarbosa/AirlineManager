@@ -307,13 +307,14 @@ public class FrontOffice extends UnicastRemoteObject{
 	}
 	
 	@SuppressWarnings("serial")
-	private class BookingsMenu extends Window implements PropertyChangeListener{
+	private class BookingsMenu extends Window{
 		private JPanel newPanel;
 		private JPanel cancelPanel;
 		private JPanel modifyPanel;
 		private JPanel charterPanel;
 		private JButton charterButton;
-		private JCalendar jCalendar;
+		private JCalendar jCalendarBooking;
+		private JCalendar jCalendarCharter;
 		private GregorianCalendar calendar;
 		
 		private JTextField dateNew;
@@ -361,7 +362,7 @@ public class FrontOffice extends UnicastRemoteObject{
 			newPanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
 			newPanel.add(dateNew = CreateBoxText(20,100,20,80,20));
 			dateNew.setText("0/0/0");
-			newPanel.add(CreateButton("Booking Date",Color.white,"Choose flight date",15,60,50,120,30));
+			newPanel.add(CreateButton("Booking Date",Color.white,"Choose flight date",15,60,50,150,30));
 			newPanel.add(CreateTitle("Origin:",Color.black,15,60,90,70,20));
 			try {
 				destinations = backOffice.getDestinations();
@@ -444,7 +445,7 @@ public class FrontOffice extends UnicastRemoteObject{
 		}
 		
 		public void mouseReleased(MouseEvent e){
-			
+			/* Every time the user releases a mouse button, the event must be handled */
 			if(e.getComponent().getName().equals("New Booking")){
 				newPanel.setVisible(true);
 				cancelPanel.setVisible(false);
@@ -470,21 +471,38 @@ public class FrontOffice extends UnicastRemoteObject{
 				charterPanel.setVisible(true);
 			}
 			else if(e.getComponent().getName().equals("Booking Date")){
-				JFrame date = new JFrame("Booking");
-				jCalendar = new JCalendar();
+				JFrame dateBooking = new JFrame("Booking");
+				jCalendarBooking = new JCalendar();
 				
-				date.getContentPane().add(jCalendar);
-				date.pack();
-				date.setVisible(true);
-				jCalendar.addPropertyChangeListener(this);
+				dateBooking.getContentPane().add(jCalendarBooking);
+				dateBooking.pack();
+				dateBooking.setVisible(true);
+				/* Every time the user selects a new date, an event is generated*/
+				jCalendarBooking.addPropertyChangeListener( new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent evt){
+						Calendar cal = jCalendarBooking.getCalendar();
+						
+						calendar = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+						dateNew.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
+					
+					}
+				});
 			}
 			else if(e.getComponent().getName().equals("Charter Date")){
-				JFrame date = new JFrame("Charter");
-				jCalendar = new JCalendar();
-				date.getContentPane().add(jCalendar);
-				date.pack();
-				date.setVisible(true);
-				jCalendar.addPropertyChangeListener(this);
+				JFrame dateCharterBooking = new JFrame("Charter");
+				jCalendarCharter = new JCalendar();
+				dateCharterBooking.getContentPane().add(jCalendarCharter);
+				dateCharterBooking.pack();
+				dateCharterBooking.setVisible(true);
+				/* Every time the user selects a new date, an event is generated*/
+				jCalendarCharter.addPropertyChangeListener( new PropertyChangeListener(){
+					public void propertyChange(PropertyChangeEvent evt){
+						Calendar cal = jCalendarCharter.getCalendar();
+						
+						calendar = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+						dateCharter.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
+					}
+				});
 			}
 			else if (e.getComponent().getName().equals("Return")){
 				newPanel.setVisible(false);
@@ -495,18 +513,6 @@ public class FrontOffice extends UnicastRemoteObject{
 				bookingsMenu.setVisible(false);
 				menu.setVisible(true);
 			}
-		}
-
-		/* Every time the user selects a new date, an event is generated*/
-		public void propertyChange(PropertyChangeEvent evt) {
-			System.out.println(evt.getPropertyName());
-			if(evt.getPropertyName().equals("")){
-				Calendar cal = jCalendar.getCalendar();
-				
-				calendar = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
-				dateNew.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
-			}
-			
 		}
 	}
 	
