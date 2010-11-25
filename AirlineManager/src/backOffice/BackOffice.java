@@ -666,7 +666,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						int hour = Integer.parseInt(hourFieldSchedule.getText());
 						int minute = Integer.parseInt(minuteFieldSchedule.getText());
 						int idPlane = Integer.parseInt(idPlaneScheduleField.getText());
-						String destiny = destinyFieldSchedule.getText();
 						
 						Airplane airplane = search.searchPlane(idPlane);
 						
@@ -674,7 +673,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 							GregorianCalendar date;
 							if (!destinyFieldSchedule.equals("") && (date = checkDate(year, month, day, hour, minute)) != null){
 								//TODO: Passar um boolean no fim para distinguir voo regular de charter (isRegular)
-								Flight flight = flightsManager.scheduleFlight(airplane, date, destiny,true);
+								Flight flight = flightsManager.scheduleFlight(airplane, date, originSchedule.getSelectedItem().toString(), destinationSchedule.getSelectedItem().toString(),regularSchedule.getSelectedItem().toString()=="Yes"?true:false);
 								
 								if (flight == null){
 									//TODO: Maybe we can inform to which one.

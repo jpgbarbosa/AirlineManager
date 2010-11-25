@@ -69,7 +69,7 @@ public class FlightsManager {
 	}
 	
 	/* Schedules a new flight. */
-	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String destination, boolean isRegular){
+	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String origin, String destination, boolean isRegular){
 		Flight flight = new Flight(plane, date, destination, isRegular);
 		int i;
 		boolean completed;
@@ -94,7 +94,6 @@ public class FlightsManager {
 			
 			if(isRegular){
 				//TODO: Alterar origin
-				String origin = "lulz";
 				RFlight rflight = new RFlight(origin, destination);
 				regularFlights.put(date.DAY_OF_WEEK, rflight);
 			}
