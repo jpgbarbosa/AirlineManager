@@ -85,6 +85,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		
 		SnapshotTimer s=new SnapshotTimer(planesManager.getPrevayler(),flightsManager.getPrevayler());
+		BackOffice.now=new GregorianCalendar();
 		TimeThread timeThread= new TimeThread(1);
 	}
 	
@@ -1256,7 +1257,7 @@ class SnapshotTimer extends Thread {
  
        try {
            while (true) { 
-               Thread.sleep(1000); // makes snapshots to the DB every 2 seconds
+               Thread.sleep(1000); // makes snapshots to the DB every 1 seconds
                planesPrevayler.takeSnapshot();
                flightsPrevayler.takeSnapshot();
            }
