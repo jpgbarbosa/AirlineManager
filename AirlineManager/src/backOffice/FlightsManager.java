@@ -3,6 +3,7 @@ package backOffice;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Hashtable;
 import java.util.Vector;
 import org.prevayler.*;
 
@@ -11,6 +12,9 @@ import bookings.Booking;
 import common.Airplane;
 import common.Flight;
 
+import common.FileManager;
+import common.RFlight;
+
 public class FlightsManager {
 	/* The list of all(?) the flights in the system. */
 	
@@ -18,6 +22,7 @@ public class FlightsManager {
 	private Vector<Flight> finishedFlights;
 	public static int idCreator = 0;
 	private Prevayler prevayler;
+	private Hashtable<Integer, RFlight> regularFlights;
 	public Prevayler getPrevayler() {
 		return prevayler;
 	}
@@ -40,7 +45,7 @@ public class FlightsManager {
 				if(f.getId()>idCreator)
 					idCreator=f.getId()+1;
 			}
-	
+		//TODO: prevayler regularFlights
 	}
 	
 	/**
