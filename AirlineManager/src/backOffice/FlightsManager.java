@@ -51,6 +51,7 @@ public class FlightsManager {
 		
 		feedBackManager = feed;
 		//TODO: prevayler regularFlights
+
 	}
 	
 	/**
@@ -89,7 +90,7 @@ public class FlightsManager {
 				RFlight rflight = new RFlight(origin, destination);
 				Vector<RFlight> aux = regularFlights.get(date.DAY_OF_WEEK);
 				for(i=0;i<aux.size();i++){
-					if(aux.get(i).getOrigin()==origin && aux.get(i).getDestination()==destination)
+					if(aux.get(i).getOrigin() == origin && aux.get(i).getDestination() == destination)
 						return null;
 				}
 				regularFlights.get(date.DAY_OF_WEEK).add(rflight);

@@ -10,15 +10,17 @@ public abstract class Booking {
 	private String address;
 	private String phoneContact;
 	private String email;
+	private int bookingNumber;
 	
 	/* The constructor. */
-	public Booking(Flight flight, int noSeats, String name, String addr, String phone, String mail){
+	public Booking(Flight flight, int noSeats, String name, String addr, String phone, String mail, int number){
 		this.flight = flight;
 		this.noSeats = noSeats;
 		this.name = name;
 		address = addr;
 		phoneContact = phone;
 		email = mail;
+		bookingNumber = number;
 		
 	}
 
@@ -70,4 +72,11 @@ public abstract class Booking {
 		this.email = email;
 	}
 	
+	public int getBookingNumber() {
+		return bookingNumber;
+	}
+
+	public void setBookingNumber(int number) {
+		this.bookingNumber = number;
+	}
 }

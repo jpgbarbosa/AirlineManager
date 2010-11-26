@@ -26,7 +26,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import bookings.Booking;
-import bookings.RegularBooking;
+import bookings.NormalBooking;
 
 import messages.Feedback;
 
@@ -531,12 +531,12 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			Vector<String> choiceChar = new Vector<String>();
 			choiceChar.add("Yes");
 			choiceChar.add("No");
-			schedulePanel.add(normalSchedule = CreateComboBox(160,240,50,20,choiceChar));
+			schedulePanel.add(normalSchedule = CreateComboBox(160,210,50,20,choiceChar));
 			schedulePanel.add(CreateTitle("Regular Flight:",Color.black,15,60,240,100,20));
 			Vector<String> choiceReg = new Vector<String>();
 			choiceReg.add("Yes");
 			choiceReg.add("No");
-			schedulePanel.add(regularSchedule = CreateComboBox(160,210,50,20,choiceReg));
+			schedulePanel.add(regularSchedule = CreateComboBox(160,240,50,20,choiceReg));
 			schedulePanel.add(confirmActionSchedule = CreateText(400,120,60,270,400,120));
 			schedulePanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,395,100,30));
 			
@@ -718,7 +718,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 							if ((date = checkDate(year, month, day, hour, minute)) != null && !originSchedule.getSelectedItem().equals("") && 
 																	!destinationSchedule.getSelectedItem().equals("")){
 								//System.out.println(date.get(Calendar.MONTH));
-								//TODO: Passar um boolean no fim para distinguir voo regular de charter (isRegular)
+
 								Flight flight = flightsManager.scheduleFlight(airplane,
 										date, originSchedule.getSelectedItem().toString(),destinationSchedule.getSelectedItem().toString(),
 											regularSchedule.getSelectedItem().toString() == "Yes" ? true : false,
@@ -1239,9 +1239,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	}
 	
 	@Override
-	public String scheduleFlight(int idFlight, String name, String address, String phone, String mail, int seats, boolean isOperator) throws RemoteException {
+	public String scheduleFlight(int idFlight, String name, String address, String phone, String mail, int seats, boolean isOperator, int bookingNumber) throws RemoteException {
 		
 		Flight flight = flightsManager.searchFlightById(idFlight);
+		
+		//System.out.println("We have " + + " for " + seats + " requested.");
 		
 		/* First, we need to check if there's such a flight. */
 		if (flight == null){
@@ -1256,7 +1258,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			return "Cancelled";
 		}
 		/* Fourth, we only accept operators booking charter flights. */
-		else if (!flight.isRegular() && !isOperator){
+		else if (flight.isCharter() && !isOperator){
 			return "Charter";
 		}
 		
@@ -1265,18 +1267,47 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			/* Difference between the number of seats for this booking
 			 * and the seats available in the flight.
 			 */
-			int diff = flight.getAirplane().getNoSeats() - seats;
+			int diff = flight.getEmptySeats() - seats;
 			
 			if (diff < 0){
-				return "InsufficientSeats " + (flight.getAirplane().getNoSeats() - flight.getOccupiedSeats());
+				return "InsufficientSeats " + flight.getEmptySeats();
 			}
 
-			flight.newBooking(new RegularBooking(flight, seats, name, address, phone, mail));
+			flight.newBooking(new NormalBooking(flight, name, address, phone, mail, seats, bookingNumber));
 			flight.increaseOccupied(seats);
 			
 		}
 		
 		return "Scheduled";
+	}
+	
+	@Override
+	public String cancelFlight(int idFlight, int idBooking) throws RemoteException {
+		
+		Flight flight = flightsManager.searchFlightById(idFlight);
+		
+		/* First, we need to check if there's such a flight. */
+		if (flight == null){
+			return "Innexistent flight";
+		}
+		
+		Booking booking = flight.findBookingById(idBooking);
+		
+		/* Second, we need to check if we still have space in this flight. */
+		if (booking == null){
+			return "Innexistent booking";
+		}
+		
+		/* We have to make sure several people aren't scheduling at the same time for the same flight. */
+		synchronized(flight.lock){
+			int seats = booking.getNoSeats();
+			flight.removeBooking(booking);
+			
+			flight.decreaseOccupied(seats);
+			
+		}
+		
+		return "Cancelled";
 	}
 	
 	

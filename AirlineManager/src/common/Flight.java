@@ -64,11 +64,20 @@ public class Flight implements Serializable{
 		return bookings.remove(booking);
 	}
 
+	public Booking findBookingById(int id){
+		for (int i = 0; i < bookings.size(); i++){
+			if (bookings.elementAt(i).getBookingNumber() == id)
+				return bookings.elementAt(i);
+		}
+		
+		return null;
+	}
+	
 	/* Getters and setters. */
 	public Vector <Booking> getBookings() {
 		return bookings;
 	}
-
+	
 	public Airplane getAirplane() {
 		return airplane;
 	}
