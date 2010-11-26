@@ -12,10 +12,7 @@ import org.prevayler.PrevaylerFactory;
 import org.prevayler.Transaction;
 
 import messages.Feedback;
-
-import common.Client;
-import common.FileManager;
-import common.Flight;
+import common.Operator;
 
 
 public class FeedBackManager {
@@ -40,11 +37,11 @@ public class FeedBackManager {
 	}
 	
 	/* Sends a notification to a specific client. */
-	public static boolean sendNotificationUser (Client client, String type, String content){
+	public boolean sendNotificationUser (String email, String type, String content){
 		//TODO: send e-mail
 		
 		try {
-			SendEmail.send("smtp.sapo.pt", 25, "airlinemanager@fakemail.com", client.getEmail(), "Notification", content);
+			SendEmail.send("smtp.sapo.pt", 25, "airlinemanager@fakemail.com", email, "Notification", content);
 		} catch (AddressException e) {
 			// TODO Auto-generated catch block
 			return false;
@@ -57,18 +54,16 @@ public class FeedBackManager {
 	}
 	
 	/* Sends a notification to all the clients. */
-	public static void sendNotificationAll(Vector <Client> listaClientes, String type, String content){
+	public void sendNotificationAllOperators(Vector <Operator> listOps, String type, String content){
 		
-		
-		for(Client c : listaClientes){
+		//TODO: OLHAR COM CUIDADO! Já não temos clientes
+		for(Operator op : listOps){
 			try {
-				SendEmail.send("smtp.sapo.pt", 25, "airlinemanager@fakemail.com", c.getEmail(), "Notification", content);
+				SendEmail.send("smtp.sapo.pt", 25, "airlinemanager@fakemail.com", op.getEmail(), "Notification", content);
 			} catch (AddressException e) {
 			} catch (MessagingException e) {}
 			
 		}
-		
-	
 	}
 	
 	/* Inserts a new message in the positive feed back list. */

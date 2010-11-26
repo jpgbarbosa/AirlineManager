@@ -26,6 +26,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import bookings.Booking;
+import bookings.RegularBooking;
 
 import messages.Feedback;
 
@@ -69,7 +70,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		super();
 		
 		feedBackManager = new FeedBackManager();
-		flightsManager = new FlightsManager();
+		flightsManager = new FlightsManager(feedBackManager);
 		planesManager = new PlanesManager();
 		operatorManager = new OperatorManager();
 		statisticsManager = new StatisticsManager(feedBackManager, flightsManager, planesManager);
@@ -179,6 +180,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		//GregorianCalendar now = new GregorianCalendar();
 		GregorianCalendar date = new GregorianCalendar(year,month-1,day,hour,minute);
+
 		/* This is an old date. */
 		if (now.after(date)){
 			//TODO: remove this
@@ -412,14 +414,14 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			}else if(e.getComponent().getName().equals("Send To Turistic Operators")){
 				display.setText("");
-				feedBackManager.sendNotificationAll(operatorManager.getOperatorList(), "Notification", messageToSend.getText());
-				display.setText("Mensagem enviada.");
+				feedBackManager.sendNotificationAllOperators(operatorManager.getOperatorList(), "Notification", messageToSend.getText());
+				display.setText("Message sent.");
 			
 			}else if(e.getComponent().getName().equals("Send")){
 				boolean status=false; 
 				display.setText("");
 				if(!email.getText().equals(""))
-					status=feedBackManager.sendNotificationUser(new Client("", "", "", email.getText()), "Notification", messageToSend.getText());
+					status=feedBackManager.sendNotificationUser(email.getText(), "Notification", messageToSend.getText());
 				if(status)	
 					display.setText("Your Notification was sent to "+email.getText()+".\n");
 				else
@@ -435,8 +437,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						status=true;
 						display.setText("Your Notification was sent to \n");
 						for(Booking r: f.getSeats()){
-							if(feedBackManager.sendNotificationUser(r.getClient(), "Notification", messageToSend.getText()))
-								display.append(r.getClient().getEmail()+"\n");
+							if(feedBackManager.sendNotificationUser(r.getEmail(), "Notification", messageToSend.getText()))
+								display.append(r.getEmail()+"\n");
 						}
 						
 					}
@@ -460,7 +462,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		private JTextField idPlaneScheduleField;
 		private JTextField hourFieldSchedule;
 		private JTextField minuteFieldSchedule;
-		private JTextField destinyFieldSchedule;
 		private JTextField scheduleDate;
 		private JCalendar jCalendarFlight;
 		private GregorianCalendar calendar;
@@ -731,7 +732,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 							logInfo.setText("Plane not found.");
 						}
 					} catch (Exception e1){
-						logInfo.setText("Invalid data.a");
+
+						logInfo.setText("Invalid integers.");
 					}
 					
 				}
@@ -955,6 +957,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						
 						if (!company.equals("") && !model.equals("") && noSeats > 0){
 							airplane = new Airplane(noSeats , company, model);
+							airplane.setDate(now);
 						}
 						else{
 							logInfo.setText("Invalid data.");
@@ -1003,13 +1006,55 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	}
 	
 	@SuppressWarnings("serial")
-	private class StatisticsManagerMenu extends Window{
+	private class StatisticsManagerMenu extends Window implements PropertyChangeListener{
+		private JPanel statsPanel;
+		private JTextArea statArea;
+		private JCalendar jCalendarBegin;
+		private JCalendar jCalendarEnd;
+		private GregorianCalendar calendarBegin;
+		private JTextField dateBegin;
+		private GregorianCalendar calendarEnd;
+		private JTextField dateEnd;
 		public StatisticsManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
-			CreateButton("Statistics 1",Color.white,"Manage Airplanes",15,60,200,150,30);
-			CreateButton("Statistics 2",Color.white,"Manage Flights",15,60,250,150,30);
-
+			//CreateButton("Statistics 1",Color.white,"Manage Airplanes",15,60,200,150,30);
+			//CreateButton("Statistics 2",Color.white,"Manage Flights",15,60,250,150,30);
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
+			
+			/* Creates the subpanels */
+			statsPanel=new JPanel();
+			statsPanel.setLayout(null);
+			statsPanel.setBounds(new Rectangle(400, 40, 500, 400));
+			statsPanel.add(CreateTitle("Satistics:",Color.white,15,100,100,70,20));
+			statsPanel.add(statArea = CreateText(10,50,40,60,350,250));
+			statArea.setEditable(false);
+			statsPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,360,100,30));
+			
+			
+			
+			add(dateBegin = CreateBoxText(20,100,20,80,20));
+			calendarBegin = new GregorianCalendar();
+			dateBegin.setText(calendarBegin.get(Calendar.DAY_OF_MONTH)+"/"+calendarBegin.get(Calendar.MONTH)+"/"+calendarBegin.get(Calendar.YEAR));
+			dateBegin.setEditable(false);
+			add(CreateButton("Begin Date",Color.white,"Choose the begining of the statistical count",15,60,50,150,30));
+			
+			add(dateEnd = CreateBoxText(20,100,90,80,20));
+			calendarEnd = new GregorianCalendar();
+			dateEnd.setText(calendarEnd.get(Calendar.DAY_OF_MONTH)+"/"+calendarEnd.get(Calendar.MONTH)+"/"+calendarEnd.get(Calendar.YEAR));
+			dateEnd.setEditable(false);
+			
+			add(CreateButton("End Date",Color.white,"Choose the begining of the statistical count",15,60,120,150,30));
+			
+			calendarEnd=null;
+			calendarBegin=null;
+			dateBegin.setText("00/00/00");
+			dateEnd.setText("00/00/00");
+			add(CreateButton("Reset Dates",Color.white,"Set the statistical count global",15,60,200,150,30));
+			
+			
+			this.add(statsPanel);
+			
+			
 		}
 		
 		/* This function is used when the user enters this menu.
@@ -1017,21 +1062,73 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		 */
 		public void entry(){
 			setVisible(true);
-			/* As default, we have the Buy Plane Menu. */
-			//buyPanel.setVisible(true);
+			statsPanel.setVisible(true);
+			
 		}
 		
 		public void mouseReleased(MouseEvent e){
 			if(e.getComponent().getName().equals("Statistics 1")){
 				
 			}
-			else if(e.getComponent().getName().equals("Statistics 2")){
+			else if(e.getComponent().getName().equals("Submit")){
+				if(calendarBegin==null||calendarEnd==null){
+					statArea.setText("Global Statistics\n"
+							+statisticsManager.generate(null, null));
+					
+					return;
+				}
+				if(calendarEnd.after(calendarBegin)){
+					statArea.setText(statisticsManager.generate(calendarBegin, calendarEnd));
+				}else{
+					statArea.setText("The end date is set before the begin one. FAIL");
+				}
+			}else if (e.getComponent().getName().equals("Reset Dates")){
+				calendarEnd=null;
+				calendarBegin=null;
+				dateBegin.setText("00/00/00");
+				dateEnd.setText("00/00/00");
 				
-			}
-			else if (e.getComponent().getName().equals("Return")){
+			
+			}else if (e.getComponent().getName().equals("Return")){
 				statisticsManagerMenu.setVisible(false);
 				menu.setVisible(true);
+			}else if(e.getComponent().getName().equals("Begin Date")){
+				JFrame date = new JFrame("Booking");
+				jCalendarBegin = new JCalendar();
+				
+				date.getContentPane().add(jCalendarBegin);
+				date.pack();
+				date.setVisible(true);
+				jCalendarBegin.addPropertyChangeListener(this);
+			}else if(e.getComponent().getName().equals("End Date")){
+				JFrame date = new JFrame("Booking");
+				jCalendarEnd = new JCalendar();
+				
+				date.getContentPane().add(jCalendarEnd);
+				date.pack();
+				date.setVisible(true);
+				jCalendarEnd.addPropertyChangeListener(this);
 			}
+		}
+		
+		/* Every time the user selects a new date, an event is generated*/
+		public void propertyChange(PropertyChangeEvent evt) {
+			Object source = evt.getSource();
+			Calendar cal ;
+	        if (source == jCalendarEnd) {
+	        	cal = jCalendarEnd.getCalendar();
+	        	calendarEnd = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+	        	dateEnd.setText(calendarEnd.get(Calendar.DAY_OF_MONTH)+"/"+calendarEnd.get(Calendar.MONTH)+"/"+calendarEnd.get(Calendar.YEAR));
+	        
+	        	
+	        }else{
+	        	cal = jCalendarBegin.getCalendar();
+	        	calendarBegin = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+	        	dateBegin.setText(calendarBegin.get(Calendar.DAY_OF_MONTH)+"/"+calendarBegin.get(Calendar.MONTH)+"/"+calendarBegin.get(Calendar.YEAR));
+	        }
+			
+			
+			
 		}
 	}
 	
@@ -1130,6 +1227,34 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	public double getPrice(String orig, String dest) throws RemoteException {
 		
 		return destinationsPrices.getPrice(orig, dest);
+	}
+	
+	@Override
+	public String scheduleRegularFlight(int idFlight, String name, String address, String phone, String mail, int seats) throws RemoteException {
+		
+		Flight flight = flightsManager.searchFlightById(idFlight);
+		
+		if (flight == null){
+			return "Innexistent flight";
+		}
+		
+		/* We have to make sure several people aren't scheduling at the same time for the same flight. */
+		synchronized(flight.lock){
+			/* Difference between the number of seats for this booking
+			 * and the seats available in the flight.
+			 */
+			int diff = flight.getAirplane().getNoSeats() - seats;
+			
+			if (diff < 0){
+				return "InsufficientSeats " + diff;
+			}
+
+			flight.newBooking(new RegularBooking(flight, seats, name, address, phone, mail));
+			flight.decreaseOccupied(seats);
+			
+		}
+		
+		return "Scheduled";
 	}
 	
 	

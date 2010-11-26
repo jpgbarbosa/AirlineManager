@@ -4,30 +4,29 @@ import java.util.Date;
 import java.util.Vector;
 import org.prevayler.*;
 
-import common.Airplane;
-import common.Client;
 import common.Operator;
 
 public class OperatorManager {
 	/* The list of all operators in the system */
-	private Vector<Client> operatorList;
+	private Vector<Operator> operatorList;
 	private Prevayler prevayler;
 	public Prevayler getPrevayler() {
 		return prevayler;
 	}
 	/* Constructor */
+	@SuppressWarnings("unchecked")
 	public OperatorManager(){
 		super();
 		
 		try {
-			prevayler = PrevaylerFactory.createPrevayler(new Vector<Client>(), "OperatorsList");
+			prevayler = PrevaylerFactory.createPrevayler(new Vector<Operator>(), "OperatorsList");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("Something went really bad!");
 			System.exit(0);
 		} 
-		operatorList=(Vector <Client>) (prevayler.prevalentSystem());
+		operatorList=(Vector <Operator>) (prevayler.prevalentSystem());
 		
 		//operatorList = new Vector<Client>();
 	}
@@ -91,7 +90,7 @@ public class OperatorManager {
 		return "Login was unsuccessful";
 	}
 
-	public Vector<Client> getOperatorList() {
+	public Vector<Operator> getOperatorList() {
 		return operatorList;
 	}
 	
@@ -117,10 +116,11 @@ class addOperator implements Transaction{
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void executeOn(Object arg0, Date arg1) {
 		
-		((Vector<Client>)arg0).add(operator);
+		((Vector<Operator>)arg0).add(operator);
 	}
 	
 	
@@ -144,10 +144,11 @@ class removeOperator implements Transaction{
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void executeOn(Object arg0, Date arg1) {
 		
-		((Vector<Client>)arg0).remove(operator);
+		((Vector<Operator>)arg0).remove(operator);
 	}
 	
 	

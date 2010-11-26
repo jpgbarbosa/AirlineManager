@@ -11,17 +11,19 @@ import bookings.Booking;
 public class Flight implements Serializable{
 	/* The list of bookings registered for this flight. */
 	private Vector <Booking> seats;
+	private int occupied;
 	/* The list of waiting clients. */
 	//private Vector <Booking> waitingList;
 	/* The airplane associated to this flight. */
 	private Airplane airplane;
 	private GregorianCalendar date;
-	private String destination;
 	private String origin;
+	private String destination;
 	private boolean isRegular;
 	private boolean wasCancelled;
 	private boolean isClosed;
 	private int id;
+	public Object lock;
 	
 	//TODO: This is temporary!
 	public static int idCreator = 0;
@@ -76,9 +78,6 @@ public class Flight implements Serializable{
 	}
 	
 	public Date getData() {
-		String day, month, year, hour, minute;
-		
-		
 		return date.getTime();
 	}
 
@@ -133,6 +132,14 @@ public class Flight implements Serializable{
 	public void setDestination(String destination) {
 		this.destination = destination;
 	}
+	
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
 
 	public boolean isRegular() {
 		return isRegular;
@@ -166,6 +173,22 @@ public class Flight implements Serializable{
 		return "ID: "+ id + "\nDate: "+date.get(Calendar.DAY_OF_MONTH)+"/"+date.get(Calendar.MONTH)+date.get(Calendar.YEAR)+
 		"\nOrigin: "+ origin + "\nDestination: "+destination + "\nRegular:"+ new Boolean(isRegular).toString() + 
 		"\nCancelled: "+ new Boolean(wasCancelled).toString() +"\nOver: "+ new Boolean(isClosed).toString()+ "\n\n";
+	}
+	
+	public void increaseOccupied(){
+		occupied++;
+	}
+	
+	public void increaseOccupied(int no){
+		occupied += no;
+	}
+	
+	public void decreaseOccupied(){
+		occupied--;
+	}
+	
+	public void decreaseOccupied(int no){
+		occupied -= no;
 	}
 	
 	
