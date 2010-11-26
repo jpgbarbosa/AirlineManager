@@ -67,8 +67,12 @@ public class FrontOffice extends UnicastRemoteObject{
 			System.out.println("Deu bode!");
 			System.exit(0);
 		}
-		
-		destinations = backOffice.getDestinations();
+		try{
+			destinations = backOffice.getDestinations();
+			System.out.println("nao deeeeeu bode");
+		} catch (RemoteException e){
+			System.out.println("deeeeeu bode");
+		}
 		
 		menu = new Menu();
 		bookingsMenu = new BookingsMenu();
