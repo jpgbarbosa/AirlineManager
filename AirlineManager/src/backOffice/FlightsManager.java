@@ -74,11 +74,10 @@ public class FlightsManager {
 	}
 	
 	/* Schedules a new flight. */
-	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String origin, String destination, boolean isRegular){
-		Flight flight = new Flight(plane, date, origin, destination, isRegular);
+	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String origin, String destination, boolean isRegular, boolean isCharter){
+		Flight flight = new Flight(plane, date, origin, destination, isRegular, isCharter);
 		int i;
 		boolean completed;
-		
 		
 		flight.setId(idCreator++);
 		/* First, we check if we can insert in this specific plane. */
@@ -121,7 +120,7 @@ public class FlightsManager {
 		 * DONE: Change and Warn passengers!!
 		 */
 		GregorianCalendar calendar=flight.getDate();
-		for(Booking r: flight.getSeats()){
+		for(Booking r: flight.getBookings()){
 			feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
 					"The Flight "+flight.getId()+" with destination to "+ flight.getDestiny()+", in "+ 
 					calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
@@ -140,7 +139,7 @@ public class FlightsManager {
 			flight.setDate(date);
 			/* TODO: Warn Clients!! */
 			GregorianCalendar calendar=flight.getDate();
-			for(Booking r: flight.getSeats()){
+			for(Booking r: flight.getBookings()){
 				feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
 						"The Flight "+flight.getId()+" with destination to "+ flight.getDestiny()+", in "+ 
 						calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
