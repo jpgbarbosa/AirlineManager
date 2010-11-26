@@ -71,7 +71,7 @@ public class FlightsManager {
 	
 	/* Schedules a new flight. */
 	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String origin, String destination, boolean isRegular){
-		Flight flight = new Flight(plane, date, destination, isRegular);
+		Flight flight = new Flight(plane, date,origin, destination, isRegular);
 		int i;
 		boolean completed;
 		

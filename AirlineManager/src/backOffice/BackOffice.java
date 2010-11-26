@@ -178,15 +178,13 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		}
 		
 		//GregorianCalendar now = new GregorianCalendar();
-		GregorianCalendar date = new GregorianCalendar(year,month - 1,day,hour,minute);
-		
+		GregorianCalendar date = new GregorianCalendar(year,month-1,day,hour,minute);
 		/* This is an old date. */
 		if (now.after(date)){
 			//TODO: remove this
 			System.out.println("OLD DATA!!!");
 			return null;
 		}
-		
 		return date;
 	}
 	
@@ -452,7 +450,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	}
 	
 	@SuppressWarnings("serial")
-	private class FlightsManagerMenu extends Window{
+	private class FlightsManagerMenu extends Window implements PropertyChangeListener{
 		private JPanel schedulePanel;
 		private JPanel reschedulePanel;
 		private JPanel cancelPanel;
@@ -483,7 +481,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		private JTextField hourFieldReschedule;
 		private JTextField minuteFieldReschedule;
 		private JTextField destinyFieldReschedule;
-		private JTextArea confirmActionReschedule;	
+		private JTextArea confirmActionReschedule;
+		private JCalendar jCalendarReschedule;
 		/* CANCELPANEL */
 		private JTextField idFlightCancelPanel;
 		private JTextArea confirmActionCancel;
@@ -515,7 +514,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			schedulePanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
 			schedulePanel.add(scheduleDate = CreateBoxText(20,100,20,80,20));
 			scheduleDate.setText("0/0/0");
-			schedulePanel.add(CreateButton("Flight Date",Color.white,"Choose flight date",15,60,50,150,30));
+			schedulePanel.add(CreateButton("Schedule Date",Color.white,"Choose flight date",15,60,50,150,30));
 			schedulePanel.add(CreateTitle("TIME:",Color.black,15,60,90,70,20));
 			schedulePanel.add(hourFieldSchedule = CreateBoxInt(20,100,90,20,20, 0));
 			schedulePanel.add(CreateTitle("h",Color.black,15,125,90,70,20));
@@ -541,13 +540,13 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			reschedulePanel.add(CreateTitle("Date:",Color.black,15,60,50,70,20));
 			reschedulePanel.add(rescheduleDate = CreateBoxText(20,100,50,80,20));
 			rescheduleDate.setText("0/0/0");
-			reschedulePanel.add(CreateButton("Flight Date",Color.white,"Choose flight date",15,60,80,150,30));
+			reschedulePanel.add(CreateButton("Reschedule Date",Color.white,"Choose flight date",15,60,80,150,30));
 			reschedulePanel.add(CreateTitle("TIME:",Color.black,15,60,120,70,20));
 			reschedulePanel.add(hourFieldReschedule = CreateBoxInt(20,100,120,20,20,0));
 			reschedulePanel.add(CreateTitle("h",Color.black,15,125,120,70,20));
 			reschedulePanel.add(minuteFieldReschedule = CreateBoxInt(20,140,120,20,20,0));
 			reschedulePanel.add(confirmActionReschedule = CreateText(400,180,60,150,400,180));
-			reschedulePanel.add(CreateButton("Reschedule Flight",Color.white,"Reschedule a flight",15,60,350,200,30));
+			reschedulePanel.add(CreateButton("Reschedule",Color.white,"Reschedule a flight",15,60,350,200,30));
 			
 			cancelPanel.setLayout(null);
 			cancelPanel.setBounds(new Rectangle(400, 40, 500, 400));
@@ -597,7 +596,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			int hour;
 			int minute;
 			int idPlane;
-			String destination;
+			
 			if(e.getComponent().getName().equals("Schedule Flight")){
 				reschedulePanel.setVisible(false);
 				cancelPanel.setVisible(false);
@@ -642,7 +641,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				
 				menuIdentifier = "listPanel";
 			}
-			else if(e.getComponent().getName().equals("Flight Date")){
+			else if(e.getComponent().getName().equals("Schedule Date")){
 				JFrame dateFlight = new JFrame("Booking");
 				jCalendarFlight = new JCalendar();
 				
@@ -650,15 +649,44 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				dateFlight.pack();
 				dateFlight.setVisible(true);
 				/* Every time the user selects a new date, an event is generated*/
-				jCalendarFlight.addPropertyChangeListener( new PropertyChangeListener() {
+				jCalendarFlight.addPropertyChangeListener(this);
+				/* new PropertyChangeListener() {
 					public void propertyChange(PropertyChangeEvent evt){
 						Calendar cal = jCalendarFlight.getCalendar();
 						calendar = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
-						scheduleDate.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
+						scheduleDate.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR));
 					
 					}
-				});
+				});*/
 				
+			}
+			else if(e.getComponent().getName().equals("Reschedule Date")){
+				JFrame dateFlight = new JFrame("Booking");
+				jCalendarReschedule = new JCalendar();
+				
+				dateFlight.getContentPane().add(jCalendarReschedule);
+				dateFlight.pack();
+				dateFlight.setVisible(true);
+				/* Every time the user selects a new date, an event is generated*/
+				jCalendarReschedule.addPropertyChangeListener(this);
+			}
+			else if(e.getComponent().getName().equals("Reschedule")){
+				try{
+					dateFields = rescheduleDate.getText().split("/");
+					day = Integer.parseInt(dateFields[0]);
+					month = Integer.parseInt(dateFields[1]);
+					year = Integer.parseInt(dateFields[2]);
+					hour = Integer.parseInt(hourFieldSchedule.getText());
+					minute = Integer.parseInt(minuteFieldSchedule.getText());
+					idPlane = Integer.parseInt(idPlaneScheduleField.getText());
+					Flight flight = search.searchFlightById(idPlane);
+					flight.setDate(new GregorianCalendar(year,month-1,day,hour,minute));
+					
+				} catch (NumberFormatException e1){
+					logInfo.setText("Invalid date!");
+				}
+				
+				logInfo.setText("Flight rescheduled!");
 			}
 			else if(e.getComponent().getName().equals("Submit")){
 				/* We are inside one of the filling forms. */
@@ -670,22 +698,21 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 					 */
 					try{
 						dateFields = scheduleDate.getText().split("/");
-						
 						day = Integer.parseInt(dateFields[0]);
 						month = Integer.parseInt(dateFields[1]);
+						System.out.println(month);
 						year = Integer.parseInt(dateFields[2]);
 						hour = Integer.parseInt(hourFieldSchedule.getText());
 						minute = Integer.parseInt(minuteFieldSchedule.getText());
 						idPlane = Integer.parseInt(idPlaneScheduleField.getText());
-						
 						Airplane airplane = search.searchPlane(idPlane);
-						
 						if (airplane != null){
 							GregorianCalendar date;
-							if (!destinyFieldSchedule.equals("") && (date = checkDate(year, month, day, hour, minute)) != null){
+							if ((date = checkDate(year, month, day, hour, minute)) != null && !originSchedule.getSelectedItem().equals("") && 
+																	!destinationSchedule.getSelectedItem().equals("")){
+								//System.out.println(date.get(Calendar.MONTH));
 								//TODO: Passar um boolean no fim para distinguir voo regular de charter (isRegular)
 								Flight flight = flightsManager.scheduleFlight(airplane, date, originSchedule.getSelectedItem().toString(), destinationSchedule.getSelectedItem().toString(),regularSchedule.getSelectedItem().toString()=="Yes"?true:false);
-								
 								if (flight == null){
 									//TODO: Maybe we can inform to which one.
 									logInfo.setText("This flights is too close to another!");
@@ -696,7 +723,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 								
 							}
 							else{
-								logInfo.setText("Invalid data.");
+								logInfo.setText("Invalid data");
 							}
 							
 						}
@@ -704,21 +731,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 							logInfo.setText("Plane not found.");
 						}
 					} catch (Exception e1){
-						logInfo.setText("Invalid data.");
+						logInfo.setText("Invalid data.a");
 					}
 					
-				}
-				else if (menuIdentifier.equals("reschedulePanel")){
-					/* TODO: */
-					//flightsManager
-					dateFields = rescheduleDate.getText().split("/");
-					day = Integer.parseInt(dateFields[0]);
-					month = Integer.parseInt(dateFields[1]);
-					year = Integer.parseInt(dateFields[2]);
-					hour = Integer.parseInt(hourFieldSchedule.getText());
-					minute = Integer.parseInt(minuteFieldSchedule.getText());
-					idPlane = Integer.parseInt(idPlaneScheduleField.getText());
-					destination = destinyFieldSchedule.getText();
 				}
 				else if (menuIdentifier.equals("cancelPanel")){
 					//TODO: Eventualmente protecções.
@@ -751,6 +766,23 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				flightsManagerMenu.setVisible(false);
 				menu.setVisible(true);
 			}
+		}
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			Object source = evt.getSource();
+			Calendar cal ;
+		    if (source == jCalendarFlight) {
+		    	cal = jCalendarFlight.getCalendar();
+				calendar = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+				scheduleDate.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR));
+		    }
+		    else if( source == jCalendarReschedule){
+		    	cal = jCalendarReschedule.getCalendar();
+				calendar = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+				rescheduleDate.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR));
+		    }
+			
 		}
 	}
 	
@@ -905,7 +937,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				try{
 					int flightID = Integer.parseInt(idSearchField.getText());
 					airplane = search.searchPlane(flightID);
-					findArea.append(airplane.getId() + "              " + airplane.getNoSeats() + "\t         " + airplane.getCompany() + "\t                   " + airplane.getModel() + "\n");
+					findArea.setText(airplane.toString());
 					
 				} catch (Exception e1){
 					logInfo.setText("Invalid data.");

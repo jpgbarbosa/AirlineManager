@@ -1,5 +1,6 @@
 package common;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -7,7 +8,7 @@ import java.util.Vector;
 
 import bookings.Booking;
 
-public class Flight {
+public class Flight implements Serializable{
 	/* The list of bookings registered for this flight. */
 	private Vector <Booking> seats;
 	/* The list of waiting clients. */
@@ -16,6 +17,7 @@ public class Flight {
 	private Airplane airplane;
 	private GregorianCalendar date;
 	private String destination;
+	private String origin;
 	private boolean isRegular;
 	private boolean wasCancelled;
 	private boolean isClosed;
@@ -25,15 +27,16 @@ public class Flight {
 	public static int idCreator = 0;
 	
 	/* The constructor. */
-	public Flight(Airplane plane, GregorianCalendar data, String dest, boolean isRegular){
-		airplane = plane;
-		destination = dest;
-		seats = new Vector <Booking>();
-		date = data;
+	public Flight(Airplane plane, GregorianCalendar data, String origin, String dest, boolean isRegular){
+		this.airplane = plane;
+		this.origin = origin;
+		this.destination = dest;
+		this.seats = new Vector <Booking>();
+		this.date = data;
 		this.isRegular = isRegular;
-		wasCancelled = false;
-		isClosed = false;
-		id = idCreator++;
+		this.wasCancelled = false;
+		this.isClosed = false;
+		this.id = idCreator++;
 	}
 	
 	/*Override .equals()*/
@@ -160,7 +163,9 @@ public class Flight {
 	}
 	
 	public String toString(){
-		return "ID: "+ id + "\n";
+		return "ID: "+ id + "\nDate: "+date.get(Calendar.DAY_OF_MONTH)+"/"+date.get(Calendar.MONTH)+date.get(Calendar.YEAR)+
+		"\nOrigin: "+ origin + "\nDestination: "+destination + "\nRegular:"+ new Boolean(isRegular).toString() + 
+		"\nCancelled: "+ new Boolean(wasCancelled).toString() +"\nOver: "+ new Boolean(isClosed).toString()+ "\n\n";
 	}
 	
 	
