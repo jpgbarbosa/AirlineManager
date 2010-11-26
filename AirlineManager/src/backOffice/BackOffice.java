@@ -179,7 +179,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		}
 		
 		//GregorianCalendar now = new GregorianCalendar();
-		GregorianCalendar date = new GregorianCalendar(year,month - 1,day,hour,minute);
+		GregorianCalendar date = new GregorianCalendar(year,month,day,hour,minute);
 		
 		/* This is an old date. */
 		if (now.after(date)){
@@ -463,7 +463,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		private JTextField idPlaneScheduleField;
 		private JTextField hourFieldSchedule;
 		private JTextField minuteFieldSchedule;
-		private JTextField destinyFieldSchedule;
 		private JTextField scheduleDate;
 		private JCalendar jCalendarFlight;
 		private GregorianCalendar calendar;
@@ -683,9 +682,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						
 						if (airplane != null){
 							GregorianCalendar date;
-							if (!destinyFieldSchedule.equals("") && (date = checkDate(year, month, day, hour, minute)) != null){
+							
+							if ((String) destinationSchedule.getSelectedItem() != (String) originSchedule.getSelectedItem() && (date = checkDate(year, month, day, hour, minute)) != null){
 								//TODO: Passar um boolean no fim para distinguir voo regular de charter (isRegular)
-								Flight flight = flightsManager.scheduleFlight(airplane, date, originSchedule.getSelectedItem().toString(), destinationSchedule.getSelectedItem().toString(),regularSchedule.getSelectedItem().toString()=="Yes"?true:false);
+								Flight flight = flightsManager.scheduleFlight(airplane, date, (String) originSchedule.getSelectedItem(), (String) destinationSchedule.getSelectedItem(),(String) regularSchedule.getSelectedItem() =="Yes"?true:false);
 								
 								if (flight == null){
 									//TODO: Maybe we can inform to which one.
@@ -705,7 +705,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 							logInfo.setText("Plane not found.");
 						}
 					} catch (Exception e1){
-						logInfo.setText("Invalid data.");
+						logInfo.setText("Invalid integers.");
 					}
 					
 				}
@@ -719,7 +719,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 					hour = Integer.parseInt(hourFieldSchedule.getText());
 					minute = Integer.parseInt(minuteFieldSchedule.getText());
 					idPlane = Integer.parseInt(idPlaneScheduleField.getText());
-					destination = destinyFieldSchedule.getText();
+					destination = destinyFieldReschedule.getText();
 				}
 				else if (menuIdentifier.equals("cancelPanel")){
 					//TODO: Eventualmente protecções.
