@@ -1,12 +1,11 @@
 package bookings;
 
 import common.Flight;
-import common.Operator;
 
 public class RegularBooking extends Booking {
 	
 	/* The constructor. */
-	public RegularBooking(Flight flight, Operator client){
-		super(flight,client);
+	public RegularBooking(Flight flight, int noSeats, String name, String addr, String phone, String mail){
+		super(flight, noSeats, name, addr, phone, mail);
 	}
 }

@@ -318,7 +318,11 @@ public class FrontOffice extends UnicastRemoteObject{
 		
 		private JTextField newFlightID;
 		private JTextField seatsNew;
-		private JTextArea confirmActionNew;		
+		private JTextField nameNew;
+		private JTextField phoneNew;
+		private JTextField addressNew;
+		private JTextField emailNew;
+		private JTextArea confirmActionNew;
 		
 		private JTextField cancelFlightID;
 		private JTextField cancelFlightSeat;
@@ -354,17 +358,25 @@ public class FrontOffice extends UnicastRemoteObject{
 			
 			/* Defines the sub panels. */
 			newPanel.setLayout(null);
-			newPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			newPanel.setBounds(new Rectangle(400, 40, 500, 500));
 			
 			newPanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
 			newPanel.add(newFlightID = CreateBoxInt(20,140,20,80,20,0));
-			newPanel.add(CreateTitle("Seats:",Color.black,15,60,50,100,20));
-			newPanel.add(seatsNew = CreateBoxInt(20,140,50,80,20,0));
-			newPanel.add(confirmActionNew = CreateText(300,150,60,90,300,150));
-			newPanel.add(CreateButton("Schedule",Color.white,"Search for a flight",15,60,350,120,20));
+			newPanel.add(CreateTitle("Name:",Color.black,15,60,50,100,20));
+			newPanel.add(nameNew = CreateBoxText(20,140,50,350,20));
+			newPanel.add(CreateTitle("Phone:",Color.black,15,60,80,100,20));
+			newPanel.add(phoneNew = CreateBoxText(20,140,80,150,20));
+			newPanel.add(CreateTitle("Address:",Color.black,15,60,110,100,20));
+			newPanel.add(addressNew = CreateBoxText(20,140,110,350,20));
+			newPanel.add(CreateTitle("E-mail:",Color.black,15,60,140,100,20));
+			newPanel.add(emailNew = CreateBoxText(20,140,140,350,20));
+			newPanel.add(CreateTitle("Seats:",Color.black,15,60,170,100,20));
+			newPanel.add(seatsNew = CreateBoxInt(20,140,170,80,20,0));
+			newPanel.add(confirmActionNew = CreateText(300,250,60,190,300,180));
+			newPanel.add(CreateButton("Schedule",Color.white,"Schedule your flight",15,60,430,120,20));
 			
 			cancelPanel.setLayout(null);
-			cancelPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			cancelPanel.setBounds(new Rectangle(400, 40, 400, 500));
 			cancelPanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
 			cancelPanel.add(cancelFlightID = CreateBoxInt(20,140,20,80,20,0));
 			cancelPanel.add(CreateTitle("Flight seat:",Color.black,15,60,50,100,20));
@@ -373,7 +385,7 @@ public class FrontOffice extends UnicastRemoteObject{
 			cancelPanel.add(CreateButton("Cancel Booking",Color.white,"Cancel Booking",15,60,260,200,30));
 			
 			modifyPanel.setLayout(null);
-			modifyPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			modifyPanel.setBounds(new Rectangle(400, 40, 400, 500));
 			modifyPanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
 			modifyPanel.add(modifyFlightID = CreateBoxInt(20,140,20,80,20,0));
 			modifyPanel.add(CreateTitle("Flight seat:",Color.black,15,60,50,100,20));
@@ -385,7 +397,7 @@ public class FrontOffice extends UnicastRemoteObject{
 			modifyPanel.add(CreateButton("Confirm modification",Color.white,"Modify a booking",15,60,290,200,30));
 			
 			charterPanel.setLayout(null);
-			charterPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			charterPanel.setBounds(new Rectangle(400, 40, 400, 500));
 			charterPanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
 			charterPanel.add(dateCharter = CreateBoxText(20,100,20,80,20));
 			charterPanel.add(CreateButton("Charter Date",Color.white,"Choose flight date",15,60,50,120,30));
@@ -473,19 +485,55 @@ public class FrontOffice extends UnicastRemoteObject{
 				jCalendar.addPropertyChangeListener(this);
 			}*/
 			else if (e.getComponent().getName().equals("Schedule")){
-				double price = 0.0;
-				//String orig = (String) originNew.getSelectedItem();
-				//String dest = (String) destinationNew.getSelectedItem();
-				
-				try {
-					price = backOffice.getPrice("", "");
-				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-				if (price != 0.0){
+				try{
+					int id = Integer.parseInt(newFlightID.getText());
+					int seats = Integer.parseInt(seatsNew.getText());
+					String name = nameNew.getText();
+					String address = addressNew.getText();
+					String phone = phoneNew.getText();
+					String mail = emailNew.getText();
 					
+					boolean validPhone = true;
+					
+					//It can't contain only numbers if it's null or empty...
+			        if (phone == null || phone.length() == 0)
+			            validPhone = false;
+			        else{
+			        	if (!(phone.charAt(0) == '+' || Character.isDigit(phone.charAt(0)))){
+			        		validPhone = false;
+			        	}
+			        	for (int i = 1; i < phone.length() && validPhone; i++) {
+
+				            //If we find a non-digit character we return false.
+				            if (!Character.isDigit(phone.charAt(i)))
+				                validPhone = false;
+				        }
+			        }
+					if (validPhone){
+						if (!name.equals("") && !address.equals("") && !mail.equals("")){
+							String answer = backOffice.scheduleRegularFlight(id, name, address, phone, mail, seats);
+							if (answer.equals("Innexistent flight")){
+								confirmActionNew.setText("There's no such flight.");
+							}
+							else if (answer.equals("Scheduled")){
+								//TODO: We have to proceed to the payment.
+								confirmActionNew.setText("Flight scheduled.");
+							}
+							else{
+								confirmActionNew.setText("There are only " + answer.split(" ")[1] + " empty seats.");
+							}	
+						}
+						else{
+							confirmActionNew.setText("Empty field(s).");
+						}
+					}
+					else{
+						confirmActionNew.setText("Invalid phone number.");
+					}
+					
+					
+				}catch(Exception e1){
+					confirmActionNew.setText("Invalid field(s).");
 				}
 			}
 			else if (e.getComponent().getName().equals("Return")){
@@ -593,7 +641,6 @@ public class FrontOffice extends UnicastRemoteObject{
 		private GregorianCalendar calendar;
 		
 		private JTextField dateNew;
-		private JTextField seatsNew;
 		private JComboBox originNew;
 		private JComboBox destinationNew;
 		private JTextArea confirmActionNew;		

@@ -26,6 +26,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import bookings.Booking;
+import bookings.RegularBooking;
 
 import messages.Feedback;
 
@@ -69,7 +70,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		super();
 		
 		feedBackManager = new FeedBackManager();
-		flightsManager = new FlightsManager();
+		flightsManager = new FlightsManager(feedBackManager);
 		planesManager = new PlanesManager();
 		operatorManager = new OperatorManager();
 		statisticsManager = new StatisticsManager(feedBackManager, flightsManager, planesManager);
@@ -414,14 +415,14 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			}else if(e.getComponent().getName().equals("Send To Turistic Operators")){
 				display.setText("");
-				feedBackManager.sendNotificationAll(operatorManager.getOperatorList(), "Notification", messageToSend.getText());
-				display.setText("Mensagem enviada.");
+				feedBackManager.sendNotificationAllOperators(operatorManager.getOperatorList(), "Notification", messageToSend.getText());
+				display.setText("Message sent.");
 			
 			}else if(e.getComponent().getName().equals("Send")){
 				boolean status=false; 
 				display.setText("");
 				if(!email.getText().equals(""))
-					status=feedBackManager.sendNotificationUser(new Client("", "", "", email.getText()), "Notification", messageToSend.getText());
+					status=feedBackManager.sendNotificationUser(email.getText(), "Notification", messageToSend.getText());
 				if(status)	
 					display.setText("Your Notification was sent to "+email.getText()+".\n");
 				else
@@ -437,8 +438,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						status=true;
 						display.setText("Your Notification was sent to \n");
 						for(Booking r: f.getSeats()){
-							if(feedBackManager.sendNotificationUser(r.getClient(), "Notification", messageToSend.getText()))
-								display.append(r.getClient().getEmail()+"\n");
+							if(feedBackManager.sendNotificationUser(r.getEmail(), "Notification", messageToSend.getText()))
+								display.append(r.getEmail()+"\n");
 						}
 						
 					}
@@ -1098,6 +1099,34 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	public double getPrice(String orig, String dest) throws RemoteException {
 		
 		return destinationsPrices.getPrice(orig, dest);
+	}
+	
+	@Override
+	public String scheduleRegularFlight(int idFlight, String name, String address, String phone, String mail, int seats) throws RemoteException {
+		
+		Flight flight = flightsManager.searchFlightById(idFlight);
+		
+		if (flight == null){
+			return "Innexistent flight";
+		}
+		
+		/* We have to make sure several people aren't scheduling at the same time for the same flight. */
+		synchronized(flight.lock){
+			/* Difference between the number of seats for this booking
+			 * and the seats available in the flight.
+			 */
+			int diff = flight.getAirplane().getNoSeats() - seats;
+			
+			if (diff < 0){
+				return "InsufficientSeats " + diff;
+			}
+
+			flight.newBooking(new RegularBooking(flight, seats, name, address, phone, mail));
+			flight.decreaseOccupied(seats);
+			
+		}
+		
+		return "Scheduled";
 	}
 	
 	
