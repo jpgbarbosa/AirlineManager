@@ -87,7 +87,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		SnapshotTimer s=new SnapshotTimer(planesManager.getPrevayler(),flightsManager.getPrevayler());
 		BackOffice.now=new GregorianCalendar();
-		TimeThread timeThread= new TimeThread(1);
+		//TimeThread timeThread= new TimeThread(1);
 	}
 	
 	public static void main(String[] args) throws RemoteException {
@@ -466,7 +466,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		private JCalendar jCalendarFlight;
 		private GregorianCalendar calendar;
 		
-		private JTextArea logInfo;
+		//private JTextArea logInfo;
 		private String menuIdentifier;
 		
 		private JTextField dateSchedule;
@@ -502,7 +502,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			 
-			logInfo = CreateText(10,10,400,500,275,50);
 			
 			/* Creates the subpanels that are displayed accordingly to the user's choice. */
 			schedulePanel = new JPanel();
@@ -657,20 +656,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				dateFlight.setVisible(true);
 				/* Every time the user selects a new date, an event is generated*/
 				jCalendarFlight.addPropertyChangeListener(this);
-				/* new PropertyChangeListener() {
-					public void propertyChange(PropertyChangeEvent evt){
-						Calendar cal = jCalendarFlight.getCalendar();
-						calendar = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
-						scheduleDate.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR));
-					
-					}
-				});*/
 				
 			}
 			else if(e.getComponent().getName().equals("Reschedule Date")){
 				JFrame dateFlight = new JFrame("Booking");
 				jCalendarReschedule = new JCalendar();
-				
 				dateFlight.getContentPane().add(jCalendarReschedule);
 				dateFlight.pack();
 				dateFlight.setVisible(true);
@@ -687,13 +677,13 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 					minute = Integer.parseInt(minuteFieldSchedule.getText());
 					idPlane = Integer.parseInt(idPlaneScheduleField.getText());
 					Flight flight = search.searchFlightById(idPlane);
-					flight.setDate(new GregorianCalendar(year,month-1,day,hour,minute));
+					flight.setDate(new GregorianCalendar(year,month,day,hour,minute));
 					
 				} catch (NumberFormatException e1){
-					logInfo.setText("Invalid date!");
+					confirmActionReschedule.setText("Invalid date!");
 				}
 				
-				logInfo.setText("Flight rescheduled!");
+				confirmActionReschedule.setText("Flight rescheduled!");
 			}
 			else if(e.getComponent().getName().equals("Submit")){
 				/* We are inside one of the filling forms. */
@@ -707,17 +697,16 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						dateFields = scheduleDate.getText().split("/");
 						day = Integer.parseInt(dateFields[0]);
 						month = Integer.parseInt(dateFields[1]);
-						System.out.println(month);
 						year = Integer.parseInt(dateFields[2]);
 						hour = Integer.parseInt(hourFieldSchedule.getText());
 						minute = Integer.parseInt(minuteFieldSchedule.getText());
 						idPlane = Integer.parseInt(idPlaneScheduleField.getText());
 						Airplane airplane = search.searchPlane(idPlane);
+						
 						if (airplane != null){
 							GregorianCalendar date;
 							if ((date = checkDate(year, month, day, hour, minute)) != null && !originSchedule.getSelectedItem().equals("") && 
 																	!destinationSchedule.getSelectedItem().equals("")){
-								//System.out.println(date.get(Calendar.MONTH));
 
 								Flight flight = flightsManager.scheduleFlight(airplane,
 										date, originSchedule.getSelectedItem().toString(),destinationSchedule.getSelectedItem().toString(),
@@ -725,24 +714,24 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 												normalSchedule.getSelectedItem().toString() == "Yes" ? false : true);
 								if (flight == null){
 									//TODO: Maybe we can inform to which one.
-									logInfo.setText("This flights is too close to another!");
+									confirmActionSchedule.setText("This flights is too close to another!");
 								}
 								else{
-									logInfo.setText("Flight schedule with ID " + flight.getId() + "!");
+									confirmActionSchedule.setText("Flight schedule with ID " + flight.getId() + "!");
 								}
 								
 							}
 							else{
-								logInfo.setText("Invalid data");
+								confirmActionSchedule.setText("Invalid data");
 							}
 							
 						}
 						else{
-							logInfo.setText("Plane not found.");
+							confirmActionSchedule.setText("Plane not found.");
 						}
-					} catch (Exception e1){
+					} catch (NumberFormatException e1){
 
-						logInfo.setText("Invalid integers.");
+						confirmActionSchedule.setText("Invalid integers.");
 					}
 					
 				}
@@ -756,15 +745,15 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						flight = flightsManager.searchFlightById(id);
 						
 					} catch (Exception e1){
-						logInfo.setText("Invalid data.");
+						confirmActionCancel.setText("Invalid data.");
 					}
 					
 					if (flight != null && id != -1){
 						flightsManager.cancelFlight(flight);
-						logInfo.setText("Flight successfully canceled!");
+						confirmActionCancel.setText("Flight successfully canceled!");
 					}
 					else if (flight == null){
-						logInfo.setText("Flight not found.");
+						confirmActionCancel.setText("Flight not found.");
 					}
 				}
 			}
@@ -804,7 +793,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		private JPanel listPanel;
 		private JPanel findPanel;
 		
-		private JTextArea logInfo;
+		//private JTextArea logInfo;
 		
 		/* So we can know in which the user is at the moment. */
 		private String menuIdentifier;
@@ -813,9 +802,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		private JTextField companyField;
 		private JTextField modelField;
 		private JTextField noSeatsField;
+		private JTextArea buyArea;
 		
 		/* SELLPANEL VARIABLES */
 		private JTextField idSellField;
+		private JTextArea sellArea;
 		
 		/* LISTPANEL VARIABLES */
 		private JTextArea listArea;
@@ -833,7 +824,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			CreateButton("Find Plane",Color.white,"List all the planes from the fleet",15,60,350,150,30);
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			
-			logInfo = CreateText(10,10,400,500,275,50);
 			
 			/* Creates the subpanels that are displayed accordingly to the user's choice. */
 			buyPanel = new JPanel();
@@ -850,12 +840,14 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			buyPanel.add(companyField = CreateBoxText(20,175,130,110,20));
 			buyPanel.add(CreateTitle("Model:",Color.white,15,100,160,70,20));
 			buyPanel.add(modelField = CreateBoxText(20,175,160,110,20));
+			buyPanel.add(buyArea = CreateText(10,10,60,200,320,100));
 			buyPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,330,100,30));
 			
 			sellPanel.setLayout(null);
 			sellPanel.setBounds(new Rectangle(400, 40, 500, 400));
 			sellPanel.add(CreateTitle("Plane's ID:",Color.white,15,100,100,70,20));
 			sellPanel.add(idSellField = CreateBoxInt(20,175,100,50,20, 0));
+			sellPanel.add(sellArea = CreateText(10,10,60,140,320,140));
 			sellPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,330,100,30));
 			
 			listPanel.setLayout(null);
@@ -905,7 +897,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				listPanel.setVisible(false);
 				findPanel.setVisible(false);
 				
-				logInfo.setText("");
+				buyArea.setText("");
 				menuIdentifier = "buyPanel";
 			}
 			else if(e.getComponent().getName().equals("Sell Plane")){
@@ -914,7 +906,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				listPanel.setVisible(false);
 				findPanel.setVisible(false);
 				
-				logInfo.setText("");
+				sellArea.setText("");
 				menuIdentifier = "sellPanel";
 			}
 			else if(e.getComponent().getName().equals("List Planes")){
@@ -923,7 +915,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				listPanel.setVisible(true);
 				findPanel.setVisible(false);
 				
-				logInfo.setText("");
 				listArea.setText("");
 				Vector <Airplane> list = planesManager.getPlanesList();
 				
@@ -940,7 +931,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				listPanel.setVisible(false);
 				findPanel.setVisible(true);
 				
-				logInfo.setText("");
+				findArea.setText("");
 				menuIdentifier = "findPanel";
 			}
 			else if(e.getComponent().getName().equals("Search Flight")){
@@ -951,7 +942,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 					findArea.setText(airplane.toString());
 					
 				} catch (Exception e1){
-					logInfo.setText("Invalid data.");
+					findArea.setText("Invalid data.");
 				}
 			}
 			else if ((e.getComponent().getName().equals("Submit"))){
@@ -969,15 +960,15 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 							airplane.setDate(now);
 						}
 						else{
-							logInfo.setText("Invalid data.");
+							buyArea.setText("Invalid data.");
 						}
 					} catch (Exception e1){
-						logInfo.setText("Invalid data.");
+						buyArea.setText("Invalid data.");
 					}
 					
 					if (airplane != null){
 						planesManager.addPlane(airplane);
-						logInfo.setText("Plane successfully added to the fleet, with ID " + airplane.getId()+ "!");
+						buyArea.setText("Plane successfully added to the fleet, with ID " + airplane.getId()+ "!");
 					}
 				}
 				else if (menuIdentifier.equals("sellPanel")){
@@ -990,15 +981,15 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						airplane = search.searchPlane(id);
 						
 					} catch (Exception e1){
-						logInfo.setText("Invalid data.");
+						sellArea.setText("Invalid data.");
 					}
 					
 					if (airplane != null && id != -1){
 						planesManager.removePlane(airplane);
-						logInfo.setText("Plane successfully remove from the fleet!");
+						sellArea.setText("Plane successfully remove from the fleet!");
 					}
 					else if (airplane == null){
-						logInfo.setText("Plane not found.");
+						sellArea.setText("Plane not found.");
 					}
 				}
 			}
@@ -1043,15 +1034,14 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			add(dateBegin = CreateBoxText(20,100,20,80,20));
 			calendarBegin = new GregorianCalendar();
-			dateBegin.setText(calendarBegin.get(Calendar.DAY_OF_MONTH)+"/"+calendarBegin.get(Calendar.MONTH)+"/"+calendarBegin.get(Calendar.YEAR));
+			dateBegin.setText(calendarBegin.get(Calendar.DAY_OF_MONTH)+"/"+calendarBegin.get((Calendar.MONTH)+1)+"/"+calendarBegin.get(Calendar.YEAR));
 			dateBegin.setEditable(false);
 			add(CreateButton("Begin Date",Color.white,"Choose the begining of the statistical count",15,60,50,150,30));
 			
 			add(dateEnd = CreateBoxText(20,100,90,80,20));
 			calendarEnd = new GregorianCalendar();
-			dateEnd.setText(calendarEnd.get(Calendar.DAY_OF_MONTH)+"/"+calendarEnd.get(Calendar.MONTH)+"/"+calendarEnd.get(Calendar.YEAR));
+			dateEnd.setText(calendarEnd.get(Calendar.DAY_OF_MONTH)+"/"+calendarEnd.get((Calendar.MONTH)+1)+"/"+calendarEnd.get(Calendar.YEAR));
 			dateEnd.setEditable(false);
-			
 			add(CreateButton("End Date",Color.white,"Choose the begining of the statistical count",15,60,120,150,30));
 			
 			calendarEnd=null;
@@ -1222,7 +1212,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	/* Check if the username and password are correct */
 	@Override
 	public String loginOperator(String user, String pass) throws RemoteException {
-		
 		return operatorManager.loginOperator(user,pass);
 		
 	}

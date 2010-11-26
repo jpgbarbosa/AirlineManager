@@ -52,7 +52,6 @@ public class OperatorManager {
 	/* Tries to register a new operator */
 	public String registerOperator(String comp, String name, String addr, String phone, String mail,String password){
 		Operator op = searchOperator(name);
-		
 		/* We haven't found any operator in the list. */
 		if(op == null){
 			addOperator(new Operator(comp, name, addr, phone, mail, password));

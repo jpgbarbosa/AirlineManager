@@ -116,7 +116,7 @@ public class Airplane implements Serializable{
 	}
 	
 	public String toString(){
-		return "ID: "+ id +"\number of seats: "+ noSeats+"\nCompany: "+ company + "\nModel: "+model+ "\n\n";
+		return "ID: "+ id +"\nNumber of seats: "+ noSeats+"\nCompany: "+ company + "\nModel: "+model+ "\n\n";
 	}
 	
 }
