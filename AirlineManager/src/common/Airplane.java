@@ -23,6 +23,7 @@ public class Airplane implements Serializable{
 	
 	
 	
+	
 	/* The constructor. */
 	public Airplane(int seatsNumber, String company, String model){
 		this.noSeats = seatsNumber;
@@ -65,7 +66,11 @@ public class Airplane implements Serializable{
 	
 	/* Getters and setters. */
 	
+	public void setDate(GregorianCalendar date) {
+		this.date = date;
+	}
 
+	
 	public Vector <Flight> getFlights() {
 		return flights;
 	}

@@ -923,6 +923,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						
 						if (!company.equals("") && !model.equals("") && noSeats > 0){
 							airplane = new Airplane(noSeats , company, model);
+							airplane.setDate(now);
 						}
 						else{
 							logInfo.setText("Invalid data.");
@@ -971,9 +972,15 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	}
 	
 	@SuppressWarnings("serial")
-	private class StatisticsManagerMenu extends Window{
+	private class StatisticsManagerMenu extends Window implements PropertyChangeListener{
 		private JPanel statsPanel;
 		private JTextArea statArea;
+		private JCalendar jCalendarBegin;
+		private JCalendar jCalendarEnd;
+		private GregorianCalendar calendarBegin;
+		private JTextField dateBegin;
+		private GregorianCalendar calendarEnd;
+		private JTextField dateEnd;
 		public StatisticsManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
 			//CreateButton("Statistics 1",Color.white,"Manage Airplanes",15,60,200,150,30);
@@ -986,7 +993,30 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			statsPanel.setBounds(new Rectangle(400, 40, 500, 400));
 			statsPanel.add(CreateTitle("Satistics:",Color.white,15,100,100,70,20));
 			statsPanel.add(statArea = CreateText(10,50,40,60,350,250));
+			statArea.setEditable(false);
 			statsPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,360,100,30));
+			
+			
+			
+			add(dateBegin = CreateBoxText(20,100,20,80,20));
+			calendarBegin = new GregorianCalendar();
+			dateBegin.setText(calendarBegin.get(Calendar.DAY_OF_MONTH)+"/"+calendarBegin.get(Calendar.MONTH)+"/"+calendarBegin.get(Calendar.YEAR));
+			dateBegin.setEditable(false);
+			add(CreateButton("Begin Date",Color.white,"Choose the begining of the statistical count",15,60,50,150,30));
+			
+			add(dateEnd = CreateBoxText(20,100,90,80,20));
+			calendarEnd = new GregorianCalendar();
+			dateEnd.setText(calendarEnd.get(Calendar.DAY_OF_MONTH)+"/"+calendarEnd.get(Calendar.MONTH)+"/"+calendarEnd.get(Calendar.YEAR));
+			dateEnd.setEditable(false);
+			
+			add(CreateButton("End Date",Color.white,"Choose the begining of the statistical count",15,60,120,150,30));
+			
+			calendarEnd=null;
+			calendarBegin=null;
+			dateBegin.setText("00/00/00");
+			dateEnd.setText("00/00/00");
+			add(CreateButton("Reset Dates",Color.white,"Set the statistical count global",15,60,200,150,30));
+			
 			
 			this.add(statsPanel);
 			
@@ -1007,12 +1037,64 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				
 			}
 			else if(e.getComponent().getName().equals("Submit")){
-				statArea.setText(statisticsManager.generate(null, null));
-			}
-			else if (e.getComponent().getName().equals("Return")){
+				if(calendarBegin==null||calendarEnd==null){
+					statArea.setText("Global Statistics\n"
+							+statisticsManager.generate(null, null));
+					
+					return;
+				}
+				if(calendarEnd.after(calendarBegin)){
+					statArea.setText(statisticsManager.generate(calendarBegin, calendarEnd));
+				}else{
+					statArea.setText("The end date is set before the begin one. FAIL");
+				}
+			}else if (e.getComponent().getName().equals("Reset Dates")){
+				calendarEnd=null;
+				calendarBegin=null;
+				dateBegin.setText("00/00/00");
+				dateEnd.setText("00/00/00");
+				
+			
+			}else if (e.getComponent().getName().equals("Return")){
 				statisticsManagerMenu.setVisible(false);
 				menu.setVisible(true);
+			}else if(e.getComponent().getName().equals("Begin Date")){
+				JFrame date = new JFrame("Booking");
+				jCalendarBegin = new JCalendar();
+				
+				date.getContentPane().add(jCalendarBegin);
+				date.pack();
+				date.setVisible(true);
+				jCalendarBegin.addPropertyChangeListener(this);
+			}else if(e.getComponent().getName().equals("End Date")){
+				JFrame date = new JFrame("Booking");
+				jCalendarEnd = new JCalendar();
+				
+				date.getContentPane().add(jCalendarEnd);
+				date.pack();
+				date.setVisible(true);
+				jCalendarEnd.addPropertyChangeListener(this);
 			}
+		}
+		
+		/* Every time the user selects a new date, an event is generated*/
+		public void propertyChange(PropertyChangeEvent evt) {
+			Object source = evt.getSource();
+			Calendar cal ;
+	        if (source == jCalendarEnd) {
+	        	cal = jCalendarEnd.getCalendar();
+	        	calendarEnd = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+	        	dateEnd.setText(calendarEnd.get(Calendar.DAY_OF_MONTH)+"/"+calendarEnd.get(Calendar.MONTH)+"/"+calendarEnd.get(Calendar.YEAR));
+	        
+	        	
+	        }else{
+	        	cal = jCalendarBegin.getCalendar();
+	        	calendarBegin = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+	        	dateBegin.setText(calendarBegin.get(Calendar.DAY_OF_MONTH)+"/"+calendarBegin.get(Calendar.MONTH)+"/"+calendarBegin.get(Calendar.YEAR));
+	        }
+			
+			
+			
 		}
 	}
 	

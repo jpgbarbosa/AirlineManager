@@ -23,6 +23,7 @@ public class FlightsManager {
 	private Vector<Flight> finishedFlights;
 	public static int idCreator = 0;
 	private Prevayler prevayler;
+	//TODO: usar o prevayler para gravar isto
 	private Hashtable<Integer, Vector<RFlight>> regularFlights;
 	public Prevayler getPrevayler() {
 		return prevayler;

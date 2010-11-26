@@ -79,10 +79,10 @@ public class PlanesManager {
 	public int getNumPlanes(GregorianCalendar beginning, GregorianCalendar end){
 		int num = 0;
 		
-		for(Airplane a:planesList)
+		for(Airplane a:planesList){
 			if(a.getDate().after(beginning) && a.getDate().before(end))
 				num++;
-		
+		}
 		return num;
 	}
 	
