@@ -20,6 +20,7 @@ public class Flight implements Serializable{
 	private String origin;
 	private String destination;
 	private boolean isRegular;
+	private boolean isCharter;
 	private boolean wasCancelled;
 	private int id;
 	public Lock lock = new Lock();
@@ -28,7 +29,7 @@ public class Flight implements Serializable{
 	public static int idCreator = 0;
 	
 	/* The constructor. */
-	public Flight(Airplane plane, GregorianCalendar data, String origin, String dest, boolean isRegular){
+	public Flight(Airplane plane, GregorianCalendar data, String origin, String dest, boolean isRegular, boolean isCharter){
 		this.airplane = plane;
 		this.origin = origin;
 		this.destination = dest;
@@ -37,6 +38,7 @@ public class Flight implements Serializable{
 		this.isRegular = isRegular;
 		this.wasCancelled = false;
 		this.id = idCreator++;
+		this.isCharter = isCharter;
 	}
 	
 	/*Override .equals()*/
@@ -150,6 +152,10 @@ public class Flight implements Serializable{
 
 	public static int getIdCreator() {
 		return idCreator;
+	}
+	
+	public boolean isCharter() {
+		return isCharter;
 	}
 	
 	public String toString(){

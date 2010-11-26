@@ -74,11 +74,10 @@ public class FlightsManager {
 	}
 	
 	/* Schedules a new flight. */
-	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String origin, String destination, boolean isRegular){
-		Flight flight = new Flight(plane, date, origin, destination, isRegular);
+	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String origin, String destination, boolean isRegular, boolean isCharter){
+		Flight flight = new Flight(plane, date, origin, destination, isRegular, isCharter);
 		int i;
 		boolean completed;
-		
 		
 		flight.setId(idCreator++);
 		/* First, we check if we can insert in this specific plane. */

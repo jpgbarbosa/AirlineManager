@@ -475,6 +475,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		private JTextArea confirmActionSchedule;
 		
 		private JComboBox regularSchedule;
+		private JComboBox normalSchedule;
 		
 		/* RESCHEDULEPANEL */
 		private JTextField rescheduleFlightID;
@@ -511,7 +512,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			/* Defines the subpanels. */
 			schedulePanel.setLayout(null);
-			schedulePanel.setBounds(new Rectangle(400, 40, 500, 400));
+			schedulePanel.setBounds(new Rectangle(400, 40, 500, 500));
 			schedulePanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
 			schedulePanel.add(scheduleDate = CreateBoxText(20,100,20,80,20));
 			scheduleDate.setText("0/0/0");
@@ -526,13 +527,18 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			schedulePanel.add(originSchedule = CreateComboBox(120,150,120,20,destinationsPrices.getDestinations()));
 			schedulePanel.add(CreateTitle("Destination:",Color.black,15,60,180,100,20));
 			schedulePanel.add(destinationSchedule = CreateComboBox(150,180,120,20,destinationsPrices.getDestinations()));
-			schedulePanel.add(CreateTitle("Regular Flight:",Color.black,15,60,210,100,20));
-			Vector<String> choice = new Vector<String>();
-			choice.add("Yes");
-			choice.add("No");
-			schedulePanel.add(regularSchedule = CreateComboBox(160,210,50,20,choice));
-			schedulePanel.add(confirmActionSchedule = CreateText(400,120,60,240,400,120));
-			schedulePanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,365,100,30));
+			schedulePanel.add(CreateTitle("Normal Flight:",Color.black,15,60,210,100,20));
+			Vector<String> choiceChar = new Vector<String>();
+			choiceChar.add("Yes");
+			choiceChar.add("No");
+			schedulePanel.add(normalSchedule = CreateComboBox(160,240,50,20,choiceChar));
+			schedulePanel.add(CreateTitle("Regular Flight:",Color.black,15,60,240,100,20));
+			Vector<String> choiceReg = new Vector<String>();
+			choiceReg.add("Yes");
+			choiceReg.add("No");
+			schedulePanel.add(regularSchedule = CreateComboBox(160,210,50,20,choiceReg));
+			schedulePanel.add(confirmActionSchedule = CreateText(400,120,60,270,400,120));
+			schedulePanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,395,100,30));
 			
 			reschedulePanel.setLayout(null);
 			reschedulePanel.setBounds(new Rectangle(400, 40, 500, 400));
@@ -713,7 +719,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 																	!destinationSchedule.getSelectedItem().equals("")){
 								//System.out.println(date.get(Calendar.MONTH));
 								//TODO: Passar um boolean no fim para distinguir voo regular de charter (isRegular)
-								Flight flight = flightsManager.scheduleFlight(airplane, date, originSchedule.getSelectedItem().toString(), destinationSchedule.getSelectedItem().toString(),regularSchedule.getSelectedItem().toString()=="Yes"?true:false);
+								Flight flight = flightsManager.scheduleFlight(airplane,
+										date, originSchedule.getSelectedItem().toString(),destinationSchedule.getSelectedItem().toString(),
+											regularSchedule.getSelectedItem().toString() == "Yes" ? true : false,
+												normalSchedule.getSelectedItem().toString() == "Yes" ? false : true);
 								if (flight == null){
 									//TODO: Maybe we can inform to which one.
 									logInfo.setText("This flights is too close to another!");
