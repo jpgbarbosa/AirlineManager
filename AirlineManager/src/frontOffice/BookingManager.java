@@ -1,5 +1,7 @@
 package frontOffice;
 
+import java.util.GregorianCalendar;
+
 import bookings.Booking;
 import common.Flight;
 
@@ -7,24 +9,6 @@ public class BookingManager {
 	
 	/* The constructor. */
 	public BookingManager(){
-		
-	}
-	
-	/* Books a flight. */
-	public String bookFlight(Flight flight, Booking booking){
-		/* First, we need to check if we still have space in this flight. */
-		if(flight.isClosed()){
-			return "This flight is over, please choose another flight";
-		}
-		if(flight.isWasCancelled()){
-			return "This flight was cancelled, please choose another flight";
-		}
-		if (flight.isFull()){
-			return "This flight is full, please choose another flight.\n";
-		}
-		
-		flight.newBooking(booking);
-		return "This client was successfully booked in this flight.\n";
 		
 	}
 	

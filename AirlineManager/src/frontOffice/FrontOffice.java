@@ -511,13 +511,22 @@ public class FrontOffice extends UnicastRemoteObject{
 			        }
 					if (validPhone){
 						if (!name.equals("") && !address.equals("") && !mail.equals("")){
-							String answer = backOffice.scheduleRegularFlight(id, name, address, phone, mail, seats);
+							String answer = backOffice.scheduleFlight(id, name, address, phone, mail, seats, loggedIn);
 							if (answer.equals("Innexistent flight")){
 								confirmActionNew.setText("There's no such flight.");
 							}
 							else if (answer.equals("Scheduled")){
 								//TODO: We have to proceed to the payment.
 								confirmActionNew.setText("Flight scheduled.");
+							}
+							else if (answer.equals("Over")){
+								confirmActionNew.setText("This flight is over, please choose another.");
+							}
+							else if (answer.equals("Cancelled")){
+								confirmActionNew.setText("This flight was cancelled, please choose another.");
+							}
+							else if (answer.equals("Charter")){
+								confirmActionNew.setText("Sorry, but only operators can book charter flights.");
 							}
 							else{
 								confirmActionNew.setText("There are only " + answer.split(" ")[1] + " empty seats.");
@@ -533,7 +542,7 @@ public class FrontOffice extends UnicastRemoteObject{
 					
 					
 				}catch(Exception e1){
-					confirmActionNew.setText("Invalid field(s).");
+					confirmActionNew.setText("Invalid field(s).\n");
 				}
 			}
 			else if (e.getComponent().getName().equals("Return")){

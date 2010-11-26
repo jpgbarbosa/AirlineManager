@@ -436,7 +436,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 					if(f!=null){
 						status=true;
 						display.setText("Your Notification was sent to \n");
-						for(Booking r: f.getSeats()){
+						for(Booking r: f.getBookings()){
 							if(feedBackManager.sendNotificationUser(r.getEmail(), "Notification", messageToSend.getText()))
 								display.append(r.getEmail()+"\n");
 						}
@@ -1230,12 +1230,25 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	}
 	
 	@Override
-	public String scheduleRegularFlight(int idFlight, String name, String address, String phone, String mail, int seats) throws RemoteException {
+	public String scheduleFlight(int idFlight, String name, String address, String phone, String mail, int seats, boolean isOperator) throws RemoteException {
 		
 		Flight flight = flightsManager.searchFlightById(idFlight);
 		
+		/* First, we need to check if there's such a flight. */
 		if (flight == null){
 			return "Innexistent flight";
+		}
+		/* Second, we need to check if we still have space in this flight. */
+		else if ((new GregorianCalendar()).after(flight.getDate())){
+			return "Over";
+		}
+		/* Third, it may have been cancelled. */
+		else if (flight.isWasCancelled()){
+			return "Cancelled";
+		}
+		/* Fourth, we only accept operators booking charter flights. */
+		else if (!flight.isRegular() && !isOperator){
+			return "Charter";
 		}
 		
 		/* We have to make sure several people aren't scheduling at the same time for the same flight. */
@@ -1246,11 +1259,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			int diff = flight.getAirplane().getNoSeats() - seats;
 			
 			if (diff < 0){
-				return "InsufficientSeats " + diff;
+				return "InsufficientSeats " + (flight.getAirplane().getNoSeats() - flight.getOccupiedSeats());
 			}
 
 			flight.newBooking(new RegularBooking(flight, seats, name, address, phone, mail));
-			flight.decreaseOccupied(seats);
+			flight.increaseOccupied(seats);
 			
 		}
 		

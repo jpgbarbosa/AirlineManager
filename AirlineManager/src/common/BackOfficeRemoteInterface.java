@@ -19,6 +19,6 @@ public interface BackOfficeRemoteInterface extends Remote{
 	
 	abstract double getPrice(String orig, String dest) throws RemoteException;
 	
-	abstract String scheduleRegularFlight(int idFlight, String name, String address, String phone, String mail, int seats) throws RemoteException;
+	abstract String scheduleFlight(int idFlight, String name, String address, String phone, String mail, int seats, boolean isOperator) throws RemoteException;
 	
 }

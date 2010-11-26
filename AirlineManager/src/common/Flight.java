@@ -10,7 +10,7 @@ import bookings.Booking;
 
 public class Flight implements Serializable{
 	/* The list of bookings registered for this flight. */
-	private Vector <Booking> seats;
+	private Vector <Booking> bookings;
 	private int occupied;
 	/* The list of waiting clients. */
 	//private Vector <Booking> waitingList;
@@ -21,9 +21,8 @@ public class Flight implements Serializable{
 	private String destination;
 	private boolean isRegular;
 	private boolean wasCancelled;
-	private boolean isClosed;
 	private int id;
-	public Object lock;
+	public Lock lock = new Lock();
 	
 	//TODO: This is temporary!
 	public static int idCreator = 0;
@@ -33,11 +32,10 @@ public class Flight implements Serializable{
 		this.airplane = plane;
 		this.origin = origin;
 		this.destination = dest;
-		this.seats = new Vector <Booking>();
+		this.bookings = new Vector <Booking>();
 		this.date = data;
 		this.isRegular = isRegular;
 		this.wasCancelled = false;
-		this.isClosed = false;
 		this.id = idCreator++;
 	}
 	
@@ -56,17 +54,17 @@ public class Flight implements Serializable{
 	
 	/* Adds a new booking to the flight. */
 	public void newBooking (Booking booking){
-		seats.add(booking);
+		bookings.add(booking);
 	}
 	
 	/* Removes a booking from the flight. */
 	public boolean removeBooking (Booking booking){
-		return seats.remove(booking);
+		return bookings.remove(booking);
 	}
 
 	/* Getters and setters. */
-	public Vector <Booking> getSeats() {
-		return seats;
+	public Vector <Booking> getBookings() {
+		return bookings;
 	}
 
 	public Airplane getAirplane() {
@@ -89,8 +87,8 @@ public class Flight implements Serializable{
 		return destination;
 	}
 
-	public void setSeats(Vector <Booking> seats) {
-		this.seats = seats;
+	public void setBookings(Vector <Booking> seats) {
+		this.bookings = seats;
 	}
 
 	public void setAirplane(Airplane airplane) {
@@ -109,20 +107,13 @@ public class Flight implements Serializable{
 		this.destination= destiny;
 	}
 	
-	/* Checks whether is flight is full or not. */
-	public boolean isFull(){
-		/* We have no more seats on this flight. */
-		if (airplane.getNoSeats() - seats.size() == 0){
-			isClosed = true;
-			return true;
-		}
-		
-		/* We still have at least one empty seat. */
-		return false;
+	/* The number of empty seats for this flight. */
+	public int getEmptySeats(){
+		return airplane.getNoSeats() - occupied;
 	}
 
 	public int getOccupiedSeats() {
-		return seats.size();
+		return occupied;
 	}
 
 	public String getDestination() {
@@ -157,14 +148,6 @@ public class Flight implements Serializable{
 		this.wasCancelled = wasCancelled;
 	}
 
-	public boolean isClosed() {
-		return isClosed;
-	}
-
-	public void setClosed(boolean isClosed) {
-		this.isClosed = isClosed;
-	}
-
 	public static int getIdCreator() {
 		return idCreator;
 	}
@@ -172,7 +155,7 @@ public class Flight implements Serializable{
 	public String toString(){
 		return "ID: "+ id + "\nDate: "+date.get(Calendar.DAY_OF_MONTH)+"/"+date.get(Calendar.MONTH)+date.get(Calendar.YEAR)+
 		"\nOrigin: "+ origin + "\nDestination: "+destination + "\nRegular:"+ new Boolean(isRegular).toString() + 
-		"\nCancelled: "+ new Boolean(wasCancelled).toString() +"\nOver: "+ new Boolean(isClosed).toString()+ "\n\n";
+		"\nCancelled: "+ new Boolean(wasCancelled).toString() +"\nOver: "+ (getEmptySeats() > 0 ? "Not closed." : "Closed.") + "\n\n";
 	}
 	
 	public void increaseOccupied(){
@@ -191,5 +174,9 @@ public class Flight implements Serializable{
 		occupied -= no;
 	}
 	
+	
+}
+
+class Lock implements Serializable{
 	
 }

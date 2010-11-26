@@ -121,7 +121,7 @@ public class FlightsManager {
 		 * DONE: Change and Warn passengers!!
 		 */
 		GregorianCalendar calendar=flight.getDate();
-		for(Booking r: flight.getSeats()){
+		for(Booking r: flight.getBookings()){
 			feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
 					"The Flight "+flight.getId()+" with destination to "+ flight.getDestiny()+", in "+ 
 					calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
@@ -140,7 +140,7 @@ public class FlightsManager {
 			flight.setDate(date);
 			/* TODO: Warn Clients!! */
 			GregorianCalendar calendar=flight.getDate();
-			for(Booking r: flight.getSeats()){
+			for(Booking r: flight.getBookings()){
 				feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
 						"The Flight "+flight.getId()+" with destination to "+ flight.getDestiny()+", in "+ 
 						calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
