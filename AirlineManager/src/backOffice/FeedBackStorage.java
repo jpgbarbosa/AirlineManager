@@ -5,7 +5,6 @@ import java.util.Vector;
 
 import messages.Feedback;
 
-import org.prevayler.*;
 public class FeedBackStorage implements Serializable{
 	
 	/**

@@ -10,23 +10,27 @@ import bookings.Booking;
 public class Flight {
 	/* The list of bookings registered for this flight. */
 	private Vector <Booking> seats;
+	private int occupied;
 	/* The list of waiting clients. */
 	//private Vector <Booking> waitingList;
 	/* The airplane associated to this flight. */
 	private Airplane airplane;
 	private GregorianCalendar date;
+	private String origin;
 	private String destination;
 	private boolean isRegular;
 	private boolean wasCancelled;
 	private boolean isClosed;
 	private int id;
+	public Object lock;
 	
 	//TODO: This is temporary!
 	public static int idCreator = 0;
 	
 	/* The constructor. */
-	public Flight(Airplane plane, GregorianCalendar data, String dest, boolean isRegular){
+	public Flight(Airplane plane, GregorianCalendar data, String origin, String dest, boolean isRegular){
 		airplane = plane;
+		this.origin = origin;
 		destination = dest;
 		seats = new Vector <Booking>();
 		date = data;
@@ -73,9 +77,6 @@ public class Flight {
 	}
 	
 	public Date getData() {
-		String day, month, year, hour, minute;
-		
-		
 		return date.getTime();
 	}
 
@@ -130,6 +131,14 @@ public class Flight {
 	public void setDestination(String destination) {
 		this.destination = destination;
 	}
+	
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
 
 	public boolean isRegular() {
 		return isRegular;
@@ -161,6 +170,22 @@ public class Flight {
 	
 	public String toString(){
 		return "ID: "+ id + "\n";
+	}
+	
+	public void increaseOccupied(){
+		occupied++;
+	}
+	
+	public void increaseOccupied(int no){
+		occupied += no;
+	}
+	
+	public void decreaseOccupied(){
+		occupied--;
+	}
+	
+	public void decreaseOccupied(int no){
+		occupied -= no;
 	}
 	
 	

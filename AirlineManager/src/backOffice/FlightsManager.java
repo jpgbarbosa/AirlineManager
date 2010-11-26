@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Vector;
 import org.prevayler.*;
 
@@ -13,10 +12,11 @@ import bookings.Booking;
 import common.Airplane;
 import common.Flight;
 
-import common.FileManager;
 import common.RFlight;
 
 public class FlightsManager {
+	FeedBackManager feedBackManager;
+	
 	/* The list of all(?) the flights in the system. */
 	
 	private Vector<Flight> flightsList;
@@ -30,7 +30,8 @@ public class FlightsManager {
 	}
 	
 	/* The constructor. */
-	public FlightsManager(){
+	@SuppressWarnings("unchecked")
+	public FlightsManager(FeedBackManager feed){
 		super();
 		
 		try {
@@ -47,6 +48,8 @@ public class FlightsManager {
 				if(f.getId()>idCreator)
 					idCreator=f.getId()+1;
 			}
+		
+		feedBackManager = feed;
 		//TODO: prevayler regularFlights
 	}
 	
@@ -72,7 +75,7 @@ public class FlightsManager {
 	
 	/* Schedules a new flight. */
 	public Flight scheduleFlight(Airplane plane, GregorianCalendar date, String origin, String destination, boolean isRegular){
-		Flight flight = new Flight(plane, date, destination, isRegular);
+		Flight flight = new Flight(plane, date, origin, destination, isRegular);
 		int i;
 		boolean completed;
 		
@@ -83,7 +86,7 @@ public class FlightsManager {
 		
 		if (completed){
 			if(isRegular){
-				//TODO: Alterar origin
+				//TODO: Change origin
 				RFlight rflight = new RFlight(origin, destination);
 				Vector<RFlight> aux = regularFlights.get(date.DAY_OF_WEEK);
 				for(i=0;i<aux.size();i++){
@@ -119,7 +122,7 @@ public class FlightsManager {
 		 */
 		GregorianCalendar calendar=flight.getDate();
 		for(Booking r: flight.getSeats()){
-			FeedBackManager.sendNotificationUser(r.getClient(), "Notification", 
+			feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
 					"The Flight "+flight.getId()+" with destination to "+ flight.getDestiny()+", in "+ 
 					calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
 					calendar.get(Calendar.HOUR_OF_DAY)+":"+(calendar.get(Calendar.MINUTE)+1)+ 
@@ -138,7 +141,7 @@ public class FlightsManager {
 			/* TODO: Warn Clients!! */
 			GregorianCalendar calendar=flight.getDate();
 			for(Booking r: flight.getSeats()){
-				FeedBackManager.sendNotificationUser(r.getClient(), "Notification", 
+				feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
 						"The Flight "+flight.getId()+" with destination to "+ flight.getDestiny()+", in "+ 
 						calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
 						calendar.get(Calendar.HOUR_OF_DAY)+":"+(calendar.get(Calendar.MINUTE)+1)+ 

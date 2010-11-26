@@ -6,7 +6,6 @@ import java.util.GregorianCalendar;
 import java.util.Vector;
 import org.prevayler.*;
 import common.Airplane;
-import common.FileManager;
 
 public class PlanesManager {
 	/* The list of registered planes. */
@@ -17,6 +16,7 @@ public class PlanesManager {
 		return prevayler;
 	}
 	/* The constructor. */
+	@SuppressWarnings("unchecked")
 	public PlanesManager(){
 		super();
 		
@@ -119,6 +119,7 @@ class addPlane implements Transaction{
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void executeOn(Object arg0, Date arg1) {
 		
@@ -147,6 +148,7 @@ class removePlane implements Transaction{
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void executeOn(Object arg0, Date arg1) {
 		
