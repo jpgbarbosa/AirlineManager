@@ -1,6 +1,7 @@
 package backOffice;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -20,6 +21,7 @@ import java.util.Vector;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -62,6 +64,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	private PlanesManagerMenu planesManagerMenu;
 	private StatisticsManagerMenu statisticsManagerMenu;
 	private LoginMenu loginMenu;
+	private ShowDepartures showDepartures;
 	
 	/* The main constructor. */
 	public BackOffice() throws RemoteException{
@@ -197,8 +200,36 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		panel.setLayout(null);
-		panel.setBackground(Color.lightGray);
 		panel.setVisible(true);
+		
+		/* Sets the panel that will hold the time display. */
+		JPanel timeDisplay = new JPanel();
+		timeDisplay.setLayout(null);
+		timeDisplay.setBounds(new Rectangle(765, 11, 250, 50));
+		timeDisplay.setOpaque(false);
+		JLabel time = new JLabel();
+		timeDisplay.add(time);
+		timeDisplay.setVisible(true);
+		panel.add(timeDisplay);
+		new ShowTime(time);
+		
+		/* Sets the panel that will hold the time display. */
+		JPanel departuresDisplay = new JPanel();
+		departuresDisplay.setLayout(null);
+		departuresDisplay.setBounds(new Rectangle(400, 500, 500, 400));
+		departuresDisplay.setOpaque(false);
+		JLabel departureLabel = new JLabel();
+		
+		/* Remove later */
+		departureLabel.setText("Airplane 10 is leaving from Lisboa to Madrid (flight 100)");
+		/* END */
+		showDepartures = new ShowDepartures(departuresDisplay, departureLabel);
+		departuresDisplay.add(showDepartures.CreateImage("./src/images/plane15.gif","",10,10,230,172));
+		
+		departuresDisplay.add(departureLabel);
+		departuresDisplay.setVisible(true);
+		
+		panel.add(departuresDisplay);
 		
 		panel.add(loginMenu);
 		panel.add(menu);
@@ -206,6 +237,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		panel.add(flightsManagerMenu);
 		panel.add(planesManagerMenu);
 		panel.add(statisticsManagerMenu);
+		
 		
 		//menu.CreateImage("./src/imagens/furniture.jpg","Visite as nossas exposições!",250,100,500,340);
 		loginMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
@@ -559,7 +591,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			listPanel.setLayout(null);
 			listPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			listPanel.add(CreateTitle("LIST OF FLIGHTS:",Color.white,15,20,20,150,20));
-			listPanel.add(CreateTitle("     ID      PLANE        DESTINY                     TIME",Color.white,15,20,40,400,20));
+			listPanel.add(CreateTitle("     ID      PLANE        DESTINATION                  TIME",Color.white,15,20,40,400,20));
 			listPanel.add(listArea = CreateText(10,50,40,60,450,320));
 			
 			/* Adds the subpanels to the main panel. */
@@ -628,17 +660,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				listPanel.setVisible(true);
 				schedulePanel.setVisible(false);
 				
-				int i;
-				Vector <Flight> flightList = flightsManager.getFlightsList();
-				
-				listArea.setText("");
-				for (i = 0; i < flightList.size(); i++){
-					Flight flight = flightList.get(i);
-					listArea.append(flight.getId() + "                " + flight.getAirplane().getId() + "\t           " 
-							+ flight.getDestiny() + "\t\t " + flight.getData().toString() + "\n");
-				}
-				
-				//GO HERE
+				listArea.setText(flightsManager.listFlights());
 				
 				menuIdentifier = "listPanel";
 			}
@@ -1014,8 +1036,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		private JTextField dateEnd;
 		public StatisticsManagerMenu(){
 			/* Creates the buttons that redirect to each manager window. */
-			//CreateButton("Statistics 1",Color.white,"Manage Airplanes",15,60,200,150,30);
-			//CreateButton("Statistics 2",Color.white,"Manage Flights",15,60,250,150,30);
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			
 			/* Creates the subpanels */
@@ -1026,6 +1046,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			statsPanel.add(statArea = CreateText(10,50,40,60,350,250));
 			statArea.setEditable(false);
 			statsPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,360,100,30));
+			statsPanel.setOpaque(false);
 			
 			
 			
@@ -1266,6 +1287,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		}
 		
 		return "Scheduled";
+	}
+	
+	@Override
+	public String listFlights() throws RemoteException{
+		return flightsManager.listFlights();
 	}
 	
 	@Override

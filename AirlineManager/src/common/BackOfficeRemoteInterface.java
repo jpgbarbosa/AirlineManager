@@ -22,4 +22,6 @@ public interface BackOfficeRemoteInterface extends Remote{
 	abstract String scheduleFlight(int idFlight, String name, String address, String phone, String mail, int seats, boolean isOperator, int bookingNumber) throws RemoteException;
 	
 	abstract String cancelFlight(int idFlight, int idBooking) throws RemoteException;
+
+	abstract String listFlights() throws RemoteException;
 }

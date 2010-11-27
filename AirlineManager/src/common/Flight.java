@@ -44,7 +44,7 @@ public class Flight implements Serializable{
 	/*Override .equals()*/
 	public boolean equals(Object obj){
 		Flight f=(Flight) obj;
-		if(airplane.getId()==f.getAirplane().getId()&&destination.equals(f.getDestiny())){
+		if(airplane.getId()==f.getAirplane().getId()&&destination.equals(f.getDestination())){
 			if(date.get(Calendar.DAY_OF_YEAR)==f.getDate().get(Calendar.DAY_OF_YEAR)&&
 					date.get(Calendar.YEAR)==f.getDate().get(Calendar.YEAR)&&
 					date.get(Calendar.HOUR)==f.getDate().get(Calendar.HOUR))
@@ -94,7 +94,7 @@ public class Flight implements Serializable{
 		return id;
 	}
 	
-	public String getDestiny() {
+	public String getDestination() {
 		return destination;
 	}
 
@@ -114,8 +114,8 @@ public class Flight implements Serializable{
 		this.id = id;
 	}
 	
-	public void setDestiny(String destiny) {
-		this.destination= destiny;
+	public void setDestination(String destination) {
+		this.destination= destination;
 	}
 	
 	/* The number of empty seats for this flight. */
@@ -125,14 +125,6 @@ public class Flight implements Serializable{
 
 	public int getOccupiedSeats() {
 		return occupied;
-	}
-
-	public String getDestination() {
-		return destination;
-	}
-
-	public void setDestination(String destination) {
-		this.destination = destination;
 	}
 	
 	public String getOrigin() {
