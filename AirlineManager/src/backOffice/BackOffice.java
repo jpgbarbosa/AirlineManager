@@ -88,7 +88,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		SnapshotTimer s=new SnapshotTimer(planesManager.getPrevayler(),flightsManager.getPrevayler());
 		BackOffice.now=new GregorianCalendar();
-		//TimeThread timeThread= new TimeThread(1);
+		TimeThread timeThread= new TimeThread(1);
 	}
 	
 	public static void main(String[] args) throws RemoteException {

@@ -161,8 +161,8 @@ public class FlightsManager {
 
 		for (int i = 0; i < flightsList.size(); i++){
 			Flight flight = flightsList.get(i);
-			text += flight.getId() + "                " + flight.getAirplane().getId() + "\t           " 
-					+ flight.getDestination() + "\t " + flight.getData().toString() + "\n";
+			text += flight.getId()+ "                " + flight.getAirplane().getId() + "                  " 
+					+ flight.getDestination() + "     \t"+ flight.getData().toString() + "\n";
 		}
 		return text;
 	}
