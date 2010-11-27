@@ -1504,7 +1504,7 @@ class SnapshotTimer extends Thread {
  
        try {
            while (true) { 
-               Thread.sleep(1000); // makes snapshots to the DB every 1 seconds
+               Thread.sleep(12500); // makes snapshots to the DB every 1 seconds
                planesPrevayler.takeSnapshot();
                flightsPrevayler.takeSnapshot();
            }
