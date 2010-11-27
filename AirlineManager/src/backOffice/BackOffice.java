@@ -63,8 +63,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	private StatisticsManagerMenu statisticsManagerMenu;
 	private LoginMenu loginMenu;
 	
-	private Vector<Operator> operatorList;
-	
 	/* The main constructor. */
 	public BackOffice() throws RemoteException{
 		super();
@@ -210,12 +208,12 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		panel.add(statisticsManagerMenu);
 		
 		//menu.CreateImage("./src/imagens/furniture.jpg","Visite as nossas exposições!",250,100,500,340);
-		/*loginMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		loginMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		menu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		feedBackManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		flightsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		planesManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
-		statisticsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);*/
+		statisticsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		
 		/*start.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
 		setup.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
@@ -309,27 +307,27 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			/* Defines the subpanels. */
 			positivePanel.setLayout(null);
-			positivePanel.setBounds(new Rectangle(400, 40, 500, 400));
+			positivePanel.setBounds(new Rectangle(500, 40, 500, 400));
 			positivePanel.add(CreateTitle("Positive Feedback Messages:",Color.white,15,20,20,200,20));
 			positivePanel.add(posMsgArea = CreateText(10,50,40,60,350,320));
 			posMsgArea.enableInputMethods(false);
 			
 			negativePanel.setLayout(null);
-			negativePanel.setBounds(new Rectangle(400, 40, 500, 400));
+			negativePanel.setBounds(new Rectangle(500, 40, 500, 400));
 			negativePanel.add(CreateTitle("Negative Feedback Messages:",Color.white,15,20,20,200,20));
 			negativePanel.add(negMsgArea = CreateText(10,50,40,60,350,320));
 			negMsgArea.enableInputMethods(false);
 			
 			
 			sendPanel.setLayout(null);
-			sendPanel.setBounds(new Rectangle(400, 40, 500, 400));
+			sendPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			sendPanel.add(CreateButton("Send To...",Color.white,"Select the client",15,60,300,200,30));
 			sendPanel.add(CreateTitle("Notification:",Color.white,15,20,20,100,20));
 			sendPanel.add(messageToSend = CreateText(10,50,40,60,300,200));
 			
 			
 			toPanel.setLayout(null);
-			toPanel.setBounds(new Rectangle(400, 40, 500, 400));
+			toPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			toPanel.add(CreateButton("Send",Color.white,"Send to client",15,150,50,200,30));
 			toPanel.add(CreateTitle("Enter the client's email address:",Color.white,15,20,20,250,20));
 			toPanel.add(email = CreateText(10,50,270,20,200,20));
@@ -466,10 +464,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		private JCalendar jCalendarFlight;
 		private GregorianCalendar calendar;
 		
-		//private JTextArea logInfo;
 		private String menuIdentifier;
 		
-		private JTextField dateSchedule;
 		private JComboBox originSchedule;
 		private JComboBox destinationSchedule;
 		private JTextArea confirmActionSchedule;
@@ -482,7 +478,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		private JTextField rescheduleDate;
 		private JTextField hourFieldReschedule;
 		private JTextField minuteFieldReschedule;
-		private JTextField destinyFieldReschedule;
 		private JTextArea confirmActionReschedule;
 		private JCalendar jCalendarReschedule;
 		/* CANCELPANEL */
@@ -511,27 +506,27 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			/* Defines the subpanels. */
 			schedulePanel.setLayout(null);
-			schedulePanel.setBounds(new Rectangle(400, 40, 500, 500));
-			schedulePanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
+			schedulePanel.setBounds(new Rectangle(500, 40, 500, 500));
+			schedulePanel.add(CreateTitle("Date:",Color.white,15,60,20,70,20));
 			schedulePanel.add(scheduleDate = CreateBoxText(20,100,20,80,20));
 			scheduleDate.setText("0/0/0");
 			schedulePanel.add(CreateButton("Schedule Date",Color.white,"Choose flight date",15,60,50,150,30));
-			schedulePanel.add(CreateTitle("TIME:",Color.black,15,60,90,70,20));
+			schedulePanel.add(CreateTitle("TIME:",Color.white,15,60,90,70,20));
 			schedulePanel.add(hourFieldSchedule = CreateBoxInt(20,100,90,20,20, 0));
-			schedulePanel.add(CreateTitle("h",Color.black,15,125,90,70,20));
+			schedulePanel.add(CreateTitle("h",Color.white,15,125,90,70,20));
 			schedulePanel.add(minuteFieldSchedule = CreateBoxInt(20,140,90,20,20, 0));
-			schedulePanel.add(CreateTitle("ID Plane:",Color.black,15,60,120,70,20));
+			schedulePanel.add(CreateTitle("ID Plane:",Color.white,15,60,120,70,20));
 			schedulePanel.add(idPlaneScheduleField = CreateBoxInt(20,135,120,50,20, 0));			
-			schedulePanel.add(CreateTitle("Origin:",Color.black,15,60,150,70,20));
+			schedulePanel.add(CreateTitle("Origin:",Color.white,15,60,150,70,20));
 			schedulePanel.add(originSchedule = CreateComboBox(120,150,120,20,destinationsPrices.getDestinations()));
-			schedulePanel.add(CreateTitle("Destination:",Color.black,15,60,180,100,20));
+			schedulePanel.add(CreateTitle("Destination:",Color.white,15,60,180,100,20));
 			schedulePanel.add(destinationSchedule = CreateComboBox(150,180,120,20,destinationsPrices.getDestinations()));
-			schedulePanel.add(CreateTitle("Normal Flight:",Color.black,15,60,210,100,20));
+			schedulePanel.add(CreateTitle("Normal Flight:",Color.white,15,60,210,100,20));
 			Vector<String> choiceChar = new Vector<String>();
 			choiceChar.add("Yes");
 			choiceChar.add("No");
 			schedulePanel.add(normalSchedule = CreateComboBox(160,210,50,20,choiceChar));
-			schedulePanel.add(CreateTitle("Regular Flight:",Color.black,15,60,240,100,20));
+			schedulePanel.add(CreateTitle("Regular Flight:",Color.white,15,60,240,100,20));
 			Vector<String> choiceReg = new Vector<String>();
 			choiceReg.add("Yes");
 			choiceReg.add("No");
@@ -540,29 +535,29 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			schedulePanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,395,100,30));
 			
 			reschedulePanel.setLayout(null);
-			reschedulePanel.setBounds(new Rectangle(400, 40, 500, 400));
-			reschedulePanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
+			reschedulePanel.setBounds(new Rectangle(500, 40, 500, 400));
+			reschedulePanel.add(CreateTitle("Flight ID:",Color.white,15,60,20,70,20));
 			reschedulePanel.add(rescheduleFlightID = CreateBoxInt(20,120,20,80,20,0));
-			reschedulePanel.add(CreateTitle("Date:",Color.black,15,60,50,70,20));
+			reschedulePanel.add(CreateTitle("Date:",Color.white,15,60,50,70,20));
 			reschedulePanel.add(rescheduleDate = CreateBoxText(20,100,50,80,20));
 			rescheduleDate.setText("0/0/0");
 			reschedulePanel.add(CreateButton("Reschedule Date",Color.white,"Choose flight date",15,60,80,150,30));
-			reschedulePanel.add(CreateTitle("TIME:",Color.black,15,60,120,70,20));
+			reschedulePanel.add(CreateTitle("TIME:",Color.white,15,60,120,70,20));
 			reschedulePanel.add(hourFieldReschedule = CreateBoxInt(20,100,120,20,20,0));
-			reschedulePanel.add(CreateTitle("h",Color.black,15,125,120,70,20));
+			reschedulePanel.add(CreateTitle("h",Color.white,15,125,120,70,20));
 			reschedulePanel.add(minuteFieldReschedule = CreateBoxInt(20,140,120,20,20,0));
 			reschedulePanel.add(confirmActionReschedule = CreateText(400,180,60,150,400,180));
 			reschedulePanel.add(CreateButton("Reschedule",Color.white,"Reschedule a flight",15,60,350,200,30));
 			
 			cancelPanel.setLayout(null);
-			cancelPanel.setBounds(new Rectangle(400, 40, 500, 400));
+			cancelPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			cancelPanel.add(CreateTitle("Flight's ID:",Color.white,15,100,100,70,20));
 			cancelPanel.add(idFlightCancelPanel = CreateBoxInt(20,175,100,50,20, 0));
 			cancelPanel.add(confirmActionCancel = CreateText(400,150,60,150,400,150));
 			cancelPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,330,100,30));
 			
 			listPanel.setLayout(null);
-			listPanel.setBounds(new Rectangle(400, 40, 500, 400));
+			listPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			listPanel.add(CreateTitle("LIST OF FLIGHTS:",Color.white,15,20,20,150,20));
 			listPanel.add(CreateTitle("     ID      PLANE        DESTINY                     TIME",Color.white,15,20,40,400,20));
 			listPanel.add(listArea = CreateText(10,50,40,60,450,320));
@@ -673,9 +668,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 					day = Integer.parseInt(dateFields[0]);
 					month = Integer.parseInt(dateFields[1]);
 					year = Integer.parseInt(dateFields[2]);
-					hour = Integer.parseInt(hourFieldSchedule.getText());
-					minute = Integer.parseInt(minuteFieldSchedule.getText());
-					idPlane = Integer.parseInt(idPlaneScheduleField.getText());
+					hour = Integer.parseInt(hourFieldReschedule.getText());
+					minute = Integer.parseInt(minuteFieldReschedule.getText());
+					idPlane = Integer.parseInt(rescheduleFlightID.getText());
 					Flight flight = search.searchFlightById(idPlane);
 					flight.setDate(new GregorianCalendar(year,month,day,hour,minute));
 					
@@ -813,7 +808,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		/* FINDPANEL VARIABLES */
 		private JTextField idSearchField;
-		private JTextArea searchArea;
 		private JTextArea findArea;
 		
 		public PlanesManagerMenu(){
@@ -833,7 +827,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			/* Defines the subpanels. */
 			buyPanel.setLayout(null);
-			buyPanel.setBounds(new Rectangle(400, 40, 500, 400));
+			buyPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			buyPanel.add(CreateTitle("No. Seats:",Color.white,15,100,100,70,20));
 			buyPanel.add(noSeatsField = CreateBoxInt(20,175,100,50,20, 0));
 			buyPanel.add(CreateTitle("Company:",Color.white,15,100,130,70,20));
@@ -844,24 +838,24 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			buyPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,330,100,30));
 			
 			sellPanel.setLayout(null);
-			sellPanel.setBounds(new Rectangle(400, 40, 500, 400));
+			sellPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			sellPanel.add(CreateTitle("Plane's ID:",Color.white,15,100,100,70,20));
 			sellPanel.add(idSellField = CreateBoxInt(20,175,100,50,20, 0));
 			sellPanel.add(sellArea = CreateText(10,10,60,140,320,140));
 			sellPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,330,100,30));
 			
 			listPanel.setLayout(null);
-			listPanel.setBounds(new Rectangle(400, 40, 500, 400));
+			listPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			listPanel.add(CreateTitle("LIST OF FLIGHTS:",Color.white,15,20,20,150,20));
 			listPanel.add(CreateTitle("     ID    SEATS        COMPANY            MODEL",Color.white,15,20,40,400,20));
 			listPanel.add(listArea = CreateText(10,50,40,60,350,280));
 			
 			findPanel.setLayout(null);
-			findPanel.setBounds(new Rectangle(400, 40, 500, 400));
+			findPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			findPanel.add(CreateTitle("Plane's ID:",Color.white,15,100,70,70,20));
 			findPanel.add(idSearchField = CreateBoxInt(20,175,70,50,20,0));
 			findPanel.add(findArea = CreateText(10,50,60,100,320,150));
-			findPanel.add(CreateButton("Search Flight",Color.white,"Search for a flight",15,100,300,200,30));
+			findPanel.add(CreateButton("Search Plane",Color.white,"Search for an Airplane",15,100,300,200,30));
 			
 			/* Adds the subpanels to the main panel. */
 			panel.add(buyPanel);
@@ -934,15 +928,18 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				findArea.setText("");
 				menuIdentifier = "findPanel";
 			}
-			else if(e.getComponent().getName().equals("Search Flight")){
+			else if(e.getComponent().getName().equals("Search Plane")){
 				Airplane airplane = null;
 				try{
 					int flightID = Integer.parseInt(idSearchField.getText());
 					airplane = search.searchPlane(flightID);
-					findArea.setText(airplane.toString());
+					if(airplane!= null)
+						findArea.setText(airplane.toString());
+					else
+						findArea.setText("Plane with id "+flightID+" does not exist.");
 					
-				} catch (Exception e1){
-					findArea.setText("Invalid data.");
+				} catch (NumberFormatException e1){
+					findArea.setText("Invalid flight id.");
 				}
 			}
 			else if ((e.getComponent().getName().equals("Submit"))){
@@ -1024,7 +1021,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			/* Creates the subpanels */
 			statsPanel=new JPanel();
 			statsPanel.setLayout(null);
-			statsPanel.setBounds(new Rectangle(400, 40, 500, 400));
+			statsPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			statsPanel.add(CreateTitle("Satistics:",Color.white,15,100,100,70,20));
 			statsPanel.add(statArea = CreateText(10,50,40,60,350,250));
 			statArea.setEditable(false);
@@ -1134,7 +1131,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	@SuppressWarnings("serial")
 	private class LoginMenu extends Window{
 		private JTextField usernameField, passwordField;
-		private JTextArea logInfo;
 		/* The constructor. */
 		public LoginMenu(){
 			
@@ -1144,7 +1140,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			CreateTitle("Password: ",Color.white,15,90,230,90,20);
 			passwordField = CreateBoxPassword(20,175,230,90,20);
 			
-			logInfo = CreateText(10,10,500,110,275,150);
 			usernameField.setText("admin");
 			passwordField.setText("fixe");
 			
@@ -1163,12 +1158,15 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				}
 				/* The user failed the authentication. */
 				else{
-					logInfo.setText("Sorry, but the login is incorrect.\n");
+					JOptionPane jp = new JOptionPane("Sorry, but the login is incorrect.",JOptionPane.INFORMATION_MESSAGE);
+					JDialog jd = jp.createDialog("Incorrect information");
+					jd.setBounds(new Rectangle(340,200,320,120));
+					jd.setVisible(true);
 				}
 			}
 			else if(e.getComponent().getName().equals("Exit")){
 				/* The user is leaving the application. */
-				JOptionPane jp= new JOptionPane("Have a nice day!",JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane jp = new JOptionPane("Have a nice day!",JOptionPane.INFORMATION_MESSAGE);
 				JDialog jd = jp.createDialog("Thank you!");
 				jd.setBounds(new Rectangle(340,200,320,120));
 				jd.setVisible(true);
@@ -1307,7 +1305,6 @@ class DestinationsPrices {
 	private Vector<String> destinations;
 	
 	public DestinationsPrices(){
-		/* TODO This is only temporary, we need to create a list of destinations */
 		destinations = new Vector<String>();
 		destinations.add("Lisbon");
 		destinations.add("Porto");
