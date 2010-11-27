@@ -1,6 +1,7 @@
 package backOffice;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -63,6 +64,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	private PlanesManagerMenu planesManagerMenu;
 	private StatisticsManagerMenu statisticsManagerMenu;
 	private LoginMenu loginMenu;
+	private ShowDepartures showDepartures;
 	
 	private Vector<Operator> operatorList;
 	
@@ -213,13 +215,30 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		panel.add(timeDisplay);
 		new ShowTime(time);
 		
+		/* Sets the panel that will hold the time display. */
+		JPanel departuresDisplay = new JPanel();
+		departuresDisplay.setLayout(null);
+		departuresDisplay.setBounds(new Rectangle(400, 500, 500, 400));
+		departuresDisplay.setOpaque(false);
+		JLabel departureLabel = new JLabel();
+		
+		/* Remove later */
+		departureLabel.setText("Airplane 10 is leaving from Lisboa to Madrid (flight 100)");
+		/* END */
+		showDepartures = new ShowDepartures(departuresDisplay, departureLabel);
+		departuresDisplay.add(showDepartures.CreateImage("./src/images/plane15.gif","",10,10,230,172));
+		
+		departuresDisplay.add(departureLabel);
+		departuresDisplay.setVisible(true);
+		
+		panel.add(departuresDisplay);
+		
 		panel.add(loginMenu);
 		panel.add(menu);
 		panel.add(feedBackManagerMenu);
 		panel.add(flightsManagerMenu);
 		panel.add(planesManagerMenu);
 		panel.add(statisticsManagerMenu);
-		
 		
 		
 		//menu.CreateImage("./src/imagens/furniture.jpg","Visite as nossas exposições!",250,100,500,340);
