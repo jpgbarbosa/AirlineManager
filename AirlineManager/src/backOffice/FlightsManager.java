@@ -36,6 +36,7 @@ public class FlightsManager {
 		
 		try {
 			prevayler = PrevaylerFactory.createPrevayler(new Vector<Flight>(), "FlightsList");
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,15 +44,25 @@ public class FlightsManager {
 			System.exit(0);
 		} 
 		flightsList=(Vector <Flight>) (prevayler.prevalentSystem());
-		if(flightsList.size()>0)
-			for(Flight f : flightsList){
-				if(f.getId()>idCreator)
-					idCreator=f.getId()+1;
-			}
+		
+		
+		if(flightsList.size()>0){
+			idCreator=getLastID();
+		}
 		
 		feedBackManager = feed;
 		//TODO: prevayler regularFlights
 
+	}
+	
+	private int getLastID(){
+		int id=0;
+		for(Flight a:flightsList)
+			if(a.getId()>id){
+				id=a.getId();
+			}
+		id++;
+		return id;
 	}
 	
 	/**
@@ -80,7 +91,8 @@ public class FlightsManager {
 		int i;
 		boolean completed;
 		
-		flight.setId(idCreator++);
+		flight.setId(idCreator);
+		idCreator++;
 		/* First, we check if we can insert in this specific plane. */
 		completed = plane.associateFlight(flight);
 		
@@ -88,6 +100,7 @@ public class FlightsManager {
 			if(isRegular){
 				//TODO: Change origin
 				RFlight rflight = new RFlight(origin, destination);
+				//TODO: deu NULLPOINTER AQUI
 				Vector<RFlight> aux = regularFlights.get(date.DAY_OF_WEEK);
 				for(i=0;i<aux.size();i++){
 					if(aux.get(i).getOrigin() == origin && aux.get(i).getDestination() == destination)
@@ -99,14 +112,16 @@ public class FlightsManager {
 			/* Inserts the flight ordered by date. */
 			for (i = 0; i < flightsList.size(); i++){
 				if (flightsList.get(i).getDate().after(flight.getDate())){
-					addFlight(i,flight);
+					this.addFlight(i,flight);
+					return flight;
 				}
 			}
 			
-			/* We insert it in the last position. */
+			/* We insert it in the last position.*/
 			if (i == flightsList.size()){
 				addFlight(i,flight);
 			}
+			
 			
 			return flight;
 		}
@@ -270,11 +285,11 @@ class addFlight implements Transaction{
 		this.flight=flight;
 		this.index=index;
 		
+		
 	}
 	
 	@Override
 	public void executeOn(Object arg0, Date arg1) {
-		
 		((Vector<Flight>)arg0).add(index,flight);
 	}
 	
