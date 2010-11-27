@@ -123,7 +123,7 @@ public class FlightsManager {
 		GregorianCalendar calendar=flight.getDate();
 		for(Booking r: flight.getBookings()){
 			feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
-					"The Flight "+flight.getId()+" with destination to "+ flight.getDestiny()+", in "+ 
+					"The Flight "+flight.getId()+" with destination to "+ flight.getDestination()+", in "+ 
 					calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
 					calendar.get(Calendar.HOUR_OF_DAY)+":"+(calendar.get(Calendar.MINUTE)+1)+ 
 					", was cancelled.\nWe are deeply sorry for all the trouble that might incur.");
@@ -142,7 +142,7 @@ public class FlightsManager {
 			GregorianCalendar calendar=flight.getDate();
 			for(Booking r: flight.getBookings()){
 				feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
-						"The Flight "+flight.getId()+" with destination to "+ flight.getDestiny()+", in "+ 
+						"The Flight "+flight.getId()+" with destination to "+ flight.getDestination()+", in "+ 
 						calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
 						calendar.get(Calendar.HOUR_OF_DAY)+":"+(calendar.get(Calendar.MINUTE)+1)+ 
 						", was rescheduled.\nWe are deeply sorry for all the trouble that might incur.");
@@ -155,6 +155,17 @@ public class FlightsManager {
 	 * 
 	 * Read Transactions
 	 */
+	
+	public String listFlights(){
+		String text = "";
+
+		for (int i = 0; i < flightsList.size(); i++){
+			Flight flight = flightsList.get(i);
+			text += flight.getId() + "                " + flight.getAirplane().getId() + "\t           " 
+					+ flight.getDestination() + "\t " + flight.getData().toString() + "\n";
+		}
+		return text;
+	}
 	
 	/* Search a flight by Date and plane*/
 	public Flight searchFlightByDate(Airplane plane, GregorianCalendar date){
