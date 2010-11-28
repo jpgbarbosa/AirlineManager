@@ -1,6 +1,7 @@
 package common;
 
 import java.rmi.*;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import messages.Feedback;
@@ -20,6 +21,8 @@ public interface BackOfficeRemoteInterface extends Remote{
 	abstract double getPrice(String orig, String dest) throws RemoteException;
 	
 	abstract String scheduleFlight(int idFlight, String name, String address, String phone, String mail, int seats, boolean isOperator, int bookingNumber) throws RemoteException;
+	
+	abstract String scheduleCharter(GregorianCalendar date, String origin, String destination,int seats) throws RemoteException;
 	
 	abstract String cancelFlight(int idFlight, int idBooking) throws RemoteException;
 

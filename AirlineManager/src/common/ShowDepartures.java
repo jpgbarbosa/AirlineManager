@@ -31,7 +31,7 @@ public class ShowDepartures extends Thread {
     	departure.setForeground(Color.white);
     	departure.validate();
     	
-    	CreateImage("./src/images/plane15.gif","",10,10,115,86);
+    	panel.add(CreateImage("./src/images/plane15.gif","",0,0,230,172));
     	
     	this.start();
     } 

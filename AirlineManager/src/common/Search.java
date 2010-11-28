@@ -41,6 +41,21 @@ public class Search {
 		return null;
 	}
 	
+	/* A method to search for a plane by the number of seats, useful to book charter flights */
+	public Airplane searchPlaneBySeats(int seats ){
+		Airplane airplane;
+		Iterator<Airplane> it = planesManager.getPlanesList().iterator();
+		
+		while(it.hasNext()){
+			airplane = it.next();
+			
+			/* If the airplane has enough seats, we have found our plane. */
+			if(airplane.getNoSeats() >= seats)
+				return airplane;
+		}
+		return null;
+	}
+	
 	/* A method to list all the flights for a given date. */
 	public Vector<Flight> listFlightsByDate(GregorianCalendar data){
 		

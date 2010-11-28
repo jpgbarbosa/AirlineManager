@@ -224,9 +224,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		departureLabel.setText("Airplane 10 is leaving from Lisboa to Madrid (flight 100)");
 		/* END */
 		showDepartures = new ShowDepartures(departuresDisplay, departureLabel);
-		departuresDisplay.add(showDepartures.CreateImage("./src/images/plane15.gif","",10,10,230,172));
-		
+		//showDepartures.CreateImage("./src/images/plane15.gif","",0,0,230,172);
 		departuresDisplay.add(departureLabel);
+		
 		departuresDisplay.setVisible(true);
 		
 		panel.add(departuresDisplay);
@@ -240,12 +240,12 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		
 		//menu.CreateImage("./src/imagens/furniture.jpg","Visite as nossas exposições!",250,100,500,340);
-		loginMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		/*loginMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		menu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		feedBackManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		flightsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		planesManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
-		statisticsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		statisticsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);*/
 		
 		/*start.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
 		setup.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
@@ -1322,6 +1322,19 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		return "Cancelled";
 	}
+
+	@Override
+	public String scheduleCharter(GregorianCalendar date, String origin, String destination, int seats) throws RemoteException {
+		Airplane plane = search.searchPlaneBySeats(seats);
+		
+		if(plane!= null){
+			Flight flight = flightsManager.scheduleFlight(plane, date, origin,destination, false,true);
+			if(flight!=null)
+				return "Charter was booked successfully";
+		}
+		return "It wasn't possible to book the charter, no planes available";
+	}
+
 	
 	
 }
