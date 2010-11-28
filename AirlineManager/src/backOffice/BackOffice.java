@@ -1,7 +1,6 @@
 package backOffice;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -992,8 +991,19 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 					}
 					
 					if (airplane != null && id != -1){
+						Vector<Flight> associatedFlights = airplane.getFlights();
+						
+						int counter = 0;
+						while (associatedFlights.size() > 0){
+							Flight flight = associatedFlights.get(0);
+							associatedFlights.remove(0);
+							flightsManager.cancelFlight(flight);
+							counter++;
+						}
+						
 						planesManager.removePlane(airplane);
-						sellArea.setText("Plane successfully remove from the fleet!");
+						
+						sellArea.setText("Plane successfully remove from the fleet,\nwith " + counter + " flight(s) cancelled!");
 					}
 					else if (airplane == null){
 						sellArea.setText("Plane not found.");
