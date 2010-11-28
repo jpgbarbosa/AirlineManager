@@ -88,7 +88,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		SnapshotTimer s=new SnapshotTimer(planesManager.getPrevayler(),flightsManager.getPrevayler());
 		BackOffice.now=new GregorianCalendar();
-		TimeThread timeThread= new TimeThread(1);
 	}
 	
 	public static void main(String[] args) throws RemoteException {
@@ -179,9 +178,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			}
 		}
 		
-		//GregorianCalendar now = new GregorianCalendar();
+		GregorianCalendar now = new GregorianCalendar();
 		GregorianCalendar date = new GregorianCalendar(year,month-1,day,hour,minute);
-
 		/* This is an old date. */
 		if (now.after(date)){
 			//TODO: remove this
@@ -224,7 +222,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		departureLabel.setText("Airplane 10 is leaving from Lisboa to Madrid (flight 100)");
 		/* END */
 		showDepartures = new ShowDepartures(departuresDisplay, departureLabel);
-		departuresDisplay.add(showDepartures.CreateImage("./src/images/plane15.gif","",10,10,230,172));
+		departuresDisplay.add(showDepartures.CreateImage("./src/images/departure2.jpg","",240,-140,350,320));
 		
 		departuresDisplay.add(departureLabel);
 		departuresDisplay.setVisible(true);
@@ -1451,45 +1449,6 @@ class DestinationsPrices {
 		return -1;
 	}
 }
-
-class TimeThread extends Thread {
-    private int mult;
-    
-  
-	public TimeThread(int mult) {
-		synchronized(BackOffice.now){
-	    	FileManager.loadObjectFromFile("Calendario", BackOffice.now);
-	    	if(BackOffice.now==null)
-	    		BackOffice.now=new GregorianCalendar();
-		}
-       this.mult=mult;
-       
-       this.start();
-       
-    } 
- 
-    public void run() { 
-    	while(true){
-    		try {
-				Thread.sleep(1000/mult);
-				synchronized(BackOffice.now){
-					BackOffice.now.set(Calendar.MINUTE, (BackOffice.now.get(Calendar.MINUTE)+1));
-					FileManager.saveObjectToFile("Calendario", BackOffice.now);
-				}
-				
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	}
-      
-    } 
-    
-
-
-	
-    
- }
 
 class SnapshotTimer extends Thread {
     Prevayler planesPrevayler,flightsPrevayler; 

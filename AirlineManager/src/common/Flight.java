@@ -183,7 +183,3 @@ public class Flight implements Serializable{
 	
 	
 }
-
-class Lock implements Serializable{
-	
-}

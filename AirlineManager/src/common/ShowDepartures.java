@@ -2,10 +2,14 @@ package common;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -31,7 +35,7 @@ public class ShowDepartures extends Thread {
     	departure.setForeground(Color.white);
     	departure.validate();
     	
-    	CreateImage("./src/images/plane15.gif","",10,10,115,86);
+    	CreateImage("./src/images/plane15.gif","",0,-100,115,86);
     	
     	this.start();
     } 
@@ -59,7 +63,8 @@ public class ShowDepartures extends Thread {
     }
     
     public JLabel CreateImage(String path, String toolTip,int x,int y,int x1,int y1){
-		BufferedImage img = null;
+    	
+    	BufferedImage img = null;
 		Icon icon;
 		JLabel label;
 		
@@ -73,7 +78,6 @@ public class ShowDepartures extends Thread {
         label.setBounds(new Rectangle(x,y,x1,y1));
         if (!toolTip.equals(""))
         	label.setToolTipText(toolTip);
-        
         panel.add(label);
         
         return label;

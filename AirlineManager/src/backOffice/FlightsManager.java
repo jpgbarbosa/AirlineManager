@@ -16,6 +16,7 @@ import common.RFlight;
 
 public class FlightsManager {
 	FeedBackManager feedBackManager;
+	FlightsCleaner flightsCleaner;
 	
 	/* The list of all(?) the flights in the system. */
 	
@@ -51,7 +52,14 @@ public class FlightsManager {
 		}
 		
 		feedBackManager = feed;
-		//TODO: prevayler regularFlights
+		//TODO: prevayler regularFlights and finishedFlights
+		
+		/*TODO: Temporarily, this will replace the prevayler initialization. */
+		finishedFlights = new Vector <Flight>();
+		regularFlights = new Hashtable<Integer, Vector<RFlight>>();
+		
+		flightsCleaner = new FlightsCleaner(flightsList, finishedFlights);
+		
 
 	}
 	
@@ -122,6 +130,14 @@ public class FlightsManager {
 				addFlight(i,flight);
 			}
 			
+			//TODO: Clarify this.
+			/*System.out.println("in");
+			synchronized(flightsCleaner.lock){
+				System.out.println("Interrupting");
+				flightsCleaner.interrupt();
+				flightsCleaner.lock.notify();
+			}
+			System.out.println("out");*/
 			
 			return flight;
 		}
