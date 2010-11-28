@@ -1,5 +1,6 @@
 package backOffice;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -804,7 +805,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		private JPanel listPanel;
 		private JPanel findPanel;
 		
-		//private JTextArea logInfo;
 		
 		/* So we can know in which the user is at the moment. */
 		private String menuIdentifier;
@@ -870,7 +870,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			findPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			findPanel.add(CreateTitle("Plane's ID:",Color.white,15,100,70,70,20));
 			findPanel.add(idSearchField = CreateBoxInt(20,175,70,50,20,0));
-			findPanel.add(findArea = CreateText(10,50,60,100,320,150));
+			findPanel.add(findArea = CreateText(10,50,60,100,350,150));
 			findPanel.add(CreateButton("Search Plane",Color.white,"Search for an Airplane",15,100,300,200,30));
 			
 			/* Adds the subpanels to the main panel. */
@@ -1241,7 +1241,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	}
 	
 	@Override
-	public String scheduleFlight(int idFlight, String name, String address, String phone, String mail, int seats, boolean isOperator, int bookingNumber) throws RemoteException {
+	public String scheduleBooking(int idFlight, String name, String address, String phone, String mail, int seats, boolean isOperator, int bookingNumber) throws RemoteException {
 		
 		Flight flight = flightsManager.searchFlightById(idFlight);
 		
@@ -1289,7 +1289,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	}
 	
 	@Override
-	public String cancelFlight(int idFlight, int idBooking) throws RemoteException {
+	public String cancelBooking(int idFlight, int idBooking) throws RemoteException {
 		
 		Flight flight = flightsManager.searchFlightById(idFlight);
 		
@@ -1319,14 +1319,73 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 
 	@Override
 	public String scheduleCharter(GregorianCalendar date, String origin, String destination, int seats) throws RemoteException {
+		/* First, we need to check if there's an airplane with enough seats. */
 		Airplane plane = search.searchPlaneBySeats(seats);
 		
 		if(plane!= null){
+			/* If it exists we need to create a new flight associated with that airplane. */
 			Flight flight = flightsManager.scheduleFlight(plane, date, origin,destination, false,true);
 			if(flight!=null)
 				return "Charter was booked successfully";
 		}
+		
+		/* If there is not airplane available, return error message. */
 		return "It wasn't possible to book the charter, no planes available";
+	}
+
+	@Override
+	public Booking getBookingInfo(int idFlight, int idBooking) throws RemoteException {
+		/* First, we need to check if there's such a flight. */
+		Flight flight = flightsManager.searchFlightById(idFlight);
+		
+		if (flight == null){
+			return null;
+		}
+		/* If it exists we try to get the asked booking. */
+		Booking booking = flight.findBookingById(idBooking);
+		
+		return booking;
+	}
+
+	@Override
+	public String modifyBooking(int idFlight, int idBooking, int idNewFlight, boolean isOperator, int bookingNumber) throws RemoteException {
+		String name, address, phone, email;
+		int seats;
+		
+		Flight flight = flightsManager.searchFlightById(idFlight);
+		
+		/* First, we need to check if there's such a flight. */
+		if (flight == null){
+			return "Innexistent flight";
+		}
+		
+		Booking booking = flight.findBookingById(idBooking);
+		
+		/* Second, we need to check if we still have space in this flight. */
+		if (booking == null){
+			return "Innexistent booking";
+		}
+		
+		name = booking.getName();
+		address = booking.getAddress();
+		phone = booking.getPhoneContact();
+		email = booking.getEmail();
+		seats = booking.getNoSeats();
+		
+		String answer = scheduleBooking(idNewFlight,name,address,phone,email,seats,isOperator,bookingNumber);
+		
+		if(!answer.equals("Scheduled")){
+			return answer + "\nYour booking with ID "+ idBooking +" to flight "+idFlight + " still exists"; 
+		}
+		
+		
+		/* We have to make sure several people aren't scheduling at the same time for the same flight. */
+		synchronized(flight.lock){
+			flight.removeBooking(booking);
+			flight.decreaseOccupied(seats);
+		}
+		
+		return "Booking scheduled, with booking number " + bookingNumber + " and flight number " + idNewFlight + ".";
 	}
 
 	

@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -124,6 +125,7 @@ public abstract class Window extends JPanel implements MouseListener{
 	public JTextArea CreateText(int size,int size1,int x,int y, int x1,int y1){
 		JTextArea text = new JTextArea(size,size1);
 		text.setBounds(new Rectangle(x,y,x1,y1));
+		text.setEditable(false);
 		add(text);
 		
 		return text;

@@ -1,7 +1,6 @@
 package frontOffice;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -10,7 +9,6 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
@@ -26,6 +24,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import messages.Feedback;
+import bookings.Booking;
 import common.*;
 
 import com.toedter.calendar.JCalendar;;
@@ -161,11 +160,11 @@ public class FrontOffice extends UnicastRemoteObject{
 	private class Menu extends Window{
 		public Menu(){
 			/* Creates the buttons that redirect to each manager window. */
-			CreateButton("Bookings",Color.black,"Check Your Bookings",15,60,200,150,30);
-			CreateButton("Find Flights",Color.black,"Find all the Flights Available",15,60,250,150,30);
-			CreateButton("Feedback",Color.black,"Send Feedback",15,60,300,150,30);
-			CreateButton("Operator",Color.black,"Login and Register",15,60,350,150,30);
-			CreateButton("Exit",Color.black,"Leave the application",15,60,500,150,30);
+			CreateButton("Bookings",Color.white,"Check Your Bookings",15,60,200,150,30);
+			CreateButton("Find Flights",Color.white,"Find all the Flights Available",15,60,250,150,30);
+			CreateButton("Feedback",Color.white,"Send Feedback",15,60,300,150,30);
+			CreateButton("Operator",Color.white,"Login and Register",15,60,350,150,30);
+			CreateButton("Exit",Color.white,"Leave the application",15,60,500,150,30);
 		}
 		
 		public void mouseReleased(MouseEvent e){
@@ -344,8 +343,8 @@ public class FrontOffice extends UnicastRemoteObject{
 		private JTextArea confirmActionCancel;
 		
 		private JTextField modifyFlightID;
-		private JTextField modifyFlightSeat;
-		private JComboBox destinationModify;
+		private JTextField modifyBookingID;
+		private JTextField modifyNewFlightID;
 		private JTextArea confirmActionModify;
 		
 		private JCalendar jCalendar;
@@ -358,13 +357,13 @@ public class FrontOffice extends UnicastRemoteObject{
 		public BookingsMenu(){
 			
 			/* Creates the buttons that redirect to each manager window. */
-			CreateButton("New Booking",Color.black,"Books a given flight",15,60,200,200,30);
-			CreateButton("Cancel Booking",Color.black,"Cancels a booking",15,60,250,200,30);
-			CreateButton("Modify Booking",Color.black,"Changes a booking to another flight",15,60,300,200,30);
-			charterButton = CreateButton("Book Charter",Color.black,"Book a Charter Flight",15,60,350,200,30);
+			CreateButton("New Booking",Color.white,"Books a given flight",15,60,200,200,30);
+			CreateButton("Cancel Booking",Color.white,"Cancels a booking",15,60,250,200,30);
+			CreateButton("Modify Booking",Color.white,"Changes a booking to another flight",15,60,300,200,30);
+			charterButton = CreateButton("Book Charter",Color.white,"Book a Charter Flight",15,60,350,200,30);
 			charterButton.setVisible(false);
 			
-			CreateButton("Return",Color.black,"Go back to the main menu",15,60,500,100,30);
+			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			 
 			/* Creates the sub panels that are displayed accordingly to the user's choice. */
 			newPanel = new JPanel();
@@ -374,45 +373,45 @@ public class FrontOffice extends UnicastRemoteObject{
 			
 			/* Defines the sub panels. */
 			newPanel.setLayout(null);
-			newPanel.setBounds(new Rectangle(400, 40, 500, 500));
+			newPanel.setBounds(new Rectangle(500, 40, 500, 500));
 			
 			newPanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
 			newPanel.add(newFlightID = CreateBoxInt(20,140,20,80,20,0));
 			newPanel.add(CreateTitle("Name:",Color.black,15,60,50,100,20));
-			newPanel.add(nameNew = CreateBoxText(20,140,50,350,20));
+			newPanel.add(nameNew = CreateBoxText(20,140,50,300,20));
 			newPanel.add(CreateTitle("Phone:",Color.black,15,60,80,100,20));
 			newPanel.add(phoneNew = CreateBoxText(20,140,80,150,20));
 			newPanel.add(CreateTitle("Address:",Color.black,15,60,110,100,20));
-			newPanel.add(addressNew = CreateBoxText(20,140,110,350,20));
+			newPanel.add(addressNew = CreateBoxText(20,140,110,300,20));
 			newPanel.add(CreateTitle("E-mail:",Color.black,15,60,140,100,20));
-			newPanel.add(emailNew = CreateBoxText(20,140,140,350,20));
+			newPanel.add(emailNew = CreateBoxText(20,140,140,300,20));
 			newPanel.add(CreateTitle("Seats:",Color.black,15,60,170,100,20));
 			newPanel.add(seatsNew = CreateBoxInt(20,140,170,80,20,0));
 			newPanel.add(confirmActionNew = CreateText(300,250,60,210,300,180));
-			newPanel.add(CreateButton("Schedule",Color.black,"Schedule your flight",15,60,430,120,20));
+			newPanel.add(CreateButton("Schedule",Color.white,"Schedule your flight",15,60,430,120,20));
 			
 			cancelPanel.setLayout(null);
-			cancelPanel.setBounds(new Rectangle(400, 40, 400, 500));
+			cancelPanel.setBounds(new Rectangle(500, 40, 400, 500));
 			cancelPanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
 			cancelPanel.add(cancelFlightID = CreateBoxInt(20,140,20,80,20,0));
 			cancelPanel.add(CreateTitle("Booking Number:",Color.black,15,60,50,150,20));
 			cancelPanel.add(cancelBookingID = CreateBoxInt(20,180,50,80,20,0));
 			cancelPanel.add(confirmActionCancel = CreateText(300,150,60,90,400,150));
-			cancelPanel.add(CreateButton("Cancel",Color.black,"Cancel Booking",15,60,260,200,30));
+			cancelPanel.add(CreateButton("Cancel",Color.white,"Cancel Booking",15,60,260,200,30));
 			
 			modifyPanel.setLayout(null);
-			modifyPanel.setBounds(new Rectangle(400, 40, 400, 500));
+			modifyPanel.setBounds(new Rectangle(500, 40, 400, 500));
 			modifyPanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
 			modifyPanel.add(modifyFlightID = CreateBoxInt(20,140,20,80,20,0));
-			modifyPanel.add(CreateTitle("Flight seat:",Color.black,15,60,50,100,20));
-			modifyPanel.add(modifyFlightSeat = CreateBoxInt(20,140,50,80,20,0));
-			modifyPanel.add(CreateTitle("New destination:",Color.black,15,60,80,120,20));
-			modifyPanel.add(destinationModify = CreateComboBox(170,80,120,20,destinations));
+			modifyPanel.add(CreateTitle("Booking ID:",Color.black,15,60,50,100,20));
+			modifyPanel.add(modifyBookingID = CreateBoxInt(20,140,50,80,20,0));
+			modifyPanel.add(CreateTitle("New Flight ID:",Color.black,15,60,80,90,20));
+			modifyPanel.add(modifyNewFlightID = CreateBoxInt(20,155,80,80,20,0));
 			modifyPanel.add(confirmActionModify = CreateText(300,150,60,120,300,150));
-			modifyPanel.add(CreateButton("Confirm modification",Color.black,"Modify a booking",15,60,290,200,30));
+			modifyPanel.add(CreateButton("Confirm modification",Color.white,"Modify a booking",15,60,290,200,30));
 			
 			charterPanel.setLayout(null);
-			charterPanel.setBounds(new Rectangle(400, 40, 400, 500));
+			charterPanel.setBounds(new Rectangle(500, 40, 400, 500));
 			charterPanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
 			charterPanel.add(dateCharter = CreateBoxText(20,100,20,80,20));
 			charterPanel.add(CreateButton("Charter Date",Color.black,"Choose flight date",15,60,50,120,30));
@@ -423,7 +422,7 @@ public class FrontOffice extends UnicastRemoteObject{
 			charterPanel.add(CreateTitle("Seats:",Color.black,15,60,150,50,20));
 			charterPanel.add(seatsCharter = CreateBoxInt(20,120,150,50,20,0));
 			charterPanel.add(confirmActionCharter= CreateText(300,150,60,180,300,150));
-			charterPanel.add(CreateButton("Book Flight",Color.black,"Search for a flight",15,60,350,120,20));
+			charterPanel.add(CreateButton("Book Flight",Color.white,"Search for a flight",15,60,350,120,20));
 			
 			/* Adds the sub panels to the main panel. */
 			panel.add(newPanel);
@@ -509,7 +508,7 @@ public class FrontOffice extends UnicastRemoteObject{
 			        }
 					if (validPhone){
 						if (!name.equals("") && !address.equals("") && !mail.equals("")){
-							String answer = backOffice.scheduleFlight(id, name, address, phone, mail, seats, loggedIn, bookingNumber);
+							String answer = backOffice.scheduleBooking(id, name, address, phone, mail, seats, loggedIn, bookingNumber);
 							if (answer.equals("Innexistent flight")){
 								confirmActionNew.setText("There's no such flight.");
 							}
@@ -551,12 +550,27 @@ public class FrontOffice extends UnicastRemoteObject{
 					confirmActionNew.setText("Invalid field(s).\n");
 				}
 			}
+			else if(e.getComponent().getName().equals("Confirm modification")){
+				try{
+					int idFlight = Integer.parseInt(modifyFlightID.getText());
+					int idBooking = Integer.parseInt(modifyBookingID.getText());
+					int newIdFlight = Integer.parseInt(modifyNewFlightID.getText());
+										
+					confirmActionModify.setText(backOffice.modifyBooking(idFlight,idBooking, newIdFlight, loggedIn,bookingNumber));
+					
+					
+				} catch (NumberFormatException e1){
+					confirmActionModify.setText("Invalid flight or booking ID");
+				} catch (RemoteException e1) {
+				}
+				
+			}
 			else if (e.getComponent().getName().equals("Cancel")){
 				try{
 					int idFlight = Integer.parseInt(cancelBookingID.getText());
 					int idBooking = Integer.parseInt(cancelFlightID.getText());
 					
-					String answer = backOffice.cancelFlight(idFlight, idBooking);
+					String answer = backOffice.cancelBooking(idFlight, idBooking);
 					if (answer.equals("Innexistent flight")){
 						confirmActionCancel.setText("There's no such flight.");
 					}
@@ -567,8 +581,10 @@ public class FrontOffice extends UnicastRemoteObject{
 						confirmActionCancel.setText("Booking cancelled.");
 					}	
 					
-				}catch(Exception e2){
+				}catch(NumberFormatException e2){
 					confirmActionCancel.setText("Invalid field(s).\n");
+				} catch (RemoteException e3){
+					confirmActionCancel.setText("The system is not availabe at the moment");
 				}
 			}
 			else if(e.getComponent().getName().equals("Book Flight")){
@@ -634,9 +650,9 @@ public class FrontOffice extends UnicastRemoteObject{
 		public SendFeedBackMenu(FrontOffice f){
 			frontOffice=f;
 			/* Creates the buttons that redirect to each manager window. */
-			CreateButton("Positive Feedback",Color.black,"Send a positive Sugestion",15,60,200,200,30);
-			CreateButton("Negative Feedback",Color.black,"Send a reclamation",15,60,250,200,30);
-			CreateButton("Return",Color.black,"Go back to the main menu",15,60,500,100,30);
+			CreateButton("Positive Feedback",Color.white,"Send a positive Sugestion",15,60,200,200,30);
+			CreateButton("Negative Feedback",Color.white,"Send a reclamation",15,60,250,200,30);
+			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			
 			/* Creates the subpanels that are displayed accordingly to the user's choice. */
 			positivePanel = new JPanel();
@@ -646,16 +662,16 @@ public class FrontOffice extends UnicastRemoteObject{
 			
 			/* Defines the subpanels. */
 			positivePanel.setLayout(null);
-			positivePanel.setBounds(new Rectangle(400, 40, 500, 400));
-			positivePanel.add(CreateButton("Send",Color.black,"Search for a flight",15,275,20,200,30));
+			positivePanel.setBounds(new Rectangle(500, 40, 500, 400));
+			positivePanel.add(CreateButton("Send",Color.white,"Search for a flight",15,275,20,200,30));
 			positivePanel.add(CreateTitle("Message:",Color.black,15,20,20,200,20));
 			positivePanel.add(posMsgArea = CreateText(10,50,40,60,350,300));
 			displayP=CreateText(10,50,40,375,150,20);
 			positivePanel.add(displayP);
 			
 			negativePanel.setLayout(null);
-			negativePanel.setBounds(new Rectangle(400, 40, 500, 400));
-			negativePanel.add(CreateButton("Send ",Color.black,"Search for a flight",15,275,20,200,30));
+			negativePanel.setBounds(new Rectangle(500, 40, 500, 400));
+			negativePanel.add(CreateButton("Send ",Color.white,"Search for a flight",15,275,20,200,30));
 			negativePanel.add(CreateTitle("Message:",Color.black,15,20,20,200,20));
 			negativePanel.add(negMsgArea = CreateText(10,50,40,60,350,300));
 			displayN=CreateText(10,50,40,375,150,20);
@@ -724,23 +740,23 @@ public class FrontOffice extends UnicastRemoteObject{
 		
 		public SearchMenu(){
 			/* Creates the buttons that redirect to each manager window. */
-			CreateButton("List Flights",Color.black,"Lists all the upcoming flights",15,60,200,150,30);
-			CreateButton("Find Flight",Color.black,"Find your flight",15,60,250,150,30);
-			CreateButton("Check Price",Color.black,"Check the flight's price",15,60,300,150,30);
+			CreateButton("List Flights",Color.white,"Lists all the upcoming flights",15,60,200,150,30);
+			CreateButton("Find Flight",Color.white,"Find your flight",15,60,250,150,30);
+			CreateButton("Check Price",Color.white,"Check the flight's price",15,60,300,150,30);
 
-			CreateButton("Return",Color.black,"Go back to the main menu",15,60,500,100,30);
+			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			
 			newPanel = new JPanel();
 			listPanel = new JPanel();
 			
 			/* Defines the sub panels. */
 			newPanel.setLayout(null);
-			newPanel.setBounds(new Rectangle(400, 40, 400, 400));
+			newPanel.setBounds(new Rectangle(500, 40, 400, 400));
 			newPanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
 			newPanel.add(dateNew = CreateBoxText(20,100,20,80,20));
 			calendar = new GregorianCalendar();
 			dateNew.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
-			newPanel.add(CreateButton("Booking Date",Color.black,"Choose flight date",15,60,50,150,30));
+			newPanel.add(CreateButton("Booking Date",Color.white,"Choose flight date",15,60,50,150,30));
 			newPanel.add(CreateTitle("Origin:",Color.black,15,60,90,70,20));
 			
 			newPanel.add(originNew = CreateComboBox(120,90,120,20,destinations));
@@ -749,7 +765,7 @@ public class FrontOffice extends UnicastRemoteObject{
 			newPanel.add(confirmActionNew = CreateText(300,150,60,180,300,150));
 			
 			listPanel.setLayout(null);
-			listPanel.setBounds(new Rectangle(400, 40, 500, 400));
+			listPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			listPanel.add(CreateTitle("LIST OF FLIGHTS:",Color.black,15,20,20,150,20));
 			listPanel.add(CreateTitle("     ID      PLANE        DESTINATION                  TIME",Color.black,15,20,40,400,20));
 			listPanel.add(listArea = CreateText(10,50,40,60,450,320));
