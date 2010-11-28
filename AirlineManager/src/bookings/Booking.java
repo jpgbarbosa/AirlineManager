@@ -1,8 +1,14 @@
 package bookings;
 
+import java.io.Serializable;
+
 import common.Flight;
 
-public abstract class Booking {
+public abstract class Booking implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/* The flight and the client associated with this booking. */
 	protected Flight flight;
 	protected int noSeats;

@@ -1274,9 +1274,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			if (diff < 0){
 				return "InsufficientSeats " + flight.getEmptySeats();
 			}
-
-			flight.newBooking(new NormalBooking(flight, name, address, phone, mail, seats, bookingNumber));
-			flight.increaseOccupied(seats);
+			flightsManager.addBookingFlight(flight, new NormalBooking(flight, name, address, phone, mail, seats, bookingNumber));
+			//flight.newBooking(new NormalBooking(flight, name, address, phone, mail, seats, bookingNumber));
+			//flight.increaseOccupied(seats);
 			
 		}
 		
