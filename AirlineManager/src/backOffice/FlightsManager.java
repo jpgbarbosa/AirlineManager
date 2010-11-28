@@ -94,11 +94,21 @@ public class FlightsManager {
 	}
 	/**
 	 * 
-	 * 
+	 * add a new Booking
 	 * @return
 	 */
 	public void addBookingFlight(Flight id, Booking booking){
 		prevayler.execute(new addBookingFlight(id, booking));
+		
+	}
+	
+	/**
+	 * 
+	 * cancels a booking
+	 * @return
+	 */
+	public void removeBookingFlight(Flight id, Booking booking){
+		prevayler.execute(new removeBookingFlight(id, booking));
 		
 	}
 	
@@ -401,6 +411,36 @@ class addBookingFlight implements Transaction{
 	public void executeOn(Object arg0, Date arg1) {
 		((Vector<Flight>)arg0).get(((Vector<Flight>)arg0).indexOf(id)).newBooking(booking);
 		((Vector<Flight>)arg0).get(((Vector<Flight>)arg0).indexOf(id)).increaseOccupied(booking.getNoSeats());
+	}
+	
+	
+}
+
+class removeBookingFlight implements Transaction{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private Flight id;
+	private Booking booking;
+	
+
+
+	public removeBookingFlight(Flight id,Booking booking){
+		this.id=id;
+		this.booking=booking;
+		
+		
+	}
+	
+	@Override
+	public void executeOn(Object arg0, Date arg1) {
+		((Vector<Flight>)arg0).get(((Vector<Flight>)arg0).indexOf(id)).removeBooking(booking);
+		((Vector<Flight>)arg0).get(((Vector<Flight>)arg0).indexOf(id)).decreaseOccupied(booking.getNoSeats());
 	}
 	
 	

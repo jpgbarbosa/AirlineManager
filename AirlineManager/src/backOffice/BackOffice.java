@@ -1268,7 +1268,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			if (diff < 0){
 				return "InsufficientSeats " + flight.getEmptySeats();
 			}
-			flightsManager.addBookingFlight(flight, new NormalBooking(flight, name, address, phone, mail, seats, bookingNumber));
+			flightsManager.addBookingFlight(flight, new NormalBooking(flight.getId(), name, address, phone, mail, seats, bookingNumber));
 			//flight.newBooking(new NormalBooking(flight, name, address, phone, mail, seats, bookingNumber));
 			//flight.increaseOccupied(seats);
 			
@@ -1301,10 +1301,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		/* We have to make sure several people aren't scheduling at the same time for the same flight. */
 		synchronized(flight.lock){
-			int seats = booking.getNoSeats();
-			flight.removeBooking(booking);
+			flightsManager.removeBookingFlight(flight, booking);
+			//int seats = booking.getNoSeats();
+			//flight.removeBooking(booking);
 			
-			flight.decreaseOccupied(seats);
+			//flight.decreaseOccupied(seats);
 			
 		}
 		

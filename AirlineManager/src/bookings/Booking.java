@@ -10,7 +10,7 @@ public abstract class Booking implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	/* The flight and the client associated with this booking. */
-	protected Flight flight;
+	protected int idFlight;
 	protected int noSeats;
 	private String name;
 	private String address;
@@ -19,8 +19,8 @@ public abstract class Booking implements Serializable{
 	private int bookingNumber;
 	
 	/* The constructor. */
-	public Booking(Flight flight, int noSeats, String name, String addr, String phone, String mail, int number){
-		this.flight = flight;
+	public Booking(int idFlight, int noSeats, String name, String addr, String phone, String mail, int number){
+		this.idFlight = idFlight;
 		this.noSeats = noSeats;
 		this.name = name;
 		address = addr;
@@ -29,17 +29,24 @@ public abstract class Booking implements Serializable{
 		bookingNumber = number;
 		
 	}
+	
+	public boolean equals(Object o){
+		Booking b=(Booking) o;
+		if(idFlight==b.getIdFlight()&&name.equals(b.getName())&&email.equals(b.getEmail())&&noSeats==b.getNoSeats())
+			return true;
+		return false;
+	}
 
-	public Flight getFlight() {
-		return flight;
+	public int getIdFlight() {
+		return idFlight;
 	}
 	
 	public int getNoSeats() {
 		return noSeats;
 	}
 
-	public void setFlight(Flight flight) {
-		this.flight = flight;
+	public void setFlight(int flight) {
+		this.idFlight = flight;
 	}
 	
 	public void setNoSeats(int noSeats) {

@@ -7,7 +7,7 @@ public class CharterBooking extends Booking {
 	Operator operator;
 	
 	/* The constructor. */
-	public CharterBooking(Flight flight, Operator operator, String name, String addr, String phone, String mail, int noSeats, int number){
+	public CharterBooking(int flight, Operator operator, String name, String addr, String phone, String mail, int noSeats, int number){
 		super(flight, noSeats,name, addr, phone, mail, number);
 		
 		this.operator = operator;
