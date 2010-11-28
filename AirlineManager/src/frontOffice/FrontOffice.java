@@ -38,8 +38,6 @@ public class FrontOffice extends UnicastRemoteObject{
 	/* The main panel. */
 	private JPanel panel = new JPanel();
 	
-	private BookingManager bookingManager;
-	
 	/* The windows used on the graphical interface. */
 	private Menu menu;
 	private BookingsMenu bookingsMenu;
@@ -755,7 +753,7 @@ public class FrontOffice extends UnicastRemoteObject{
 			newPanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
 			newPanel.add(dateNew = CreateBoxText(20,100,20,80,20));
 			calendar = new GregorianCalendar();
-			dateNew.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
+			dateNew.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR));
 			newPanel.add(CreateButton("Booking Date",Color.white,"Choose flight date",15,60,50,150,30));
 			newPanel.add(CreateTitle("Origin:",Color.black,15,60,90,70,20));
 			
@@ -840,7 +838,7 @@ public class FrontOffice extends UnicastRemoteObject{
 		public void propertyChange(PropertyChangeEvent evt) {
 			Calendar cal = jCalendar.getCalendar();
 			calendar = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
-			dateNew.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
+			dateNew.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR));
 			
 		}
 	}

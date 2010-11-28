@@ -58,7 +58,7 @@ public class FlightsManager {
 		finishedFlights = new Vector <Flight>();
 		regularFlights = new Hashtable<Integer, Vector<RFlight>>();
 		
-		flightsCleaner = new FlightsCleaner(flightsList, finishedFlights);
+		flightsCleaner = new FlightsCleaner(this, flightsList, finishedFlights);
 		
 
 	}
@@ -90,6 +90,33 @@ public class FlightsManager {
 	 */
 	private void removeFlight(Flight flight){
 		prevayler.execute(new removeFlight(flight));
+		
+	}
+	/**
+	 * 
+	 * add a new Booking
+	 * @return
+	 */
+	public void addBookingFlight(Flight id, Booking booking){
+		prevayler.execute(new addBookingFlight(id, booking));
+		
+	}
+	
+	/**
+	 * 
+	 * cancels a booking
+	 * @return
+	 */
+	public void removeBookingFlight(Flight id, Booking booking){
+		prevayler.execute(new removeBookingFlight(id, booking));
+		
+	}
+	
+	public Flight removeFlight(int index){
+		Flight flight = flightsList.get(index);
+		prevayler.execute(new removeFlight(flightsList.get(index)));
+		
+		return flight;
 		
 	}
 	
@@ -167,11 +194,26 @@ public class FlightsManager {
 	
 	/* Changes a flight's information. */
 	public void reScheduleFlight(Flight flight, GregorianCalendar date, Airplane plane){
+		Flight temp=flight;
+		int i;
 		if(date!=null){
-			flight.setDate(date);
+			temp.setDate(date);
+			this.removeFlight(flight);
+			/* Inserts the flight ordered by date. */
+			for (i = 0; i < flightsList.size(); i++){
+				if (flightsList.get(i).getDate().after(flight.getDate())){
+					this.addFlight(i,temp);
+					break;
+				}
+			}
+			
+			/* We insert it in the last position.*/
+			if (i == flightsList.size()){
+				addFlight(i,temp);
+			}
 			/* TODO: Warn Clients!! */
-			GregorianCalendar calendar=flight.getDate();
-			for(Booking r: flight.getBookings()){
+			GregorianCalendar calendar=temp.getDate();
+			for(Booking r: temp.getBookings()){
 				feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
 						"The Flight "+flight.getId()+" with destination to "+ flight.getDestination()+", in "+ 
 						calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
@@ -282,6 +324,10 @@ public class FlightsManager {
 		return sum/total;
 	}
 	
+	public FlightsCleaner getFlightsCleaner(){
+		return flightsCleaner;
+	}
+	
 }
 
 class addFlight implements Transaction{
@@ -339,3 +385,64 @@ class removeFlight implements Transaction{
 	
 	
 }
+
+class addBookingFlight implements Transaction{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private Flight id;
+	private Booking booking;
+	
+
+
+	public addBookingFlight(Flight id,Booking booking){
+		this.id=id;
+		this.booking=booking;
+		
+		
+	}
+	
+	@Override
+	public void executeOn(Object arg0, Date arg1) {
+		((Vector<Flight>)arg0).get(((Vector<Flight>)arg0).indexOf(id)).newBooking(booking);
+		((Vector<Flight>)arg0).get(((Vector<Flight>)arg0).indexOf(id)).increaseOccupied(booking.getNoSeats());
+	}
+	
+	
+}
+
+class removeBookingFlight implements Transaction{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private Flight id;
+	private Booking booking;
+	
+
+
+	public removeBookingFlight(Flight id,Booking booking){
+		this.id=id;
+		this.booking=booking;
+		
+		
+	}
+	
+	@Override
+	public void executeOn(Object arg0, Date arg1) {
+		((Vector<Flight>)arg0).get(((Vector<Flight>)arg0).indexOf(id)).removeBooking(booking);
+		((Vector<Flight>)arg0).get(((Vector<Flight>)arg0).indexOf(id)).decreaseOccupied(booking.getNoSeats());
+	}
+	
+	
+}
+

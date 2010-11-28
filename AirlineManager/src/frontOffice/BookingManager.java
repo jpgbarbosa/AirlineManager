@@ -1,7 +1,5 @@
 package frontOffice;
 
-import java.util.GregorianCalendar;
-
 import bookings.Booking;
 import common.Flight;
 
@@ -11,6 +9,8 @@ public class BookingManager {
 	public BookingManager(){
 		
 	}
+	
+	//TODO: We can remove this class. 
 	
 	/* Cancels a booking. */
 	public String cancelBooking(Flight flight, Booking booking){
