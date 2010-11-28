@@ -13,7 +13,7 @@ public class ShowTime extends Thread {
 	/* The main constructor. */
     public ShowTime(JLabel t) {
     	time = t;
-    	time.setBounds(new Rectangle(10,10,300,20));
+    	time.setBounds(new Rectangle(0,10,300,20));
     	time.setName("time");
     	time.setFont(new Font("sansserif",Font.PLAIN,15));
     	time.setForeground(Color.white);
@@ -26,7 +26,7 @@ public class ShowTime extends Thread {
        try {
            while (true) { 
         	   GregorianCalendar calendar = new GregorianCalendar();
-        	   time.setText(calendar.getTime().toString());
+        	   time.setText("<HTML><B>" + calendar.getTime().toString() + "</B></HTML>");
                Thread.sleep(1000); // Updates the time everysecond.
            }
        } catch (InterruptedException e) { 

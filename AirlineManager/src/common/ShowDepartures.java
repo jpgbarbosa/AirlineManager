@@ -25,11 +25,11 @@ public class ShowDepartures extends Thread {
 	
 	
 	/* The main constructor. */
-    public ShowDepartures(JPanel j, JLabel t) {
+    public ShowDepartures(JPanel j, JLabel t, String there) {
     	panel = j;
     	
     	departure = t;
-    	departure.setBounds(new Rectangle(10,10,360,20));
+    	departure.setBounds(new Rectangle(10,5,360,40));
     	departure.setName("departures");
     	departure.setFont(new Font("sansserif",Font.PLAIN,15));
     	departure.setBackground(Color.black);
