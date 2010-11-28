@@ -214,16 +214,13 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		/* Sets the panel that will hold the time display. */
 		JPanel departuresDisplay = new JPanel();
 		departuresDisplay.setLayout(null);
-		departuresDisplay.setBounds(new Rectangle(400, 500, 500, 400));
+		departuresDisplay.setBounds(new Rectangle(530, 510, 500, 400));
 		departuresDisplay.setOpaque(false);
 		JLabel departureLabel = new JLabel();
 		
-		/* Remove later */
-		departureLabel.setText(" Airplane 10 is leaving from Lisboa to Madrid (flight 100)");
-		/* END */
-		showDepartures = new ShowDepartures(departuresDisplay, departureLabel);
+		flightsManager.getFlightsCleaner().setComponents(departuresDisplay, departureLabel);
 		departuresDisplay.add(departureLabel);
-		departuresDisplay.setVisible(true);
+		departuresDisplay.setVisible(false);
 		
 		panel.add(departuresDisplay);
 		
@@ -240,10 +237,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		flightsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		planesManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		statisticsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
-		
-		/*start.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
-		setup.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);
-		seeds.CreateImage("./src/imagens/finalBackground.jpg","",0,0,990,570);*/
 		
 		/* Sets all the windows invisible, except, naturally, the main menu. */
 		loginMenu.setVisible(true);

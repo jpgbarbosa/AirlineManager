@@ -58,7 +58,7 @@ public class FlightsManager {
 		finishedFlights = new Vector <Flight>();
 		regularFlights = new Hashtable<Integer, Vector<RFlight>>();
 		
-		flightsCleaner = new FlightsCleaner(flightsList, finishedFlights);
+		flightsCleaner = new FlightsCleaner(this, flightsList, finishedFlights);
 		
 
 	}
@@ -90,6 +90,14 @@ public class FlightsManager {
 	 */
 	private void removeFlight(Flight flight){
 		prevayler.execute(new removeFlight(flight));
+		
+	}
+	
+	public Flight removeFlight(int index){
+		Flight flight = flightsList.get(index);
+		prevayler.execute(new removeFlight(flightsList.get(index)));
+		
+		return flight;
 		
 	}
 	
@@ -280,6 +288,10 @@ public class FlightsManager {
 		if (total==0)
 			return 0;
 		return sum/total;
+	}
+	
+	public FlightsCleaner getFlightsCleaner(){
+		return flightsCleaner;
 	}
 	
 }
