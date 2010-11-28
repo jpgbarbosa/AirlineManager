@@ -528,12 +528,13 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			schedulePanel.setBounds(new Rectangle(500, 40, 500, 500));
 			schedulePanel.add(CreateTitle("Date:",Color.white,15,60,20,70,20));
 			schedulePanel.add(scheduleDate = CreateBoxText(20,100,20,80,20));
-			scheduleDate.setText("0/0/0");
+			calendar = new GregorianCalendar();
+			scheduleDate.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+( calendar.get(Calendar.MONTH) + 1)+"/"+calendar.get(Calendar.YEAR));
 			schedulePanel.add(CreateButton("Schedule Date",Color.white,"Choose flight date",15,60,50,150,30));
 			schedulePanel.add(CreateTitle("TIME:",Color.white,15,60,90,70,20));
-			schedulePanel.add(hourFieldSchedule = CreateBoxInt(20,100,90,20,20, 0));
+			schedulePanel.add(hourFieldSchedule = CreateBoxInt(20,100,90,20,20, calendar.get(Calendar.HOUR_OF_DAY)));
 			schedulePanel.add(CreateTitle("h",Color.white,15,125,90,70,20));
-			schedulePanel.add(minuteFieldSchedule = CreateBoxInt(20,140,90,20,20, 0));
+			schedulePanel.add(minuteFieldSchedule = CreateBoxInt(20,140,90,20,20, calendar.get(Calendar.MINUTE) + 1));
 			schedulePanel.add(CreateTitle("ID Plane:",Color.white,15,60,120,70,20));
 			schedulePanel.add(idPlaneScheduleField = CreateBoxInt(20,135,120,50,20, 0));			
 			schedulePanel.add(CreateTitle("Origin:",Color.white,15,60,150,70,20));
