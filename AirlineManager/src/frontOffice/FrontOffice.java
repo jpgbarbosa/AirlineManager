@@ -324,7 +324,7 @@ public class FrontOffice extends UnicastRemoteObject{
 	}
 	
 	@SuppressWarnings("serial")
-	private class BookingsMenu extends Window{
+	private class BookingsMenu extends Window implements PropertyChangeListener{
 		private JPanel newPanel;
 		private JPanel cancelPanel;
 		private JPanel modifyPanel;
@@ -348,6 +348,7 @@ public class FrontOffice extends UnicastRemoteObject{
 		private JComboBox destinationModify;
 		private JTextArea confirmActionModify;
 		
+		private JCalendar jCalendar;
 		private JTextField dateCharter;
 		private JTextField seatsCharter;
 		private JComboBox originCharter;
@@ -405,7 +406,6 @@ public class FrontOffice extends UnicastRemoteObject{
 			modifyPanel.add(modifyFlightID = CreateBoxInt(20,140,20,80,20,0));
 			modifyPanel.add(CreateTitle("Flight seat:",Color.black,15,60,50,100,20));
 			modifyPanel.add(modifyFlightSeat = CreateBoxInt(20,140,50,80,20,0));
-			
 			modifyPanel.add(CreateTitle("New destination:",Color.black,15,60,80,120,20));
 			modifyPanel.add(destinationModify = CreateComboBox(170,80,120,20,destinations));
 			modifyPanel.add(confirmActionModify = CreateText(300,150,60,120,300,150));
@@ -571,6 +571,35 @@ public class FrontOffice extends UnicastRemoteObject{
 					confirmActionCancel.setText("Invalid field(s).\n");
 				}
 			}
+			else if(e.getComponent().getName().equals("Book Flight")){
+				int day,month,year;
+				String [] dateFields = dateCharter.getText().split("/");
+				try{
+					day = Integer.parseInt(dateFields[0]);
+					month = Integer.parseInt(dateFields[1]);
+					year = Integer.parseInt(dateFields[2]);
+					
+					try {
+						confirmActionCharter.setText(backOffice.scheduleCharter(new GregorianCalendar(year,month,day), originCharter.getSelectedItem().toString(), destinationCharter.getSelectedItem().toString(), Integer.parseInt(seatsCharter.getText())));
+					} catch (RemoteException e1) {
+						confirmActionCharter.setText("The server is not available, please try again later");
+					}
+					
+				} catch (NumberFormatException e1){
+					confirmActionCharter.setText("Invalid Date");
+				}
+				
+			}
+			else if(e.getComponent().getName().equals("Charter Date")){
+				JFrame date = new JFrame("Booking");
+				jCalendar = new JCalendar();
+				
+				date.getContentPane().add(jCalendar);
+				date.pack();
+				date.setVisible(true);
+				jCalendar.addPropertyChangeListener(this);
+				
+			}
 			else if (e.getComponent().getName().equals("Return")){
 				newPanel.setVisible(false);
 				cancelPanel.setVisible(false);
@@ -580,6 +609,14 @@ public class FrontOffice extends UnicastRemoteObject{
 				bookingsMenu.setVisible(false);
 				menu.setVisible(true);
 			}
+		}
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			Calendar cal = jCalendar.getCalendar();
+			GregorianCalendar calendar = new GregorianCalendar(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+			dateCharter.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
+			
 		}
 	}
 	

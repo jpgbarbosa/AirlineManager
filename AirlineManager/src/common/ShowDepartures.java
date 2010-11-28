@@ -29,14 +29,17 @@ public class ShowDepartures extends Thread {
     	panel = j;
     	
     	departure = t;
-    	departure.setBounds(new Rectangle(10,10,500,20));
+    	departure.setBounds(new Rectangle(10,10,360,20));
     	departure.setName("departures");
     	departure.setFont(new Font("sansserif",Font.PLAIN,15));
+    	departure.setBackground(Color.black);
     	departure.setForeground(Color.white);
+    	departure.setOpaque(true);
     	departure.validate();
     	
-    	CreateImage("./src/images/plane15.gif","",0,-100,115,86);
-    	
+
+		CreateImage("./src/images/departure2.jpg","",240,-140,350,320);
+
     	this.start();
     } 
  
