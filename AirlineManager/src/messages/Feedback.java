@@ -2,6 +2,7 @@ package messages;
 
 import java.util.GregorianCalendar;
 
+@SuppressWarnings("serial")
 public class Feedback extends Message{
 	/* The type of feedback: it can be positive or negative. */
 	private String feedBackType;

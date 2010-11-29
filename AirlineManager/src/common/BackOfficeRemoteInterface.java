@@ -4,8 +4,6 @@ import java.rmi.*;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
-import bookings.Booking;
-
 import messages.Feedback;
 
 public interface BackOfficeRemoteInterface extends Remote{

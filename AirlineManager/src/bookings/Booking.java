@@ -2,40 +2,28 @@ package bookings;
 
 import java.io.Serializable;
 
-import common.Flight;
+import common.Client;
 
-
-public abstract class Booking implements Serializable{
+public class Booking implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	/* The flight and the client associated with this booking. */
-	protected int idFlight;
-	protected int noSeats;
-	private String name;
-	private String address;
-	private String phoneContact;
-	private String email;
+	private int idFlight;
+	private int noSeats;
+	private Client client;
 	private int bookingNumber;
+	private double price;
 	
 	/* The constructor. */
-	public Booking(int idFlight, int noSeats, String name, String addr, String phone, String mail, int number){
+	public Booking(int idFlight, int noSeats, Client client, int number, double price){
 		this.idFlight = idFlight;
 		this.noSeats = noSeats;
-		this.name = name;
-		address = addr;
-		phoneContact = phone;
-		email = mail;
 		bookingNumber = number;
+		this.client = client;
+		this.price = price;
 		
-	}
-	
-	public boolean equals(Object o){
-		Booking b=(Booking) o;
-		if(idFlight==b.getIdFlight()&&name.equals(b.getName())&&email.equals(b.getEmail())&&noSeats==b.getNoSeats())
-			return true;
-		return false;
 	}
 
 	public int getIdFlight() {
@@ -54,38 +42,6 @@ public abstract class Booking implements Serializable{
 		this.noSeats = noSeats;
 	}
 	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getPhoneContact() {
-		return phoneContact;
-	}
-
-	public void setPhoneContact(String phoneContact) {
-		this.phoneContact = phoneContact;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
 	public int getBookingNumber() {
 		return bookingNumber;
 	}
@@ -95,7 +51,15 @@ public abstract class Booking implements Serializable{
 	}
 	
 	public String toString(){
-		return "Flight ID: "+idFlight+"\nBooking ID: "+bookingNumber+"\nName: "+name+"\nEmail: "+email
+		return "Flight ID: "+idFlight+"\nBooking ID: "+bookingNumber+"\nName: "+client.getName()+"\nEmail: "+client.getEmail()
 			+ "\nNumber of seats: "+ noSeats;
+	}
+	
+	public double getPrice(){
+		return price;
+	}
+	
+	public Client getClient(){
+		return client;
 	}
 }

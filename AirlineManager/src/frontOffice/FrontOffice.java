@@ -24,10 +24,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import messages.Feedback;
-import bookings.Booking;
 import common.*;
 
 import com.toedter.calendar.JCalendar;;
@@ -46,7 +44,6 @@ public class FrontOffice extends UnicastRemoteObject{
 	private BookingsMenu bookingsMenu;
 	private SendFeedBackMenu sendFeedBackMenu;
 	private SearchMenu searchMenu;
-	private Search search;
 	private BackOfficeRemoteInterface backOffice;
 	private boolean loggedIn = false;
 	private JFrame f;
@@ -63,18 +60,8 @@ public class FrontOffice extends UnicastRemoteObject{
 		
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.exit(-1);
 		}
 		
 		try {
@@ -82,9 +69,7 @@ public class FrontOffice extends UnicastRemoteObject{
 			backOffice = (BackOfficeRemoteInterface) Naming.lookup("rmi://localhost:2000/AirlineManager");
 
 		} catch (Exception e) {
-			//TODO: Quem foi o engraçadinho? :P Foi a daniela lol
-			System.out.println("Deu bode!");
-			System.exit(0);
+			System.exit(-1);
 		}
 		destinations = backOffice.getDestinations();
 		
@@ -358,6 +343,7 @@ public class FrontOffice extends UnicastRemoteObject{
 		private JTextField phoneNew;
 		private JTextField addressNew;
 		private JTextField emailNew;
+		private JTextField ccNoNew;
 		private JTextArea confirmActionNew;
 		private JScrollPane jpNew;
 		
@@ -412,22 +398,24 @@ public class FrontOffice extends UnicastRemoteObject{
 			newPanel.setBounds(new Rectangle(500, 40, 500, 500));
 			
 			newPanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
-			newPanel.add(newFlightID = CreateBoxInt(20,140,20,80,20,0));
+			newPanel.add(newFlightID = CreateBoxInt(20,170,20,80,20,0));
 			newPanel.add(CreateTitle("Name:",Color.black,15,60,50,100,20));
-			newPanel.add(nameNew = CreateBoxText(20,140,50,300,20));
+			newPanel.add(nameNew = CreateBoxText(20,170,50,300,20));
 			newPanel.add(CreateTitle("Phone:",Color.black,15,60,80,100,20));
-			newPanel.add(phoneNew = CreateBoxText(20,140,80,150,20));
+			newPanel.add(phoneNew = CreateBoxText(20,170,80,150,20));
 			newPanel.add(CreateTitle("Address:",Color.black,15,60,110,100,20));
-			newPanel.add(addressNew = CreateBoxText(20,140,110,300,20));
+			newPanel.add(addressNew = CreateBoxText(20,170,110,300,20));
 			newPanel.add(CreateTitle("E-mail:",Color.black,15,60,140,100,20));
-			newPanel.add(emailNew = CreateBoxText(20,140,140,300,20));
+			newPanel.add(emailNew = CreateBoxText(20,170,140,300,20));
 			newPanel.add(CreateTitle("Seats:",Color.black,15,60,170,100,20));
-			newPanel.add(seatsNew = CreateBoxInt(20,140,170,80,20,0));
-			newPanel.add(confirmActionNew = CreateText(300,250,60,210,300,180));
+			newPanel.add(seatsNew = CreateBoxInt(20,170,170,80,20,0));
+			newPanel.add(CreateTitle("CC Number:",Color.black,15,60,200,100,20));
+			newPanel.add(ccNoNew = CreateBoxInt(20,170,200,150,20,0));
+			newPanel.add(confirmActionNew = CreateText(100,100,60,210,100,60));
 			jpNew = new JScrollPane(confirmActionNew);
 			newPanel.add(jpNew);
-			jpNew.setBounds(60,210,300,180);
-			newPanel.add(CreateButton("Schedule",Color.white,"Schedule your flight",15,60,430,120,20));
+			jpNew.setBounds(60,240,300,180);
+			newPanel.add(CreateButton("Schedule",Color.white,"Schedule your flight",15,60,460,120,20));
 			
 			
 			checkPanel.setLayout(null);
@@ -563,8 +551,9 @@ public class FrontOffice extends UnicastRemoteObject{
 					String address = addressNew.getText();
 					String phone = phoneNew.getText();
 					String mail = emailNew.getText();
+					String cc = ccNoNew.getText();
 					
-					boolean validPhone = true;
+					boolean validPhone = true, validCC = true;
 					
 					//It can't contain only numbers if it's null or empty...
 			        if (phone == null || phone.length() == 0)
@@ -580,43 +569,64 @@ public class FrontOffice extends UnicastRemoteObject{
 				                validPhone = false;
 				        }
 			        }
-					if (validPhone){
+			        
+			      //It can't contain only numbers if it's null or empty...
+			        if (cc == null || cc.length() == 0)
+			            validCC = false;
+			        else{
+			        	for (int i = 0; i < cc.length() && validCC; i++) {
+
+				            //If we find a non-digit character we return false.
+				            if (!Character.isDigit(cc.charAt(i)))
+				                validCC = false;
+				        }
+			        }
+					if (validPhone && validCC){
 						if (!name.equals("") && !address.equals("") && !mail.equals("")){
 							String answer = backOffice.scheduleBooking(id, name, address, phone, mail, seats, loggedIn, bookingNumber);
 							if (answer.equals("Innexistent flight")){
 								confirmActionNew.setText("There's no such flight.");
+								confirmActionNew.setCaretPosition(0);
 							}
 							else if (answer.equals("Scheduled")){
 								//TODO: We have to proceed to the payment.
 								confirmActionNew.setText("Booking scheduled, with booking number " + bookingNumber + " and flight number " + id + ".");
+								confirmActionNew.setCaretPosition(0);
 								bookingNumber++;
 							}
 							else if (answer.equals("Over")){
 								confirmActionNew.setText("This flight is over, please choose another.");
+								confirmActionNew.setCaretPosition(0);
 							}
 							else if (answer.equals("Cancelled")){
 								confirmActionNew.setText("This flight was cancelled, please choose another.");
+								confirmActionNew.setCaretPosition(0);
 							}
 							else if (answer.equals("Charter")){
 								confirmActionNew.setText("Sorry, but only operators can book charter flights.");
+								confirmActionNew.setCaretPosition(0);
 							}
 							else{
 								int number = Integer.parseInt(answer.split(" ")[1]);
 								if (number == 0){
 									confirmActionNew.setText("This flight is closed.");
+									confirmActionNew.setCaretPosition(0);
 								}
 								else{
 									confirmActionNew.setText("There are only " + number + " empty seats.");
+									confirmActionNew.setCaretPosition(0);
 								}
 								
 							}	
 						}
 						else{
 							confirmActionNew.setText("Empty field(s).");
+							confirmActionNew.setCaretPosition(0);
 						}
 					}
 					else{
-						confirmActionNew.setText("Invalid phone number.");
+						confirmActionNew.setText("Invalid phone number or\ncredit card number.");
+						confirmActionNew.setCaretPosition(0);
 					}
 					
 					
@@ -682,7 +692,7 @@ public class FrontOffice extends UnicastRemoteObject{
 					year = Integer.parseInt(dateFields[2]);
 					
 					try {
-						confirmActionCharter.setText(backOffice.scheduleCharter(new GregorianCalendar(year,month,day), originCharter.getSelectedItem().toString(), destinationCharter.getSelectedItem().toString(), Integer.parseInt(seatsCharter.getText())));
+						confirmActionCharter.setText(backOffice.scheduleCharter(new GregorianCalendar(year,month-1,day), originCharter.getSelectedItem().toString(), destinationCharter.getSelectedItem().toString(), Integer.parseInt(seatsCharter.getText())));
 					} catch (RemoteException e1) {
 						confirmActionCharter.setText("The server is not available, please try again later");
 					}

@@ -21,10 +21,7 @@ public class OperatorManager {
 		try {
 			prevayler = PrevaylerFactory.createPrevayler(new Vector<Operator>(), "OperatorsList");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("Something went really bad!");
-			System.exit(0);
+			System.exit(-1);
 		} 
 		operatorList=(Vector <Operator>) (prevayler.prevalentSystem());
 		

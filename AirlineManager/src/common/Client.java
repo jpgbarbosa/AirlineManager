@@ -14,13 +14,14 @@ public class Client implements Serializable{
 	/* The list of bookings related to this client. */
 	private Vector <Booking> bookingsList;
 	/* The list of messages received by this client. */
-	//TODO: Will it be necessary or feasible?
 	private Vector <Message> messagesList;
 	/* The personal information of this client. */
 	private String name;
 	private String address;
 	private String phoneContact;
 	private String email;
+	/* The number of kilometers flown so far. */
+	private double kilometers;
 	
 	/* The constructor. */
 	public Client(String name, String addr, String phone, String mail){
@@ -92,6 +93,14 @@ public class Client implements Serializable{
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public double getKilometers(){
+		return kilometers;
+	}
+	
+	public void increaseKilometers(double no){
+		kilometers += no;
 	}
 	
 	

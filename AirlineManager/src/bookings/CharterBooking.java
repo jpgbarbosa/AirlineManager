@@ -1,8 +1,8 @@
 package bookings;
 
-import common.Flight;
 import common.Operator;
 
+@SuppressWarnings("serial")
 public class CharterBooking extends Booking {
 	Operator operator;
 	

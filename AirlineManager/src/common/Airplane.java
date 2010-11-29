@@ -52,11 +52,9 @@ public class Airplane implements Serializable{
 		}
 		/* We insert it in the last position. */
 		if (i == flights.size()){
-			flights.add(i,flight);
+			flights.add(flight);
 		}
 		
-		//TODO: Later, we have to confirm that we can associate this flight to this plane.
-		//		A reason for failing is that we have two flights too close to each other.
 		return true;
 	}
 	

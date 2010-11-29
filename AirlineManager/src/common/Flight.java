@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import bookings.Booking;
 
+@SuppressWarnings("serial")
 public class Flight implements Serializable{
 	/* The list of bookings registered for this flight. */
 	private Vector <Booking> bookings;
