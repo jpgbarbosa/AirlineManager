@@ -1548,8 +1548,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		/* We have to make sure several people aren't scheduling at the same time for the same flight. */
 		synchronized(flight.lock){
-			flight.removeBooking(booking);
-			flight.decreaseOccupied(seats);
+			flightsManager.removeBookingFlight(flight, booking);
+			//flight.removeBooking(booking);
+			//flight.decreaseOccupied(seats);
 		}
 		
 		return "Booking scheduled, with booking number " + bookingNumber + " and flight number " + idNewFlight + ".";

@@ -114,6 +114,9 @@ public class FlightsManager {
 	 */
 	public void addBookingFlight(Flight id, Booking booking){
 		prevayler.execute(new addBookingFlight(id, booking));
+		feedBackManager.sendNotificationUser(booking.getClient().getEmail(), "NEW BOOKING",
+				"Reservation under the name of: "+booking.getClient().getName()+
+				"\nSecret Boarding Code: "+booking.getHashBoardingTicket());
 		
 	}
 	

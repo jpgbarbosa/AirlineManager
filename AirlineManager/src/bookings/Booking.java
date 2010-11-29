@@ -15,7 +15,11 @@ public class Booking implements Serializable{
 	private Client client;
 	private int bookingNumber;
 	private double price;
+	private String boardingTicket;
+	private int hashBoardingTicket;
 	
+	
+
 	/* The constructor. */
 	public Booking(int idFlight, int noSeats, Client client, int number, double price){
 		this.idFlight = idFlight;
@@ -23,7 +27,19 @@ public class Booking implements Serializable{
 		bookingNumber = number;
 		this.client = client;
 		this.price = price;
+		boardingTicket=client.getName()+idFlight+number+price+"";
+		hashBoardingTicket=boardingTicket.hashCode();
 		
+	}
+	
+	public String getBoardingTicket() {
+		return boardingTicket;
+	}
+
+	
+
+	public int getHashBoardingTicket() {
+		return hashBoardingTicket;
 	}
 
 	public int getIdFlight() {
