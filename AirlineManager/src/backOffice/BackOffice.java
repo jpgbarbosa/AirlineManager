@@ -59,6 +59,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	private StatisticsManager statisticsManager;
 	private OperatorManager operatorManager;
 	private Search search;
+	private OperatorsMenu operatorsMenu;
 	private DestinationsPrices destinationsPrices;
 	
 	private Menu menu;
@@ -98,6 +99,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		operatorManager = new OperatorManager();
 		statisticsManager = new StatisticsManager(feedBackManager, flightsManager, planesManager);
 		search = new Search(flightsManager, planesManager);
+		operatorsMenu = new OperatorsMenu();
 		destinationsPrices = new DestinationsPrices();
 		
 		menu = new Menu();
@@ -252,6 +254,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		panel.add(flightsManagerMenu);
 		panel.add(planesManagerMenu);
 		panel.add(statisticsManagerMenu);
+		panel.add(operatorsMenu);
 		
 		loginMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		menu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
@@ -259,6 +262,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		flightsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		planesManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		statisticsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		operatorsMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		
 		/* Sets all the windows invisible, except, naturally, the main menu. */
 		loginMenu.setVisible(true);
@@ -267,6 +271,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		flightsManagerMenu.setVisible(false);
 		planesManagerMenu.setVisible(false);
 		statisticsManagerMenu.setVisible(false);
+		operatorsMenu.setVisible(false);
 		
 		f.setContentPane(panel);
 		f.setVisible(true);
@@ -281,6 +286,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			CreateButton("Flights",Color.white,"Manage Flights",15,60,250,100,30);
 			CreateButton("Feedback",Color.white,"Handle Feedback",15,60,300,100,30);
 			CreateButton("Statistics",Color.white,"Check Statistics",15,60,350,100,30);
+			CreateButton("Operators",Color.white,"List all the operators",15,60,400,100,30);
 			CreateButton("Exit",Color.white,"Leave the application",15,60,500,100,30);
 		}
 		
@@ -300,6 +306,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			else if(e.getComponent().getName().equals("Statistics")){
 				menu.setVisible(false);
 				statisticsManagerMenu.entry();
+				
+			}
+			else if(e.getComponent().getName().equals("Operators")){
+				menu.setVisible(false);
+				operatorsMenu.entry();
 				
 			}
 			else if (e.getComponent().getName().equals("Exit")){
@@ -1188,6 +1199,52 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 		}
 	}
+	
+	
+	
+	@SuppressWarnings("serial")
+	private class OperatorsMenu extends Window{
+		private JPanel operatorPanel;
+		private JTextArea operatorArea;
+		
+		public OperatorsMenu(){
+			/* Creates the buttons that redirect to each manager window. */
+			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
+			
+			/* Creates the subpanels */
+			operatorPanel = new JPanel();
+			operatorPanel.setLayout(null);
+			operatorPanel.setBounds(new Rectangle(500, 40, 500, 400));
+			operatorPanel.add(CreateTitle("Satistics:",Color.white,15,100,100,70,20));
+			operatorPanel.add(operatorArea = CreateText(10,50,40,60,350,250));
+			operatorArea.setEditable(false);
+			operatorPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,360,100,30));
+			operatorPanel.setOpaque(false);
+			
+			
+			
+			this.add(operatorPanel);
+			
+			
+		}
+		
+		/* This function is used when the user enters this menu.
+		 * We need to set true the right menu and one of its subpanels.
+		 */
+		public void entry(){
+			setVisible(true);
+			operatorPanel.setVisible(true);
+			
+		}
+		
+		public void mouseReleased(MouseEvent e){
+			if (e.getComponent().getName().equals("Return")){
+				operatorsMenu.setVisible(false);
+				menu.setVisible(true);
+			}
+		}
+	}
+	
 	
 	@SuppressWarnings("serial")
 	private class LoginMenu extends Window{

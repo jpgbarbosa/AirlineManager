@@ -434,9 +434,9 @@ public class FrontOffice extends UnicastRemoteObject{
 			checkPanel.setBounds(new Rectangle(500, 40, 500, 500));
 			
 			checkPanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
-			checkPanel.add(checkFlightID = CreateBoxInt(20,140,20,80,20,0));
+			checkPanel.add(checkFlightID = CreateBoxInt(20,150,20,80,20,0));
 			checkPanel.add(CreateTitle("Booking ID:",Color.black,15,60,50,90,20));
-			checkPanel.add(checkBookingID = CreateBoxInt(20,140,50,80,20,0));
+			checkPanel.add(checkBookingID = CreateBoxInt(20,150,50,80,20,0));
 			checkPanel.add(confirmActionCheck = CreateText(300,150,60,90,400,150));
 			checkPanel.add(CreateButton("Check",Color.white,"Check Booking",15,60,260,200,30));
 			
@@ -525,6 +525,7 @@ public class FrontOffice extends UnicastRemoteObject{
 				cancelPanel.setVisible(false);
 				modifyPanel.setVisible(false);
 				charterPanel.setVisible(false);
+				checkPanel.setVisible(false);
 			}
 			else if(e.getComponent().getName().equals("Check Booking")){
 				newPanel.setVisible(false);
@@ -706,6 +707,7 @@ public class FrontOffice extends UnicastRemoteObject{
 				cancelPanel.setVisible(false);
 				modifyPanel.setVisible(false);
 				charterPanel.setVisible(false);
+				checkPanel.setVisible(false);
 				
 				bookingsMenu.setVisible(false);
 				menu.setVisible(true);
@@ -748,7 +750,7 @@ public class FrontOffice extends UnicastRemoteObject{
 			/* Defines the subpanels. */
 			positivePanel.setLayout(null);
 			positivePanel.setBounds(new Rectangle(500, 40, 500, 400));
-			positivePanel.add(CreateButton("Send",Color.white,"Search for a flight",15,275,20,200,30));
+			positivePanel.add(CreateButton("Send",Color.white,"Send your message",15,280,20,200,30));
 			positivePanel.add(CreateTitle("Message (Positive Comment):",Color.black,15,20,20,250,20));
 			positivePanel.add(posMsgArea = CreateText(10,50,40,60,350,300));
 			displayP=CreateText(10,50,40,375,150,20);
@@ -756,7 +758,7 @@ public class FrontOffice extends UnicastRemoteObject{
 			
 			negativePanel.setLayout(null);
 			negativePanel.setBounds(new Rectangle(500, 40, 500, 400));
-			negativePanel.add(CreateButton("Send ",Color.white,"Search for a flight",15,275,20,200,30));
+			negativePanel.add(CreateButton("Send ",Color.white,"Send your message",15,280,20,200,30));
 			negativePanel.add(CreateTitle("Message (Negative Comment):",Color.black,15,20,20,250,20));
 			negativePanel.add(negMsgArea = CreateText(10,50,40,60,350,300));
 			displayN=CreateText(10,50,40,375,150,20);
