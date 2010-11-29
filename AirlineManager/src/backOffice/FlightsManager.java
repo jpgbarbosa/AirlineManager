@@ -58,6 +58,22 @@ public class FlightsManager {
 		finishedFlights = new Vector <Flight>();
 		regularFlights = new Hashtable<Integer, Vector<RFlight>>();
 		
+		
+		Vector<RFlight> regularFlightsList = new Vector<RFlight>();
+		regularFlights.put(Calendar.SUNDAY, regularFlightsList);
+		regularFlightsList = new Vector<RFlight>();
+		regularFlights.put(Calendar.MONDAY, regularFlightsList);
+		regularFlightsList = new Vector<RFlight>();
+		regularFlights.put(Calendar.TUESDAY, regularFlightsList);
+		regularFlightsList = new Vector<RFlight>();
+		regularFlights.put(Calendar.WEDNESDAY, regularFlightsList);
+		regularFlightsList = new Vector<RFlight>();
+		regularFlights.put(Calendar.THURSDAY, regularFlightsList);
+		regularFlightsList = new Vector<RFlight>();
+		regularFlights.put(Calendar.FRIDAY, regularFlightsList);
+		regularFlightsList = new Vector<RFlight>();
+		regularFlights.put(Calendar.SATURDAY, regularFlightsList);
+		
 		flightsCleaner = new FlightsCleaner(this, flightsList, finishedFlights);
 		
 
@@ -135,9 +151,9 @@ public class FlightsManager {
 			if(isRegular){
 				//TODO: Change origin
 				RFlight rflight = new RFlight(origin, destination);
-				//TODO: deu NULLPOINTER AQUI
+				//TODO: deu NULLPOINTER AQUI - Melhorar aquilo do aux != null
 				Vector<RFlight> aux = regularFlights.get(date.DAY_OF_WEEK);
-				for(i=0;i<aux.size();i++){
+				for(i=0; i<aux.size();i++){
 					if(aux.get(i).getOrigin() == origin && aux.get(i).getDestination() == destination)
 						return null;
 				}

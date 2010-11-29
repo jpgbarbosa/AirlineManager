@@ -541,7 +541,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			schedulePanel.add(CreateTitle("TIME:",Color.white,15,60,90,70,20));
 			schedulePanel.add(hourFieldSchedule = CreateBoxInt(20,100,90,20,20, calendar.get(Calendar.HOUR_OF_DAY)));
 			schedulePanel.add(CreateTitle("h",Color.white,15,125,90,70,20));
-			schedulePanel.add(minuteFieldSchedule = CreateBoxInt(20,140,90,20,20, calendar.get(Calendar.MINUTE) + 1));
+			schedulePanel.add(minuteFieldSchedule = CreateBoxInt(20,140,90,20,20, (calendar.get(Calendar.MINUTE) + 1)%60));
 			schedulePanel.add(CreateTitle("ID Plane:",Color.white,15,60,120,70,20));
 			schedulePanel.add(idPlaneScheduleField = CreateBoxInt(20,135,120,50,20, 0));			
 			schedulePanel.add(CreateTitle("Origin:",Color.white,15,60,150,70,20));
@@ -567,12 +567,12 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			reschedulePanel.add(rescheduleFlightID = CreateBoxInt(20,120,20,80,20,0));
 			reschedulePanel.add(CreateTitle("Date:",Color.white,15,60,50,70,20));
 			reschedulePanel.add(rescheduleDate = CreateBoxText(20,100,50,80,20));
-			rescheduleDate.setText("0/0/0");
+			rescheduleDate.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+( calendar.get(Calendar.MONTH) + 1)+"/"+calendar.get(Calendar.YEAR));
 			reschedulePanel.add(CreateButton("Reschedule Date",Color.white,"Choose flight date",15,60,80,150,30));
 			reschedulePanel.add(CreateTitle("TIME:",Color.white,15,60,120,70,20));
-			reschedulePanel.add(hourFieldReschedule = CreateBoxInt(20,100,120,20,20,0));
+			reschedulePanel.add(hourFieldReschedule = CreateBoxInt(20,100,120,20,20,calendar.get(Calendar.HOUR_OF_DAY)));
 			reschedulePanel.add(CreateTitle("h",Color.white,15,125,120,70,20));
-			reschedulePanel.add(minuteFieldReschedule = CreateBoxInt(20,140,120,20,20,0));
+			reschedulePanel.add(minuteFieldReschedule = CreateBoxInt(20,140,120,20,20,(calendar.get(Calendar.MINUTE) + 1)%60));
 			reschedulePanel.add(confirmActionReschedule = CreateText(400,180,60,150,400,180));
 			reschedulePanel.add(CreateButton("Reschedule",Color.white,"Reschedule a flight",15,60,350,200,30));
 			
@@ -692,13 +692,21 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 					minute = Integer.parseInt(minuteFieldReschedule.getText());
 					idPlane = Integer.parseInt(rescheduleFlightID.getText());
 					Flight flight = search.searchFlightById(idPlane);
-					flight.setDate(new GregorianCalendar(year,month,day,hour,minute));
+					
+					GregorianCalendar date;
+					if ((date = checkDate(year, month, day, hour, minute)) != null){
+						flight.setDate(date);
+						confirmActionReschedule.setText("Flight rescheduled!");
+					}
+					else{
+						confirmActionReschedule.setText("Invalid date!");
+					}
 					
 				} catch (NumberFormatException e1){
 					confirmActionReschedule.setText("Invalid date!");
 				}
 				
-				confirmActionReschedule.setText("Flight rescheduled!");
+				
 			}
 			else if(e.getComponent().getName().equals("Submit")){
 				/* We are inside one of the filling forms. */
