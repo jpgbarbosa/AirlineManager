@@ -52,7 +52,7 @@ public class Airplane implements Serializable{
 		}
 		/* We insert it in the last position. */
 		if (i == flights.size()){
-			flights.add(i,flight);
+			flights.add(flight);
 		}
 		
 		return true;

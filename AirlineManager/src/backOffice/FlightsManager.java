@@ -174,7 +174,7 @@ public class FlightsManager {
 		 */
 		GregorianCalendar calendar=flight.getDate();
 		for(Booking r: flight.getBookings()){
-			feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
+			feedBackManager.sendNotificationUser(r.getClient().getEmail(), "Notification", 
 					"The Flight "+flight.getId()+" with destination to "+ flight.getDestination()+", in "+ 
 					calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
 					calendar.get(Calendar.HOUR_OF_DAY)+":"+(calendar.get(Calendar.MINUTE)+1)+ 
@@ -208,7 +208,7 @@ public class FlightsManager {
 			
 			GregorianCalendar calendar=temp.getDate();
 			for(Booking r: temp.getBookings()){
-				feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
+				feedBackManager.sendNotificationUser(r.getClient().getEmail(), "Notification", 
 						"The Flight "+flight.getId()+" with destination to "+ flight.getDestination()+", in "+ 
 						calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
 						calendar.get(Calendar.HOUR_OF_DAY)+":"+(calendar.get(Calendar.MINUTE)+1)+ 

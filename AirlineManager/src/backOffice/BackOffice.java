@@ -29,7 +29,6 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import bookings.Booking;
-import bookings.NormalBooking;
 
 import messages.Feedback;
 
@@ -56,6 +55,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	private PlanesManager planesManager;
 	private StatisticsManager statisticsManager;
 	private OperatorManager operatorManager;
+	private ClientsManager clientsManager;
 	private Search search;
 	private OperatorsMenu operatorsMenu;
 	private DestinationsPrices destinationsPrices;
@@ -84,6 +84,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		flightsManager = new FlightsManager(feedBackManager);
 		planesManager = new PlanesManager();
 		operatorManager = new OperatorManager();
+		clientsManager = new ClientsManager();
 		statisticsManager = new StatisticsManager(feedBackManager, flightsManager, planesManager);
 		search = new Search(flightsManager, planesManager);
 		operatorsMenu = new OperatorsMenu();
@@ -477,8 +478,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						status=true;
 						display.setText("Your Notification was sent to \n");
 						for(Booking r: f.getBookings()){
-							if(feedBackManager.sendNotificationUser(r.getEmail(), "Notification", messageToSend.getText()))
-								display.append(r.getEmail()+"\n");
+							if(feedBackManager.sendNotificationUser(r.getClient().getEmail(), "Notification", messageToSend.getText()))
+								display.append(r.getClient().getEmail()+"\n");
 						}
 						
 					}
@@ -748,7 +749,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 											regularSchedule.getSelectedItem().toString() == "Yes" ? true : false,
 												normalSchedule.getSelectedItem().toString() == "Yes" ? false : true);
 								
-								confirmActionSchedule.setText("Flight schedule with ID " + flight.getId() + "!");
+								if (flight != null)
+									confirmActionSchedule.setText("Flight schedule with ID " + flight.getId() + "!");
+								else
+									confirmActionSchedule.setText("There's already a regular flight for this date\nin this plane.");
 								
 							}
 							else{
@@ -1351,9 +1355,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			if (diff < 0){
 				return "InsufficientSeats " + flight.getEmptySeats();
 			}
-			flightsManager.addBookingFlight(flight, new NormalBooking(flight.getId(), name, address, phone, mail, seats, bookingNumber));
-			//flight.newBooking(new NormalBooking(flight, name, address, phone, mail, seats, bookingNumber));
-			//flight.increaseOccupied(seats);
+			
+			Client client = new Client(name, address, phone, mail);
+			Booking booking = new Booking(flight.getId(), seats, client, bookingNumber, getPrice(flight.getOrigin(), flight.getDestination()));
+			clientsManager.putClient(client, booking);
+			flightsManager.addBookingFlight(flight, booking);
 			
 		}
 		
@@ -1424,7 +1430,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		if(booking!=null)
 			return booking.toString();
 		else
-			return "That booking is not associated with Flight "+idFlight;
+			return "That booking is not associated with Flight " + idFlight;
 	}
 
 	@Override
@@ -1446,10 +1452,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			return "Innexistent booking";
 		}
 		
-		name = booking.getName();
-		address = booking.getAddress();
-		phone = booking.getPhoneContact();
-		email = booking.getEmail();
+		name = booking.getClient().getName();
+		address = booking.getClient().getAddress();
+		phone = booking.getClient().getPhoneContact();
+		email = booking.getClient().getEmail();
 		seats = booking.getNoSeats();
 		
 		String answer = scheduleBooking(idNewFlight,name,address,phone,email,seats,isOperator,bookingNumber);

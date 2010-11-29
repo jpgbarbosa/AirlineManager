@@ -20,6 +20,8 @@ public class Client implements Serializable{
 	private String address;
 	private String phoneContact;
 	private String email;
+	/* The number of kilometers flown so far. */
+	private int kilometers;
 	
 	/* The constructor. */
 	public Client(String name, String addr, String phone, String mail){
@@ -91,6 +93,14 @@ public class Client implements Serializable{
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public int getKilometers(){
+		return kilometers;
+	}
+	
+	public void increaseKilometers(int no){
+		kilometers += no;
 	}
 	
 	
