@@ -93,4 +93,9 @@ public abstract class Booking implements Serializable{
 	public void setBookingNumber(int number) {
 		this.bookingNumber = number;
 	}
+	
+	public String toString(){
+		return "Flight ID: "+idFlight+"\nBooking ID: "+bookingNumber+"\nName: "+name+"\nEmail: "+email
+			+ "\nNumber of seats: "+ noSeats;
+	}
 }

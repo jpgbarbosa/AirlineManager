@@ -24,6 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -350,12 +351,18 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			positivePanel.setBounds(new Rectangle(500, 40, 500, 400));
 			positivePanel.add(CreateTitle("Positive Feedback Messages:",Color.white,15,20,20,250,20));
 			positivePanel.add(posMsgArea = CreateText(10,50,40,60,350,320));
+			JScrollPane jpPos = new JScrollPane(posMsgArea);
+			positivePanel.add(jpPos);
+			jpPos.setBounds(40,60,350,320);
 			posMsgArea.enableInputMethods(false);
 			
 			negativePanel.setLayout(null);
 			negativePanel.setBounds(new Rectangle(500, 40, 500, 400));
 			negativePanel.add(CreateTitle("Negative Feedback Messages:",Color.white,15,20,20,250,20));
 			negativePanel.add(negMsgArea = CreateText(10,50,40,60,350,320));
+			JScrollPane jpNeg = new JScrollPane(negMsgArea);
+			negativePanel.add(jpNeg);
+			jpNeg.setBounds(40,60,350,320);
 			negMsgArea.enableInputMethods(false);
 			
 			
@@ -600,8 +607,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			listPanel.setLayout(null);
 			listPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			listPanel.add(CreateTitle("LIST OF FLIGHTS:",Color.white,15,20,20,150,20));
-			listPanel.add(CreateTitle("     ID      PLANE        DESTINATION                  TIME",Color.white,15,20,40,400,20));
-			listPanel.add(listArea = CreateText(10,50,40,60,450,320));
+			listPanel.add(CreateTitle(" ID      PLANE        DESTINATION                  TIME",Color.white,15,20,40,400,20));
+			listPanel.add(listArea = CreateText(10,50,20,60,450,320));
+			JScrollPane jpList = new JScrollPane(listArea);
+			listPanel.add(jpList);
+			jpList.setBounds(20,60,450,320);
 			
 			/* Adds the subpanels to the main panel. */
 			panel.add(schedulePanel);
@@ -887,6 +897,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			listPanel.add(CreateTitle("LIST OF FLIGHTS:",Color.white,15,20,20,150,20));
 			listPanel.add(CreateTitle("     ID    SEATS        COMPANY            MODEL",Color.white,15,20,40,400,20));
 			listPanel.add(listArea = CreateText(10,50,40,60,350,280));
+			JScrollPane jpList = new JScrollPane(listArea);
+			listPanel.add(jpList);
+			jpList.setBounds(40,60,350,280);
 			
 			findPanel.setLayout(null);
 			findPanel.setBounds(new Rectangle(500, 40, 500, 400));
@@ -1368,17 +1381,19 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	}
 
 	@Override
-	public Booking getBookingInfo(int idFlight, int idBooking) throws RemoteException {
+	public String getBookingInfo(int idFlight, int idBooking) throws RemoteException {
 		/* First, we need to check if there's such a flight. */
 		Flight flight = flightsManager.searchFlightById(idFlight);
 		
 		if (flight == null){
-			return null;
+			return "There's no such flight";
 		}
 		/* If it exists we try to get the asked booking. */
 		Booking booking = flight.findBookingById(idBooking);
-		
-		return booking;
+		if(booking!=null)
+			return booking.toString();
+		else
+			return "That booking is not associated with Flight "+idFlight;
 	}
 
 	@Override
