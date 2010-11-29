@@ -76,7 +76,7 @@ public abstract class Window extends JPanel implements MouseListener{
 	protected JLabel CreateTitle(String name,Color cor, int size, int x, int y, int x1,int y1){
 		JLabel title = new JLabel();
 		title.setBounds(new Rectangle(x,y,x1,y1));
-		title.setText(name);
+		title.setText("<HTML><B>" + name + "</B></HTML>");
 		title.setName(name);
 		title.setFont(new Font("sansserif",Font.PLAIN,size));
 		title.setForeground(cor);

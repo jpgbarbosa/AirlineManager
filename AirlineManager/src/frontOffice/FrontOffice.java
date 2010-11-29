@@ -22,6 +22,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import messages.Feedback;
 import bookings.Booking;
@@ -56,6 +58,25 @@ public class FrontOffice extends UnicastRemoteObject{
 	
 	/* The main constructor. */
 	public FrontOffice() throws RemoteException{
+		
+		JFrame.setDefaultLookAndFeelDecorated(true);
+		JDialog.setDefaultLookAndFeelDecorated(true);
+		
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		try {
 			
@@ -393,18 +414,18 @@ public class FrontOffice extends UnicastRemoteObject{
 			cancelPanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
 			cancelPanel.add(cancelFlightID = CreateBoxInt(20,140,20,80,20,0));
 			cancelPanel.add(CreateTitle("Booking Number:",Color.black,15,60,50,150,20));
-			cancelPanel.add(cancelBookingID = CreateBoxInt(20,180,50,80,20,0));
+			cancelPanel.add(cancelBookingID = CreateBoxInt(20,190,50,80,20,0));
 			cancelPanel.add(confirmActionCancel = CreateText(300,150,60,90,400,150));
 			cancelPanel.add(CreateButton("Cancel",Color.white,"Cancel Booking",15,60,260,200,30));
 			
 			modifyPanel.setLayout(null);
 			modifyPanel.setBounds(new Rectangle(500, 40, 400, 500));
 			modifyPanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
-			modifyPanel.add(modifyFlightID = CreateBoxInt(20,140,20,80,20,0));
+			modifyPanel.add(modifyFlightID = CreateBoxInt(20,165,20,80,20,0));
 			modifyPanel.add(CreateTitle("Booking ID:",Color.black,15,60,50,100,20));
-			modifyPanel.add(modifyBookingID = CreateBoxInt(20,140,50,80,20,0));
-			modifyPanel.add(CreateTitle("New Flight ID:",Color.black,15,60,80,90,20));
-			modifyPanel.add(modifyNewFlightID = CreateBoxInt(20,155,80,80,20,0));
+			modifyPanel.add(modifyBookingID = CreateBoxInt(20,165,50,80,20,0));
+			modifyPanel.add(CreateTitle("New Flight ID:",Color.black,15,60,80,120,20));
+			modifyPanel.add(modifyNewFlightID = CreateBoxInt(20,165,80,80,20,0));
 			modifyPanel.add(confirmActionModify = CreateText(300,150,60,120,300,150));
 			modifyPanel.add(CreateButton("Confirm modification",Color.white,"Modify a booking",15,60,290,200,30));
 			
@@ -662,7 +683,7 @@ public class FrontOffice extends UnicastRemoteObject{
 			positivePanel.setLayout(null);
 			positivePanel.setBounds(new Rectangle(500, 40, 500, 400));
 			positivePanel.add(CreateButton("Send",Color.white,"Search for a flight",15,275,20,200,30));
-			positivePanel.add(CreateTitle("Message:",Color.black,15,20,20,200,20));
+			positivePanel.add(CreateTitle("Message (Positive Comment):",Color.black,15,20,20,250,20));
 			positivePanel.add(posMsgArea = CreateText(10,50,40,60,350,300));
 			displayP=CreateText(10,50,40,375,150,20);
 			positivePanel.add(displayP);
@@ -670,7 +691,7 @@ public class FrontOffice extends UnicastRemoteObject{
 			negativePanel.setLayout(null);
 			negativePanel.setBounds(new Rectangle(500, 40, 500, 400));
 			negativePanel.add(CreateButton("Send ",Color.white,"Search for a flight",15,275,20,200,30));
-			negativePanel.add(CreateTitle("Message:",Color.black,15,20,20,200,20));
+			negativePanel.add(CreateTitle("Message (Negative Comment):",Color.black,15,20,20,250,20));
 			negativePanel.add(negMsgArea = CreateText(10,50,40,60,350,300));
 			displayN=CreateText(10,50,40,375,150,20);
 			negativePanel.add(displayN);

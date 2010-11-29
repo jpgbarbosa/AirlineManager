@@ -26,6 +26,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import bookings.Booking;
 import bookings.NormalBooking;
@@ -69,6 +71,25 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	/* The main constructor. */
 	public BackOffice() throws RemoteException{
 		super();
+		
+		JFrame.setDefaultLookAndFeelDecorated(true);
+		JDialog.setDefaultLookAndFeelDecorated(true);
+		
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		feedBackManager = new FeedBackManager();
 		flightsManager = new FlightsManager(feedBackManager);
@@ -327,20 +348,20 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			/* Defines the subpanels. */
 			positivePanel.setLayout(null);
 			positivePanel.setBounds(new Rectangle(500, 40, 500, 400));
-			positivePanel.add(CreateTitle("Positive Feedback Messages:",Color.white,15,20,20,200,20));
+			positivePanel.add(CreateTitle("Positive Feedback Messages:",Color.white,15,20,20,250,20));
 			positivePanel.add(posMsgArea = CreateText(10,50,40,60,350,320));
 			posMsgArea.enableInputMethods(false);
 			
 			negativePanel.setLayout(null);
 			negativePanel.setBounds(new Rectangle(500, 40, 500, 400));
-			negativePanel.add(CreateTitle("Negative Feedback Messages:",Color.white,15,20,20,200,20));
+			negativePanel.add(CreateTitle("Negative Feedback Messages:",Color.white,15,20,20,250,20));
 			negativePanel.add(negMsgArea = CreateText(10,50,40,60,350,320));
 			negMsgArea.enableInputMethods(false);
 			
 			
 			sendPanel.setLayout(null);
 			sendPanel.setBounds(new Rectangle(500, 40, 500, 400));
-			sendPanel.add(CreateButton("Send To...",Color.white,"Select the client",15,60,300,200,30));
+			sendPanel.add(CreateButton("Send To...",Color.white,"Select the client",15,60,300,250,30));
 			sendPanel.add(CreateTitle("Notification:",Color.white,15,20,20,100,20));
 			sendPanel.add(messageToSend = CreateText(10,50,40,60,300,200));
 			
@@ -545,12 +566,12 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			Vector<String> choiceChar = new Vector<String>();
 			choiceChar.add("Yes");
 			choiceChar.add("No");
-			schedulePanel.add(normalSchedule = CreateComboBox(160,210,50,20,choiceChar));
-			schedulePanel.add(CreateTitle("Regular Flight:",Color.white,15,60,240,100,20));
+			schedulePanel.add(normalSchedule = CreateComboBox(170,210,50,20,choiceChar));
+			schedulePanel.add(CreateTitle("Regular Flight:",Color.white,15,60,240,150,20));
 			Vector<String> choiceReg = new Vector<String>();
 			choiceReg.add("Yes");
 			choiceReg.add("No");
-			schedulePanel.add(regularSchedule = CreateComboBox(160,240,50,20,choiceReg));
+			schedulePanel.add(regularSchedule = CreateComboBox(170,240,50,20,choiceReg));
 			schedulePanel.add(confirmActionSchedule = CreateText(400,120,60,270,400,120));
 			schedulePanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,395,100,30));
 			
@@ -571,7 +592,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			cancelPanel.setLayout(null);
 			cancelPanel.setBounds(new Rectangle(500, 40, 500, 400));
-			cancelPanel.add(CreateTitle("Flight's ID:",Color.white,15,100,100,70,20));
+			cancelPanel.add(CreateTitle("Flight's ID:",Color.white,15,100,100,150,20));
 			cancelPanel.add(idFlightCancelPanel = CreateBoxInt(20,175,100,50,20, 0));
 			cancelPanel.add(confirmActionCancel = CreateText(400,150,60,150,400,150));
 			cancelPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,330,100,30));
@@ -845,7 +866,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			/* Defines the subpanels. */
 			buyPanel.setLayout(null);
 			buyPanel.setBounds(new Rectangle(500, 40, 500, 400));
-			buyPanel.add(CreateTitle("No. Seats:",Color.white,15,100,100,70,20));
+			buyPanel.add(CreateTitle("No. Seats:",Color.white,15,100,100,150,20));
 			buyPanel.add(noSeatsField = CreateBoxInt(20,175,100,50,20, 0));
 			buyPanel.add(CreateTitle("Company:",Color.white,15,100,130,70,20));
 			buyPanel.add(companyField = CreateBoxText(20,175,130,110,20));
@@ -856,7 +877,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			sellPanel.setLayout(null);
 			sellPanel.setBounds(new Rectangle(500, 40, 500, 400));
-			sellPanel.add(CreateTitle("Plane's ID:",Color.white,15,100,100,70,20));
+			sellPanel.add(CreateTitle("Plane's ID:",Color.white,15,90,100,150,20));
 			sellPanel.add(idSellField = CreateBoxInt(20,175,100,50,20, 0));
 			sellPanel.add(sellArea = CreateText(10,10,60,140,320,140));
 			sellPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,60,330,100,30));
@@ -869,7 +890,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			
 			findPanel.setLayout(null);
 			findPanel.setBounds(new Rectangle(500, 40, 500, 400));
-			findPanel.add(CreateTitle("Plane's ID:",Color.white,15,100,70,70,20));
+			findPanel.add(CreateTitle("Plane's ID:",Color.white,15,90,70,150,20));
 			findPanel.add(idSearchField = CreateBoxInt(20,175,70,50,20,0));
 			findPanel.add(findArea = CreateText(10,50,60,100,350,150));
 			findPanel.add(CreateButton("Search Plane",Color.white,"Search for an Airplane",15,100,300,200,30));
