@@ -32,5 +32,5 @@ public interface BackOfficeRemoteInterface extends Remote{
 
 	abstract String listFlights() throws RemoteException;
 	
-	abstract Booking getBookingInfo(int idFlight, int idBooking) throws RemoteException;
+	abstract String getBookingInfo(int idFlight, int idBooking) throws RemoteException;
 }

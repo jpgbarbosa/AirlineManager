@@ -20,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -43,8 +44,6 @@ public class FrontOffice extends UnicastRemoteObject{
 	private BookingsMenu bookingsMenu;
 	private SendFeedBackMenu sendFeedBackMenu;
 	private SearchMenu searchMenu;
-	//TODO: Think about this! The constructor accepts a flight and a plane manager, so
-	// 		we will need to eventually invoke an RMI command when we want to access this class.
 	private Search search;
 	private BackOfficeRemoteInterface backOffice;
 	private boolean loggedIn = false;
@@ -322,12 +321,16 @@ public class FrontOffice extends UnicastRemoteObject{
 	
 	@SuppressWarnings("serial")
 	private class BookingsMenu extends Window implements PropertyChangeListener{
+		
+		/* ALL PANELS */
 		private JPanel newPanel;
+		private JPanel checkPanel;
 		private JPanel cancelPanel;
 		private JPanel modifyPanel;
 		private JPanel charterPanel;
 		private JButton charterButton;
 		
+		/* NEW BOOKING PANEL */
 		private JTextField newFlightID;
 		private JTextField seatsNew;
 		private JTextField nameNew;
@@ -335,36 +338,50 @@ public class FrontOffice extends UnicastRemoteObject{
 		private JTextField addressNew;
 		private JTextField emailNew;
 		private JTextArea confirmActionNew;
+		private JScrollPane jpNew;
 		
+		/* CHECK BOOKING PANEL */
+		private JTextField checkFlightID;
+		private JTextField checkBookingID;
+		private JTextArea confirmActionCheck;
+		
+		/* CANCEL BOOKING PANEL */
 		private JTextField cancelFlightID;
 		private JTextField cancelBookingID;
 		private JTextArea confirmActionCancel;
+		private JScrollPane jpCancel;
 		
+		/* MODIFY BOOKING PANEL */
 		private JTextField modifyFlightID;
 		private JTextField modifyBookingID;
 		private JTextField modifyNewFlightID;
 		private JTextArea confirmActionModify;
+		private JScrollPane jpModify;
 		
+		/* CHARTER BOOKING PANEL */
 		private JCalendar jCalendar;
 		private JTextField dateCharter;
 		private JTextField seatsCharter;
 		private JComboBox originCharter;
 		private JComboBox destinationCharter;
 		private JTextArea confirmActionCharter;
+		private JScrollPane jpCharter;
 		
 		public BookingsMenu(){
 			
 			/* Creates the buttons that redirect to each manager window. */
 			CreateButton("New Booking",Color.white,"Books a given flight",15,60,200,200,30);
-			CreateButton("Cancel Booking",Color.white,"Cancels a booking",15,60,250,200,30);
-			CreateButton("Modify Booking",Color.white,"Changes a booking to another flight",15,60,300,200,30);
-			charterButton = CreateButton("Book Charter",Color.white,"Book a Charter Flight",15,60,350,200,30);
+			CreateButton("Check Booking", Color.white,"Confirm booked flight",15,60,250,200,30);
+			CreateButton("Cancel Booking",Color.white,"Cancels a booking",15,60,300,200,30);
+			CreateButton("Modify Booking",Color.white,"Changes a booking to another flight",15,60,350,200,30);
+			charterButton = CreateButton("Book Charter",Color.white,"Book a Charter Flight",15,60,400,200,30);
 			charterButton.setVisible(false);
 			
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			 
 			/* Creates the sub panels that are displayed accordingly to the user's choice. */
 			newPanel = new JPanel();
+			checkPanel = new JPanel();
 			cancelPanel = new JPanel();
 			modifyPanel = new JPanel();
 			charterPanel = new JPanel();
@@ -386,7 +403,21 @@ public class FrontOffice extends UnicastRemoteObject{
 			newPanel.add(CreateTitle("Seats:",Color.black,15,60,170,100,20));
 			newPanel.add(seatsNew = CreateBoxInt(20,140,170,80,20,0));
 			newPanel.add(confirmActionNew = CreateText(300,250,60,210,300,180));
+			jpNew = new JScrollPane(confirmActionNew);
+			newPanel.add(jpNew);
+			jpNew.setBounds(60,210,300,180);
 			newPanel.add(CreateButton("Schedule",Color.white,"Schedule your flight",15,60,430,120,20));
+			
+			
+			checkPanel.setLayout(null);
+			checkPanel.setBounds(new Rectangle(500, 40, 500, 500));
+			
+			checkPanel.add(CreateTitle("Flight ID:",Color.black,15,60,20,70,20));
+			checkPanel.add(checkFlightID = CreateBoxInt(20,140,20,80,20,0));
+			checkPanel.add(CreateTitle("Booking ID:",Color.black,15,60,50,90,20));
+			checkPanel.add(checkBookingID = CreateBoxInt(20,140,50,80,20,0));
+			checkPanel.add(confirmActionCheck = CreateText(300,150,60,90,400,150));
+			checkPanel.add(CreateButton("Check",Color.white,"Check Booking",15,60,260,200,30));
 			
 			cancelPanel.setLayout(null);
 			cancelPanel.setBounds(new Rectangle(500, 40, 400, 500));
@@ -395,7 +426,11 @@ public class FrontOffice extends UnicastRemoteObject{
 			cancelPanel.add(CreateTitle("Booking Number:",Color.black,15,60,50,150,20));
 			cancelPanel.add(cancelBookingID = CreateBoxInt(20,180,50,80,20,0));
 			cancelPanel.add(confirmActionCancel = CreateText(300,150,60,90,400,150));
+			jpCancel = new JScrollPane(confirmActionCancel);
+			cancelPanel.add(jpCancel);
+			jpCancel.setBounds(60,90,400,150);
 			cancelPanel.add(CreateButton("Cancel",Color.white,"Cancel Booking",15,60,260,200,30));
+			
 			
 			modifyPanel.setLayout(null);
 			modifyPanel.setBounds(new Rectangle(500, 40, 400, 500));
@@ -406,13 +441,16 @@ public class FrontOffice extends UnicastRemoteObject{
 			modifyPanel.add(CreateTitle("New Flight ID:",Color.black,15,60,80,90,20));
 			modifyPanel.add(modifyNewFlightID = CreateBoxInt(20,155,80,80,20,0));
 			modifyPanel.add(confirmActionModify = CreateText(300,150,60,120,300,150));
+			jpModify = new JScrollPane(confirmActionModify);
+			modifyPanel.add(jpModify);
+			jpModify.setBounds(60,120,300,150);
 			modifyPanel.add(CreateButton("Confirm modification",Color.white,"Modify a booking",15,60,290,200,30));
 			
 			charterPanel.setLayout(null);
 			charterPanel.setBounds(new Rectangle(500, 40, 400, 500));
 			charterPanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
 			charterPanel.add(dateCharter = CreateBoxText(20,100,20,80,20));
-			charterPanel.add(CreateButton("Charter Date",Color.black,"Choose flight date",15,60,50,120,30));
+			charterPanel.add(CreateButton("Charter Date",Color.white,"Choose flight date",15,60,50,120,30));
 			charterPanel.add(CreateTitle("Origin:",Color.black,15,60,90,70,20));
 			charterPanel.add(originCharter = CreateComboBox(120,90,120,20,destinations));
 			charterPanel.add(CreateTitle("Destination:",Color.black,15,60,120,100,20));
@@ -420,10 +458,14 @@ public class FrontOffice extends UnicastRemoteObject{
 			charterPanel.add(CreateTitle("Seats:",Color.black,15,60,150,50,20));
 			charterPanel.add(seatsCharter = CreateBoxInt(20,120,150,50,20,0));
 			charterPanel.add(confirmActionCharter= CreateText(300,150,60,180,300,150));
+			jpCharter = new JScrollPane(confirmActionCharter);
+			charterPanel.add(jpCharter);
+			jpCharter.setBounds(60,180,300,150);
 			charterPanel.add(CreateButton("Book Flight",Color.white,"Search for a flight",15,60,350,120,20));
 			
 			/* Adds the sub panels to the main panel. */
 			panel.add(newPanel);
+			panel.add(checkPanel);
 			panel.add(cancelPanel);
 			panel.add(modifyPanel);
 			panel.add(charterPanel);
@@ -431,6 +473,8 @@ public class FrontOffice extends UnicastRemoteObject{
 			
 			newPanel.setVisible(false);
 			newPanel.setOpaque(false);
+			checkPanel.setVisible(false);
+			checkPanel.setOpaque(false);
 			cancelPanel.setVisible(false);
 			cancelPanel.setOpaque(false);
 			modifyPanel.setVisible(false);
@@ -461,20 +505,30 @@ public class FrontOffice extends UnicastRemoteObject{
 				modifyPanel.setVisible(false);
 				charterPanel.setVisible(false);
 			}
+			else if(e.getComponent().getName().equals("Check Booking")){
+				newPanel.setVisible(false);
+				checkPanel.setVisible(true);
+				cancelPanel.setVisible(false);
+				modifyPanel.setVisible(false);
+				charterPanel.setVisible(false);
+			}
 			else if(e.getComponent().getName().equals("Cancel Booking")){
 				newPanel.setVisible(false);
+				checkPanel.setVisible(false);
 				cancelPanel.setVisible(true);
 				modifyPanel.setVisible(false);
 				charterPanel.setVisible(false);
 			}
 			else if(e.getComponent().getName().equals("Modify Booking")){
 				newPanel.setVisible(false);
+				checkPanel.setVisible(false);
 				cancelPanel.setVisible(false);
 				modifyPanel.setVisible(true);
 				charterPanel.setVisible(false);
 			}
 			else if(e.getComponent().getName().equals("Book Charter")){
 				newPanel.setVisible(false);
+				checkPanel.setVisible(false);
 				cancelPanel.setVisible(false);
 				modifyPanel.setVisible(false);
 				charterPanel.setVisible(true);
@@ -546,6 +600,18 @@ public class FrontOffice extends UnicastRemoteObject{
 					
 				}catch(Exception e1){
 					confirmActionNew.setText("Invalid field(s).\n");
+				}
+			}
+			else if(e.getComponent().getName().equals("Check")){
+				try{
+					int idFlight = Integer.parseInt(checkFlightID.getText());
+					int idBooking = Integer.parseInt(checkBookingID.getText());
+					
+					confirmActionCheck.setText(backOffice.getBookingInfo(idFlight, idBooking));
+				} catch (NumberFormatException e1){
+					confirmActionCheck.setText("Invalid flight or booking ID");
+				} catch (RemoteException e1) {
+					confirmActionCheck.setText("The system is not availabe, please try again later");
 				}
 			}
 			else if(e.getComponent().getName().equals("Confirm modification")){
@@ -800,8 +866,7 @@ public class FrontOffice extends UnicastRemoteObject{
 				try {
 					listArea.setText(backOffice.listFlights());
 				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					listArea.setText("The system is not available, please try again later");
 				}
 			}
 			else if(e.getComponent().getName().equals("Booking Date")){
@@ -821,8 +886,7 @@ public class FrontOffice extends UnicastRemoteObject{
 				try {
 					price = backOffice.getPrice(orig, dest);
 				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					confirmActionNew.setText("The system is not available, please try again later");
 				}
 				confirmActionNew.setText("The price is " + price + "€.");
 			}
