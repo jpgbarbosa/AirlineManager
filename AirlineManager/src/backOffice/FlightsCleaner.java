@@ -53,8 +53,7 @@ public class FlightsCleaner extends Thread{
 	     		   	try {
 						sleep(10000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						System.exit(-1);
 					}
 	     		   	panel.setVisible(false);
 				}
@@ -66,33 +65,9 @@ public class FlightsCleaner extends Thread{
 			try {
 				sleep(10000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.exit(-1);
 			}
 			
-			//TODO: Clarify this.
-			/*if (flightsList.size() != 0){
-				System.out.println("Sleeping");
-				try{
-					sleep(flightsList.get(0).getDate().getTimeInMillis() - (new GregorianCalendar()).getTimeInMillis());
-				}catch(InterruptedException e){
-					// If we were interrupted, we have to evaluate if the new flight has
-					// past the current time.
-					System.out.println("Was interrupted");
-				}
-			}
-			else{
-				System.out.println("Waiting");
-				synchronized(lock){
-					try {
-						lock.wait();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-			*/
 		}
 	}
 	

@@ -2,9 +2,6 @@ package bookings;
 
 import java.io.Serializable;
 
-import common.Flight;
-
-
 public abstract class Booking implements Serializable{
 	/**
 	 * 

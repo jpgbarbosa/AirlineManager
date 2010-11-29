@@ -2,6 +2,7 @@ package messages;
 
 import java.util.GregorianCalendar;
 
+@SuppressWarnings("serial")
 public class Notification extends Message{
 	/* The type of notification. */
 	//TODO: Define the types of notifications.

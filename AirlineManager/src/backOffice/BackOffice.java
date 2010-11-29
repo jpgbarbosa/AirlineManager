@@ -1,6 +1,5 @@
 package backOffice;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -28,7 +27,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import bookings.Booking;
 import bookings.NormalBooking;
@@ -68,7 +66,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	private PlanesManagerMenu planesManagerMenu;
 	private StatisticsManagerMenu statisticsManagerMenu;
 	private LoginMenu loginMenu;
-	private ShowDepartures showDepartures;
 	
 	/* The main constructor. */
 	public BackOffice() throws RemoteException{
@@ -79,18 +76,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.exit(-1);
 		}
 		
 		feedBackManager = new FeedBackManager();
@@ -110,7 +97,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		loginMenu = new LoginMenu();
 		
 		
-		SnapshotTimer s=new SnapshotTimer(planesManager.getPrevayler(),flightsManager.getPrevayler());
+		new SnapshotTimer(planesManager.getPrevayler(),flightsManager.getPrevayler());
 		BackOffice.now=new GregorianCalendar();
 	}
 	
@@ -145,7 +132,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		return false;
 	}
 	
-	//TODO: Make sure this function works correctly.
 	public GregorianCalendar checkDate(int year, int month, int day, int hour, int minute){
 		
 		/* A non-positive year. */
@@ -206,8 +192,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		GregorianCalendar date = new GregorianCalendar(year,month-1,day,hour,minute);
 		/* This is an old date. */
 		if (now.after(date)){
-			//TODO: remove this
-			System.out.println("OLD DATA!!!");
 			return null;
 		}
 		return date;
@@ -743,11 +727,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			else if(e.getComponent().getName().equals("Submit")){
 				/* We are inside one of the filling forms. */
 				if (menuIdentifier.equals("schedulePanel")){
-					/*TODO: Naturalmente, temos de fazer isto melhor.
-					 * Não podemos deixar introduzir o voo simplesmente, temos de ver
-					 * se há concordância no avião, se não há outro voo para o mesmo
-					 * avião demasiado ao pé e coisas do género.
-					 */
+					
 					try{
 						dateFields = scheduleDate.getText().split("/");
 						day = Integer.parseInt(dateFields[0]);
@@ -767,13 +747,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 										date, originSchedule.getSelectedItem().toString(),destinationSchedule.getSelectedItem().toString(),
 											regularSchedule.getSelectedItem().toString() == "Yes" ? true : false,
 												normalSchedule.getSelectedItem().toString() == "Yes" ? false : true);
-								if (flight == null){
-									//TODO: Maybe we can inform to which one.
-									confirmActionSchedule.setText("This flights is too close to another!");
-								}
-								else{
-									confirmActionSchedule.setText("Flight schedule with ID " + flight.getId() + "!");
-								}
+								
+								confirmActionSchedule.setText("Flight schedule with ID " + flight.getId() + "!");
 								
 							}
 							else{
@@ -791,7 +766,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 					
 				}
 				else if (menuIdentifier.equals("cancelPanel")){
-					//TODO: Eventualmente protecções.
+					
 					Flight flight = null;
 					int id = -1;
 					try{
@@ -1007,7 +982,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			else if ((e.getComponent().getName().equals("Submit"))){
 				/* We are inside one of the filling forms. */
 				if (menuIdentifier.equals("buyPanel")){
-					//TODO: Eventualmente protecções.
+					
 					Airplane airplane = null;
 					try{
 						int noSeats = Integer.parseInt(noSeatsField.getText());
@@ -1218,7 +1193,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			operatorPanel.add(CreateTitle("Satistics:",Color.white,15,100,100,70,20));
 			operatorPanel.add(operatorArea = CreateText(10,50,40,60,350,250));
 			operatorArea.setEditable(false);
-			operatorPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,360,100,30));
 			operatorPanel.setOpaque(false);
 			
 			

@@ -24,10 +24,7 @@ public class PlanesManager {
 			prevayler = PrevaylerFactory.createPrevayler(new Vector<Airplane>(), "PlanesList");
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("Something went really bad!");
-			System.exit(0);
+			System.exit(-1);
 		} 
 		planesList=(Vector <Airplane>) (prevayler.prevalentSystem());
 		

@@ -28,25 +28,18 @@ public class FeedBackManager {
 		try {
 			prevayler = PrevaylerFactory.createPrevayler(new FeedBackStorage(), "MessageStorage");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("Something went really bad!");
-			System.exit(0);
+			System.exit(-1);
 		} 
 		msgStorage=(FeedBackStorage) (prevayler.prevalentSystem());
 	}
 	
 	/* Sends a notification to a specific client. */
 	public boolean sendNotificationUser (String email, String type, String content){
-		//TODO: send e-mail
-		
 		try {
 			SendEmail.send("smtp.sapo.pt", 25, "airlinemanager@fakemail.com", email, "Notification", content);
 		} catch (AddressException e) {
-			// TODO Auto-generated catch block
 			return false;
 		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
 			return false;
 		}
 		return true;
@@ -55,8 +48,6 @@ public class FeedBackManager {
 	
 	/* Sends a notification to all the clients. */
 	public void sendNotificationAllOperators(Vector <Operator> listOps, String type, String content){
-		
-		//TODO: OLHAR COM CUIDADO! Já não temos clientes
 		for(Operator op : listOps){
 			try {
 				SendEmail.send("smtp.sapo.pt", 25, "airlinemanager@fakemail.com", op.getEmail(), "Notification", content);

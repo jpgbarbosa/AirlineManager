@@ -39,10 +39,7 @@ public class FlightsManager {
 			prevayler = PrevaylerFactory.createPrevayler(new Vector<Flight>(), "FlightsList");
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("Something went really bad!");
-			System.exit(0);
+			System.exit(-1);
 		} 
 		flightsList=(Vector <Flight>) (prevayler.prevalentSystem());
 		
@@ -151,7 +148,7 @@ public class FlightsManager {
 			if(isRegular){
 				//TODO: Change origin
 				RFlight rflight = new RFlight(origin, destination);
-				//TODO: deu NULLPOINTER AQUI - Melhorar aquilo do aux != null
+
 				Vector<RFlight> aux = regularFlights.get(date.DAY_OF_WEEK);
 				for(i=0; i<aux.size();i++){
 					if(aux.get(i).getOrigin() == origin && aux.get(i).getDestination() == destination)
@@ -172,15 +169,6 @@ public class FlightsManager {
 			if (i == flightsList.size()){
 				addFlight(i,flight);
 			}
-			
-			//TODO: Clarify this.
-			/*System.out.println("in");
-			synchronized(flightsCleaner.lock){
-				System.out.println("Interrupting");
-				flightsCleaner.interrupt();
-				flightsCleaner.lock.notify();
-			}
-			System.out.println("out");*/
 			
 			return flight;
 		}
@@ -227,7 +215,7 @@ public class FlightsManager {
 			if (i == flightsList.size()){
 				addFlight(i,temp);
 			}
-			/* TODO: Warn Clients!! */
+			
 			GregorianCalendar calendar=temp.getDate();
 			for(Booking r: temp.getBookings()){
 				feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
@@ -366,6 +354,7 @@ class addFlight implements Transaction{
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void executeOn(Object arg0, Date arg1) {
 		((Vector<Flight>)arg0).add(index,flight);
@@ -393,6 +382,7 @@ class removeFlight implements Transaction{
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void executeOn(Object arg0, Date arg1) {
 		
@@ -423,6 +413,7 @@ class addBookingFlight implements Transaction{
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void executeOn(Object arg0, Date arg1) {
 		((Vector<Flight>)arg0).get(((Vector<Flight>)arg0).indexOf(id)).newBooking(booking);
@@ -453,6 +444,7 @@ class removeBookingFlight implements Transaction{
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void executeOn(Object arg0, Date arg1) {
 		((Vector<Flight>)arg0).get(((Vector<Flight>)arg0).indexOf(id)).removeBooking(booking);

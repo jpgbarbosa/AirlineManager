@@ -1,7 +1,6 @@
 package bookings;
 
-import common.Flight;
-
+@SuppressWarnings("serial")
 public class NormalBooking extends Booking {
 	
 	/* The constructor. */

@@ -24,10 +24,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import messages.Feedback;
-import bookings.Booking;
 import common.*;
 
 import com.toedter.calendar.JCalendar;;
@@ -46,7 +44,6 @@ public class FrontOffice extends UnicastRemoteObject{
 	private BookingsMenu bookingsMenu;
 	private SendFeedBackMenu sendFeedBackMenu;
 	private SearchMenu searchMenu;
-	private Search search;
 	private BackOfficeRemoteInterface backOffice;
 	private boolean loggedIn = false;
 	private JFrame f;
@@ -63,18 +60,8 @@ public class FrontOffice extends UnicastRemoteObject{
 		
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.exit(-1);
 		}
 		
 		try {
@@ -82,9 +69,7 @@ public class FrontOffice extends UnicastRemoteObject{
 			backOffice = (BackOfficeRemoteInterface) Naming.lookup("rmi://localhost:2000/AirlineManager");
 
 		} catch (Exception e) {
-			//TODO: Quem foi o engraçadinho? :P Foi a daniela lol
-			System.out.println("Deu bode!");
-			System.exit(0);
+			System.exit(-1);
 		}
 		destinations = backOffice.getDestinations();
 		

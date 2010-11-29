@@ -55,8 +55,6 @@ public class Airplane implements Serializable{
 			flights.add(i,flight);
 		}
 		
-		//TODO: Later, we have to confirm that we can associate this flight to this plane.
-		//		A reason for failing is that we have two flights too close to each other.
 		return true;
 	}
 	

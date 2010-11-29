@@ -60,10 +60,7 @@ public class Search {
 	public Vector<Flight> listFlightsByDate(GregorianCalendar data){
 		
 		Vector<Flight> finalList = new Vector<Flight>();
-		
-		/* TODO: Very inefficient method. We can organize the linked list so
-		 * we won't look up in the entire structure.
-		 */
+
 		/* Collects the list of all flights and creates an iterator over it. */
 		Iterator<Flight> it = flightsManager.getFlightsList().iterator();
 		while (it.hasNext()){
@@ -77,7 +74,6 @@ public class Search {
 		
 		/* If we have elements on the list, we can return the vector.
 		 * Otherwise, we simply return null, indicating there were no members.
-		 * TODO: Verify if it's better to return null or the vector with 0 flights.
 		 */
 		if (finalList.size() != 0){
 			return finalList;

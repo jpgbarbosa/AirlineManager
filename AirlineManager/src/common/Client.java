@@ -14,7 +14,6 @@ public class Client implements Serializable{
 	/* The list of bookings related to this client. */
 	private Vector <Booking> bookingsList;
 	/* The list of messages received by this client. */
-	//TODO: Will it be necessary or feasible?
 	private Vector <Message> messagesList;
 	/* The personal information of this client. */
 	private String name;
