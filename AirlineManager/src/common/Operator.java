@@ -26,6 +26,14 @@ public class Operator implements Serializable{
 		
 	}
 
+	public boolean equals(Object c){
+		if(((Operator) c).getName().equals(this.name)&&((Operator) c).getAddress().equals(this.address))
+			return true;
+		
+		return false;
+		
+	}
+	
 	/* Getters and setters. */
 	public String getCompany() {
 		return company;
@@ -69,5 +77,9 @@ public class Operator implements Serializable{
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public String toString(){
+		return name + "\t\t" + company + "\t\t" + phoneContact +"\n";
 	}
 }

@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -1204,26 +1205,54 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	
 	@SuppressWarnings("serial")
 	private class OperatorsMenu extends Window{
+		
+		/* LIST OPERATORS */
 		private JPanel operatorPanel;
+		private JPanel removePanel;
 		private JTextArea operatorArea;
+		
+		/* REMOVE OPERATOR */
+		private JTextField nameField;
+		private JTextArea removeArea;
 		
 		public OperatorsMenu(){
 			/* Creates the buttons that redirect to each manager window. */
+			CreateButton("List Operators",Color.white,"List the Operators",15,60,200,150,30);
+			CreateButton("Remove Operator",Color.white,"Remove one operator",15,60,250,150,30);
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			
 			/* Creates the subpanels */
 			operatorPanel = new JPanel();
 			operatorPanel.setLayout(null);
 			operatorPanel.setBounds(new Rectangle(500, 40, 500, 400));
-			operatorPanel.add(CreateTitle("Satistics:",Color.white,15,100,100,70,20));
-			operatorPanel.add(operatorArea = CreateText(10,50,40,60,350,250));
+			operatorPanel.add(CreateTitle("Operators:",Color.white,15,60,40,70,20));
+			operatorPanel.add(CreateTitle("Name",Color.white,15,40,80,100,20));
+			operatorPanel.add(CreateTitle("Company",Color.white,15,150,80,100,20));
+			operatorPanel.add(CreateTitle("Phone Contact",Color.white,15,260,80,150,20));
+			operatorPanel.add(operatorArea = CreateText(10,50,40,120,350,260));
+			JScrollPane jpOperator = new JScrollPane(operatorArea);
+			operatorPanel.add(jpOperator);
+			jpOperator.setBounds(new Rectangle(40,100,350,260));
 			operatorArea.setEditable(false);
-			operatorPanel.add(CreateButton("Submit",Color.white,"Submit the form",15,250,360,100,30));
 			operatorPanel.setOpaque(false);
+			
+			removePanel = new JPanel();
+			removePanel.setLayout(null);
+			removePanel.setBounds(new Rectangle(500,40,500,400));
+			removePanel.add(CreateTitle("Operator's name:",Color.white,15,90,100,150,20));
+			removePanel.add(nameField = CreateBoxText(20,220,100,150,20));
+			removePanel.add(removeArea = CreateText(10,10,60,140,320,140));
+			JScrollPane jpRemove = new JScrollPane(removeArea);
+			removePanel.add(jpRemove);
+			jpRemove.setBounds(new Rectangle(60,140,320,140));
+			removePanel.add(CreateButton("Remove",Color.white,"Remove Operator",15,60,300,100,30));
 			
 			
 			
 			this.add(operatorPanel);
+			this.add(removePanel);
+			removePanel.setVisible(false);
+			removePanel.setOpaque(false);
 			
 			
 		}
@@ -1238,7 +1267,29 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		}
 		
 		public void mouseReleased(MouseEvent e){
-			if (e.getComponent().getName().equals("Return")){
+			
+			if (e.getComponent().getName().equals("List Operators")){
+				operatorPanel.setVisible(true);
+				removePanel.setVisible(false);
+				
+				Vector<Operator> operador = operatorManager.getOperatorList();
+				Iterator<Operator> it = operador.iterator();
+				operatorArea.setText("");
+				while(it.hasNext()){
+					operatorArea.append(it.next().toString());
+				}
+			}
+			else if (e.getComponent().getName().equals("Remove Operator")){
+				operatorPanel.setVisible(false);
+				removePanel.setVisible(true);
+			}
+			else if(e.getComponent().getName().equals("Remove")){
+				String operator = nameField.getText();
+				Operator op = operatorManager.searchOperator(operator);
+				operatorManager.removeOperator(op);
+				removeArea.setText("Operator with name "+ operator+ " removed from the system");
+			}
+			else if (e.getComponent().getName().equals("Return")){
 				operatorsMenu.setVisible(false);
 				menu.setVisible(true);
 			}
