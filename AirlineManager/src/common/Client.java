@@ -11,15 +11,13 @@ public class Client implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	/* The list of bookings related to this client. */
-	private Vector <Booking> bookingsList;
-	/* The list of messages received by this client. */
-	private Vector <Message> messagesList;
-	/* The personal information of this client. */
-	private String name;
-	private String address;
-	private String phoneContact;
-	private String email;
+	
+	protected String name;
+	protected String address;
+	protected String phoneContact;
+	protected String email;
+	/* The number of kilometers flown so far. */
+	protected double kilometers;
 	
 	/* The constructor. */
 	public Client(String name, String addr, String phone, String mail){
@@ -28,10 +26,6 @@ public class Client implements Serializable{
 		address = addr;
 		phoneContact = phone;
 		email = mail;
-		
-		/* Initializes the lists. */
-		bookingsList = new Vector <Booking>();
-		messagesList = new Vector <Message>();
 		
 	}
 	
@@ -44,22 +38,6 @@ public class Client implements Serializable{
 	}
 	
 	/**GETTERS & SETTERS**/
-
-	public Vector <Booking> getBookingsList() {
-		return bookingsList;
-	}
-
-	public void setBookingsList(Vector <Booking> bookingsList) {
-		this.bookingsList = bookingsList;
-	}
-
-	public Vector <Message> getMessagesList() {
-		return messagesList;
-	}
-
-	public void setMessagesList(Vector <Message> messagesList) {
-		this.messagesList = messagesList;
-	}
 
 	public String getName() {
 		return name;
@@ -91,6 +69,14 @@ public class Client implements Serializable{
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public double getKilometers(){
+		return kilometers;
+	}
+	
+	public void increaseKilometers(double no){
+		kilometers += no;
 	}
 	
 	

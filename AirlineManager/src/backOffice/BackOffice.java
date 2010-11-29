@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -29,7 +30,6 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import bookings.Booking;
-import bookings.NormalBooking;
 
 import messages.Feedback;
 
@@ -56,8 +56,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	private PlanesManager planesManager;
 	private StatisticsManager statisticsManager;
 	private OperatorManager operatorManager;
+	private ClientsManager clientsManager;
 	private Search search;
-	private OperatorsMenu operatorsMenu;
+	private ClientsMenu clientsMenu;
 	private DestinationsPrices destinationsPrices;
 	
 	private Menu menu;
@@ -84,9 +85,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		flightsManager = new FlightsManager(feedBackManager);
 		planesManager = new PlanesManager();
 		operatorManager = new OperatorManager();
+		clientsManager = new ClientsManager();
 		statisticsManager = new StatisticsManager(feedBackManager, flightsManager, planesManager);
 		search = new Search(flightsManager, planesManager);
-		operatorsMenu = new OperatorsMenu();
+		clientsMenu = new ClientsMenu();
 		destinationsPrices = new DestinationsPrices();
 		
 		menu = new Menu();
@@ -97,7 +99,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		loginMenu = new LoginMenu();
 		
 		
-		new SnapshotTimer(planesManager.getPrevayler(),flightsManager.getPrevayler());
 		BackOffice.now=new GregorianCalendar();
 	}
 	
@@ -238,7 +239,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		panel.add(flightsManagerMenu);
 		panel.add(planesManagerMenu);
 		panel.add(statisticsManagerMenu);
-		panel.add(operatorsMenu);
+		panel.add(clientsMenu);
 		
 		loginMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		menu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
@@ -246,7 +247,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		flightsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		planesManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		statisticsManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
-		operatorsMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
+		clientsMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		
 		/* Sets all the windows invisible, except, naturally, the main menu. */
 		loginMenu.setVisible(true);
@@ -255,7 +256,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		flightsManagerMenu.setVisible(false);
 		planesManagerMenu.setVisible(false);
 		statisticsManagerMenu.setVisible(false);
-		operatorsMenu.setVisible(false);
+		clientsMenu.setVisible(false);
 		
 		f.setContentPane(panel);
 		f.setVisible(true);
@@ -270,7 +271,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			CreateButton("Flights",Color.white,"Manage Flights",15,60,250,100,30);
 			CreateButton("Feedback",Color.white,"Handle Feedback",15,60,300,100,30);
 			CreateButton("Statistics",Color.white,"Check Statistics",15,60,350,100,30);
-			CreateButton("Operators",Color.white,"List all the operators",15,60,400,100,30);
+			CreateButton("Clients",Color.white,"List all the operators",15,60,400,100,30);
 			CreateButton("Exit",Color.white,"Leave the application",15,60,500,100,30);
 		}
 		
@@ -292,9 +293,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				statisticsManagerMenu.entry();
 				
 			}
-			else if(e.getComponent().getName().equals("Operators")){
+			else if(e.getComponent().getName().equals("Clients")){
 				menu.setVisible(false);
-				operatorsMenu.entry();
+				clientsMenu.entry();
 				
 			}
 			else if (e.getComponent().getName().equals("Exit")){
@@ -477,8 +478,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						status=true;
 						display.setText("Your Notification was sent to \n");
 						for(Booking r: f.getBookings()){
-							if(feedBackManager.sendNotificationUser(r.getEmail(), "Notification", messageToSend.getText()))
-								display.append(r.getEmail()+"\n");
+							if(feedBackManager.sendNotificationUser(r.getClient().getEmail(), "Notification", messageToSend.getText()))
+								display.append(r.getClient().getEmail()+"\n");
 						}
 						
 					}
@@ -748,7 +749,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 											regularSchedule.getSelectedItem().toString() == "Yes" ? true : false,
 												normalSchedule.getSelectedItem().toString() == "Yes" ? false : true);
 								
-								confirmActionSchedule.setText("Flight schedule with ID " + flight.getId() + "!");
+								if (flight != null)
+									confirmActionSchedule.setText("Flight schedule with ID " + flight.getId() + "!");
+								else
+									confirmActionSchedule.setText("There's already a regular flight for this date\nin this plane.");
 								
 							}
 							else{
@@ -1178,26 +1182,77 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	
 	
 	@SuppressWarnings("serial")
-	private class OperatorsMenu extends Window{
-		private JPanel operatorPanel;
-		private JTextArea operatorArea;
+	private class ClientsMenu extends Window{
 		
-		public OperatorsMenu(){
+		/* LIST OPERATORS */
+		private JPanel operatorPanel;
+		private JPanel clientPanel;
+		private JPanel removePanel;
+		private JTextArea operatorArea;
+		private JTextArea clientArea;
+		
+		/* REMOVE OPERATOR */
+		private JTextField nameField;
+		private JTextArea removeArea;
+		
+		public ClientsMenu(){
 			/* Creates the buttons that redirect to each manager window. */
+			CreateButton("List Operators",Color.white,"List the Operators",15,60,200,150,30);
+			CreateButton("List Clients",Color.white,"Remove one operator",15,60,250,150,30);
+			CreateButton("Remove Operator",Color.white,"Remove one operator",15,60,300,150,30);
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			
 			/* Creates the subpanels */
+			clientPanel = new JPanel();
+			clientPanel.setLayout(null);
+			clientPanel.setBounds(new Rectangle(500, 40, 500, 400));
+			clientPanel.add(CreateTitle("Clients:",Color.white,15,60,40,70,20));
+			clientPanel.add(CreateTitle("Name",Color.white,15,40,80,100,20));
+			clientPanel.add(CreateTitle("Email",Color.white,15,150,80,100,20));
+			clientPanel.add(CreateTitle("Phone Contact",Color.white,15,260,80,150,20));
+			clientPanel.add(clientArea = CreateText(10,50,40,120,350,260));
+			JScrollPane jpOperator = new JScrollPane(operatorArea);
+			clientPanel.add(jpOperator);
+			jpOperator.setBounds(new Rectangle(40,100,350,260));
+			clientArea.setEditable(false);
+			clientPanel.setOpaque(false);
+			
 			operatorPanel = new JPanel();
 			operatorPanel.setLayout(null);
 			operatorPanel.setBounds(new Rectangle(500, 40, 500, 400));
-			operatorPanel.add(CreateTitle("Satistics:",Color.white,15,100,100,70,20));
-			operatorPanel.add(operatorArea = CreateText(10,50,40,60,350,250));
+			operatorPanel.add(CreateTitle("Operators:",Color.white,15,60,40,70,20));
+			operatorPanel.add(CreateTitle("Name",Color.white,15,40,80,100,20));
+			operatorPanel.add(CreateTitle("Company",Color.white,15,150,80,100,20));
+			operatorPanel.add(CreateTitle("Phone Contact",Color.white,15,260,80,150,20));
+			operatorPanel.add(operatorArea = CreateText(10,50,40,120,350,260));
+			JScrollPane jpOperator2 = new JScrollPane(operatorArea);
+			operatorPanel.add(jpOperator2);
+			jpOperator2.setBounds(new Rectangle(40,100,350,260));
 			operatorArea.setEditable(false);
 			operatorPanel.setOpaque(false);
+			
+			removePanel = new JPanel();
+			removePanel.setLayout(null);
+			removePanel.setBounds(new Rectangle(500,40,500,400));
+			removePanel.add(CreateTitle("Operator's name:",Color.white,15,90,100,150,20));
+			removePanel.add(nameField = CreateBoxText(20,220,100,150,20));
+			removePanel.add(removeArea = CreateText(10,10,60,140,320,140));
+			JScrollPane jpRemove = new JScrollPane(removeArea);
+			removePanel.add(jpRemove);
+			jpRemove.setBounds(new Rectangle(60,140,320,140));
+			removePanel.add(CreateButton("Remove",Color.white,"Remove Operator",15,60,300,100,30));
 			
 			
 			
 			this.add(operatorPanel);
+			this.add(clientPanel);
+			this.add(removePanel);
+			operatorPanel.setVisible(false);
+			operatorPanel.setOpaque(false);
+			clientPanel.setVisible(false);
+			clientPanel.setOpaque(false);
+			removePanel.setVisible(false);
+			removePanel.setOpaque(false);
 			
 			
 		}
@@ -1212,8 +1267,38 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		}
 		
 		public void mouseReleased(MouseEvent e){
-			if (e.getComponent().getName().equals("Return")){
-				operatorsMenu.setVisible(false);
+			
+			if (e.getComponent().getName().equals("List Operators")){
+				operatorPanel.setVisible(true);
+				clientPanel.setVisible(false);
+				removePanel.setVisible(false);
+				
+				Vector<Operator> operador = operatorManager.getOperatorList();
+				Iterator<Operator> it = operador.iterator();
+				operatorArea.setText("");
+				while(it.hasNext()){
+					operatorArea.append(it.next().toString());
+				}
+			}
+			else if (e.getComponent().getName().equals("List Clients")){
+				operatorPanel.setVisible(false);
+				clientPanel.setVisible(true);
+				removePanel.setVisible(false);
+				
+				clientArea.setText(clientsManager.listClients());
+			}
+			else if (e.getComponent().getName().equals("Remove Operator")){
+				operatorPanel.setVisible(false);
+				removePanel.setVisible(true);
+			}
+			else if(e.getComponent().getName().equals("Remove")){
+				String operator = nameField.getText();
+				Operator op = operatorManager.searchOperator(operator);
+				operatorManager.removeOperator(op);
+				removeArea.setText("Operator with name "+ operator+ " removed from the system");
+			}
+			else if (e.getComponent().getName().equals("Return")){
+				clientsMenu.setVisible(false);
 				menu.setVisible(true);
 			}
 		}
@@ -1351,9 +1436,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			if (diff < 0){
 				return "InsufficientSeats " + flight.getEmptySeats();
 			}
-			flightsManager.addBookingFlight(flight, new NormalBooking(flight.getId(), name, address, phone, mail, seats, bookingNumber));
-			//flight.newBooking(new NormalBooking(flight, name, address, phone, mail, seats, bookingNumber));
-			//flight.increaseOccupied(seats);
+			
+			Client client = new Client(name, address, phone, mail);
+			Booking booking = new Booking(flight.getId(), seats, client, bookingNumber, getPrice(flight.getOrigin(), flight.getDestination()));
+			clientsManager.putClient(client, booking);
+			flightsManager.addBookingFlight(flight, booking);
 			
 		}
 		
@@ -1424,7 +1511,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		if(booking!=null)
 			return booking.toString();
 		else
-			return "That booking is not associated with Flight "+idFlight;
+			return "That booking is not associated with Flight " + idFlight;
 	}
 
 	@Override
@@ -1446,10 +1533,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			return "Innexistent booking";
 		}
 		
-		name = booking.getName();
-		address = booking.getAddress();
-		phone = booking.getPhoneContact();
-		email = booking.getEmail();
+		name = booking.getClient().getName();
+		address = booking.getClient().getAddress();
+		phone = booking.getClient().getPhoneContact();
+		email = booking.getClient().getEmail();
 		seats = booking.getNoSeats();
 		
 		String answer = scheduleBooking(idNewFlight,name,address,phone,email,seats,isOperator,bookingNumber);
@@ -1598,27 +1685,3 @@ class DestinationsPrices {
 	}
 }
 
-class SnapshotTimer extends Thread {
-    Prevayler planesPrevayler,flightsPrevayler; 
- 
-    public SnapshotTimer(Prevayler planesPrevayler, Prevayler flightsPrevayler) {
-       this.planesPrevayler = planesPrevayler;
-       this.flightsPrevayler=flightsPrevayler;
-    } 
- 
-    public void run() { 
-       super.run(); 
- 
-       try {
-           while (true) { 
-               Thread.sleep(12500); // makes snapshots to the DB every 1 seconds
-               planesPrevayler.takeSnapshot();
-               flightsPrevayler.takeSnapshot();
-           }
-       } catch (InterruptedException e) { 
-    	   System.out.println("Deu Bode"); 
-       } catch (IOException e) {
-           System.out.println("Deu Bode"); 
-       }
-    } 
- }

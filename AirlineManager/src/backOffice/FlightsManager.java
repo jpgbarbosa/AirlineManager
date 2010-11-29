@@ -48,14 +48,14 @@ public class FlightsManager {
 		try {
 			prevayler = PrevaylerFactory.createPrevayler(new Vector<Flight>(), "FlightsList");
 			prevaylerFinished = PrevaylerFactory.createPrevayler(new Vector<Flight>(), "FinishedFlightsList");
-			prevaylerRegular = PrevaylerFactory.createPrevayler(new Vector<Flight>(), "RegularFlightsList");
+			prevaylerRegular = PrevaylerFactory.createPrevayler(new Hashtable<Integer, Vector<RFlight>>(), "RegularFlightsList");
 			
 		} catch (Exception e) {
 			System.exit(-1);
 		} 
 		flightsList=(Vector <Flight>) (prevayler.prevalentSystem());
 		finishedFlights=(Vector <Flight>) (prevaylerFinished.prevalentSystem());
-		regularFlights=(Hashtable<Integer, Vector<RFlight>>)(prevaylerFinished.prevalentSystem());;
+		regularFlights=(Hashtable<Integer, Vector<RFlight>>)(prevaylerRegular.prevalentSystem());
 		
 		if(flightsList.size()>0){
 			idCreator=getLastID();
@@ -201,7 +201,7 @@ public class FlightsManager {
 		 */
 		GregorianCalendar calendar=flight.getDate();
 		for(Booking r: flight.getBookings()){
-			feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
+			feedBackManager.sendNotificationUser(r.getClient().getEmail(), "Notification", 
 					"The Flight "+flight.getId()+" with destination to "+ flight.getDestination()+", in "+ 
 					calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
 					calendar.get(Calendar.HOUR_OF_DAY)+":"+(calendar.get(Calendar.MINUTE)+1)+ 
@@ -235,7 +235,7 @@ public class FlightsManager {
 			
 			GregorianCalendar calendar=temp.getDate();
 			for(Booking r: temp.getBookings()){
-				feedBackManager.sendNotificationUser(r.getEmail(), "Notification", 
+				feedBackManager.sendNotificationUser(r.getClient().getEmail(), "Notification", 
 						"The Flight "+flight.getId()+" with destination to "+ flight.getDestination()+", in "+ 
 						calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR)+ " at "+
 						calendar.get(Calendar.HOUR_OF_DAY)+":"+(calendar.get(Calendar.MINUTE)+1)+ 

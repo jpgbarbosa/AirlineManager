@@ -586,38 +586,47 @@ public class FrontOffice extends UnicastRemoteObject{
 							String answer = backOffice.scheduleBooking(id, name, address, phone, mail, seats, loggedIn, bookingNumber);
 							if (answer.equals("Innexistent flight")){
 								confirmActionNew.setText("There's no such flight.");
+								confirmActionNew.setCaretPosition(0);
 							}
 							else if (answer.equals("Scheduled")){
 								//TODO: We have to proceed to the payment.
 								confirmActionNew.setText("Booking scheduled, with booking number " + bookingNumber + " and flight number " + id + ".");
+								confirmActionNew.setCaretPosition(0);
 								bookingNumber++;
 							}
 							else if (answer.equals("Over")){
 								confirmActionNew.setText("This flight is over, please choose another.");
+								confirmActionNew.setCaretPosition(0);
 							}
 							else if (answer.equals("Cancelled")){
 								confirmActionNew.setText("This flight was cancelled, please choose another.");
+								confirmActionNew.setCaretPosition(0);
 							}
 							else if (answer.equals("Charter")){
 								confirmActionNew.setText("Sorry, but only operators can book charter flights.");
+								confirmActionNew.setCaretPosition(0);
 							}
 							else{
 								int number = Integer.parseInt(answer.split(" ")[1]);
 								if (number == 0){
 									confirmActionNew.setText("This flight is closed.");
+									confirmActionNew.setCaretPosition(0);
 								}
 								else{
 									confirmActionNew.setText("There are only " + number + " empty seats.");
+									confirmActionNew.setCaretPosition(0);
 								}
 								
 							}	
 						}
 						else{
 							confirmActionNew.setText("Empty field(s).");
+							confirmActionNew.setCaretPosition(0);
 						}
 					}
 					else{
 						confirmActionNew.setText("Invalid phone number or\ncredit card number.");
+						confirmActionNew.setCaretPosition(0);
 					}
 					
 					

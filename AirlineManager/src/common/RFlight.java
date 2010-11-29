@@ -1,8 +1,9 @@
 package common;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class RFlight {
+public class RFlight implements Serializable{
 	private String origin;
 	private String destination;
 	private String day;
