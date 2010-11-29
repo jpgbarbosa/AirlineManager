@@ -22,12 +22,22 @@ public class FlightsManager {
 	
 	private Vector<Flight> flightsList;
 	private Vector<Flight> finishedFlights;
+	
+
 	public static int idCreator = 0;
 	private Prevayler prevayler;
+	private Prevayler prevaylerFinished;
+	private Prevayler prevaylerRegular;
 	//TODO: usar o prevayler para gravar isto
 	private Hashtable<Integer, Vector<RFlight>> regularFlights;
 	public Prevayler getPrevayler() {
 		return prevayler;
+	}
+	public Prevayler getPrevaylerFinished() {
+		return prevaylerFinished;
+	}
+	public Prevayler getPrevaylerRegular() {
+		return prevaylerRegular;
 	}
 	
 	/* The constructor. */
@@ -37,12 +47,15 @@ public class FlightsManager {
 		
 		try {
 			prevayler = PrevaylerFactory.createPrevayler(new Vector<Flight>(), "FlightsList");
+			prevaylerFinished = PrevaylerFactory.createPrevayler(new Vector<Flight>(), "FinishedFlightsList");
+			prevaylerRegular = PrevaylerFactory.createPrevayler(new Vector<Flight>(), "RegularFlightsList");
 			
 		} catch (Exception e) {
 			System.exit(-1);
 		} 
 		flightsList=(Vector <Flight>) (prevayler.prevalentSystem());
-		
+		finishedFlights=(Vector <Flight>) (prevaylerFinished.prevalentSystem());
+		regularFlights=(Hashtable<Integer, Vector<RFlight>>)(prevaylerFinished.prevalentSystem());;
 		
 		if(flightsList.size()>0){
 			idCreator=getLastID();
@@ -50,18 +63,17 @@ public class FlightsManager {
 		
 		feedBackManager = feed;
 		//TODO: prevayler regularFlights and finishedFlights
-		
-		/*TODO: Temporarily, this will replace the prevayler initialization. */
-		finishedFlights = new Vector <Flight>();
-		regularFlights = new Hashtable<Integer, Vector<RFlight>>();
+	
 		
 		/* Calendar.SUNDAY = 1  (...) Calendar.SATURDAY = 7 */
-		for (int i = 1; i < 8; i++){
-			Vector<RFlight> regularFlightsList = new Vector<RFlight>();
-			regularFlights.put(i, regularFlightsList);
+		if(regularFlights.size()==0){
+			for (int i = 1; i < 8; i++){
+			 
+				Vector<RFlight> regularFlightsList = new Vector<RFlight>();
+				regularFlights.put(i, regularFlightsList);
+			}
 		}
-		
-		flightsCleaner = new FlightsCleaner(this, flightsList, finishedFlights);
+		flightsCleaner = new FlightsCleaner(this);
 		
 
 	}
@@ -105,6 +117,20 @@ public class FlightsManager {
 		
 	}
 	
+	public void putRegularFlight(int id, Vector<RFlight> rfs){
+		
+		prevaylerRegular.execute(new putRegularFlight(id, rfs));
+		
+	}
+	//TODO:
+	public void addRegularFlight(int id, RFlight rf){
+			
+			prevaylerRegular.execute(new addRegularFlight(id, rf));
+			
+	}
+
+	
+	
 	/**
 	 * 
 	 * cancels a booking
@@ -144,7 +170,8 @@ public class FlightsManager {
 					if(aux.get(i).getOrigin() == origin && aux.get(i).getDestination() == destination)
 						return null;
 				}
-				regularFlights.get(date.get(Calendar.DAY_OF_WEEK)).add(rflight);
+				this.addRegularFlight(date.get(Calendar.DAY_OF_WEEK), rflight);
+				
 			}
 			
 			/* Inserts the flight ordered by date. */
@@ -272,6 +299,10 @@ public class FlightsManager {
 	public Vector<Flight> getFlightsList() {
 		return flightsList;
 	}
+	
+	public Vector<Flight> getFinishedFlights() {
+		return finishedFlights;
+	}
 
 	
 	public int getNumFlights(){
@@ -334,6 +365,12 @@ public class FlightsManager {
 	
 	public FlightsCleaner getFlightsCleaner(){
 		return flightsCleaner;
+	}
+
+	public void addFinished(Flight flight) {
+		// TODO Auto-generated method stub
+		prevaylerFinished.execute(new addFinished(flight));
+		return;
 	}
 	
 }
@@ -458,3 +495,95 @@ class removeBookingFlight implements Transaction{
 	
 }
 
+class addFinished implements Transaction{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private Flight flight;
+	
+
+
+	public addFinished(Flight flight){
+		this.flight=flight;
+		
+		
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void executeOn(Object arg0, Date arg1) {
+		((Vector<Flight>)arg0).add(flight);
+	}
+	
+	
+}
+
+
+
+
+class putRegularFlight implements Transaction{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private Vector<RFlight> rfs;
+	private int id;
+
+
+	public putRegularFlight(int id, Vector<RFlight> rfs){
+		this.id=id;
+		this.rfs=rfs;
+		
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void executeOn(Object arg0, Date arg1) {
+		((Hashtable<Integer, Vector<RFlight>>)arg0).put((Integer)id, rfs);
+	}
+	
+	
+}
+
+
+
+
+class addRegularFlight implements Transaction{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private RFlight rfs;
+	private int id;
+
+
+	public addRegularFlight(int id, RFlight rfs){
+		this.id=id;
+		this.rfs=rfs;
+		
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void executeOn(Object arg0, Date arg1) {
+		((Hashtable<Integer, Vector<RFlight>>)arg0).get((Integer)id).add(rfs);
+	}
+	
+	
+}

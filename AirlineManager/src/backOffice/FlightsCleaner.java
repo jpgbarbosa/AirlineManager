@@ -19,16 +19,13 @@ import common.Flight;
 import common.Lock;
 
 public class FlightsCleaner extends Thread{
-	private Vector<Flight> flightsList;
-	private Vector<Flight> finishedFlights;
+	
 	private FlightsManager flightsManager;
 	private JLabel departure; 
 	private String text = "Hi";
 	private JPanel panel;
 	
-	public FlightsCleaner(FlightsManager manager, Vector<Flight> list, Vector<Flight> finishedList){
-		flightsList = list;
-		finishedFlights = finishedList;
+	public FlightsCleaner(FlightsManager manager){
 		flightsManager = manager;
 		
 		this.start();
@@ -40,10 +37,10 @@ public class FlightsCleaner extends Thread{
 			Flight flight;
 			GregorianCalendar date = new GregorianCalendar();
 			
-			for (int i = 0; i < flightsList.size() && flightsList.get(i).getDate().before(date); i++){
+			for (int i = 0; i < flightsManager.getFlightsList().size() && flightsManager.getFlightsList().get(i).getDate().before(date); i++){
 				flight = flightsManager.removeFlight(i);
 				//TODO: Change this line to prevayler.
-				finishedFlights.add(flight);
+				flightsManager.addFinished(flight);
 				
 				if (departure != null && panel != null){
 					/* Shows the warning in the main menu for 5 seconds. */

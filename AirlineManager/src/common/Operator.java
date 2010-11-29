@@ -25,6 +25,14 @@ public class Operator implements Serializable{
 		email = mail;
 		
 	}
+	
+	public boolean equals(Object c){
+		if(((Operator) c).getName().equals(this.name)&&((Operator) c).getAddress().equals(this.address))
+			return true;
+		
+		return false;
+		
+	}
 
 	/* Getters and setters. */
 	public String getCompany() {
