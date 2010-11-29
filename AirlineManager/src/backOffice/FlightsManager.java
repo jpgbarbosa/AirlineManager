@@ -55,21 +55,11 @@ public class FlightsManager {
 		finishedFlights = new Vector <Flight>();
 		regularFlights = new Hashtable<Integer, Vector<RFlight>>();
 		
-		
-		Vector<RFlight> regularFlightsList = new Vector<RFlight>();
-		regularFlights.put(Calendar.SUNDAY, regularFlightsList);
-		regularFlightsList = new Vector<RFlight>();
-		regularFlights.put(Calendar.MONDAY, regularFlightsList);
-		regularFlightsList = new Vector<RFlight>();
-		regularFlights.put(Calendar.TUESDAY, regularFlightsList);
-		regularFlightsList = new Vector<RFlight>();
-		regularFlights.put(Calendar.WEDNESDAY, regularFlightsList);
-		regularFlightsList = new Vector<RFlight>();
-		regularFlights.put(Calendar.THURSDAY, regularFlightsList);
-		regularFlightsList = new Vector<RFlight>();
-		regularFlights.put(Calendar.FRIDAY, regularFlightsList);
-		regularFlightsList = new Vector<RFlight>();
-		regularFlights.put(Calendar.SATURDAY, regularFlightsList);
+		/* Calendar.SUNDAY = 1  (...) Calendar.SATURDAY = 7 */
+		for (int i = 1; i < 8; i++){
+			Vector<RFlight> regularFlightsList = new Vector<RFlight>();
+			regularFlights.put(i, regularFlightsList);
+		}
 		
 		flightsCleaner = new FlightsCleaner(this, flightsList, finishedFlights);
 		
@@ -144,17 +134,17 @@ public class FlightsManager {
 		/* First, we check if we can insert in this specific plane. */
 		completed = plane.associateFlight(flight);
 		
+		
 		if (completed){
 			if(isRegular){
-				//TODO: Change origin
-				RFlight rflight = new RFlight(origin, destination);
+				RFlight rflight = new RFlight(origin, destination, date.get(Calendar.DAY_OF_WEEK), date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE), plane.getId(), flight.getId());
 
-				Vector<RFlight> aux = regularFlights.get(date.DAY_OF_WEEK);
+				Vector<RFlight> aux = regularFlights.get(date.get(Calendar.DAY_OF_WEEK));
 				for(i=0; i<aux.size();i++){
 					if(aux.get(i).getOrigin() == origin && aux.get(i).getDestination() == destination)
 						return null;
 				}
-				regularFlights.get(date.DAY_OF_WEEK).add(rflight);
+				regularFlights.get(date.get(Calendar.DAY_OF_WEEK)).add(rflight);
 			}
 			
 			/* Inserts the flight ordered by date. */
@@ -236,11 +226,25 @@ public class FlightsManager {
 	public String listFlights(){
 		String text = "";
 
+		/* Prints the flights. */
+		text += "FLIGHTS\n";
 		for (int i = 0; i < flightsList.size(); i++){
 			Flight flight = flightsList.get(i);
-			text += flight.getId()+ "                " + flight.getAirplane().getId() + "                  " 
-					+ flight.getDestination() + "     \t"+ flight.getData().toString() + "\n";
+			text += flight.getId()+ "\t" + flight.getAirplane().getId() + "\t" 
+					+ flight.getOrigin() + "/" + flight.getDestination() + "\t"+ flight.getData().toString() + "\n";
 		}
+		
+		/* Prints the regular flights. */
+		text += "\nREGULAR FLIGHTS\n";
+		for (int i = 1; i < 8; i++){
+			Vector<RFlight> aux = regularFlights.get(i);
+			for (int z = 0; z < aux.size() ;z++){
+				RFlight rFlight = aux.get(z);
+				text += rFlight.getIdFlight()+ "\t" + rFlight.getIdPlane() + "\t" 
+				+rFlight.getOrigin() + "/" + rFlight.getDestination() + "\t"+ rFlight.getData() + "\n";
+			}
+		}
+		
 		return text;
 	}
 	

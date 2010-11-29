@@ -740,9 +740,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 						
 						if (airplane != null){
 							GregorianCalendar date;
-							if ((date = checkDate(year, month, day, hour, minute)) != null && !originSchedule.getSelectedItem().equals("") && 
+							if ((checkDate(year, month, day, hour, minute)) != null && !originSchedule.getSelectedItem().equals("") && 
 																	!destinationSchedule.getSelectedItem().equals("")){
-
+								date = new GregorianCalendar(year,month-1,day,hour,minute);
 								Flight flight = flightsManager.scheduleFlight(airplane,
 										date, originSchedule.getSelectedItem().toString(),destinationSchedule.getSelectedItem().toString(),
 											regularSchedule.getSelectedItem().toString() == "Yes" ? true : false,

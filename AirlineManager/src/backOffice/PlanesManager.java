@@ -48,7 +48,6 @@ public class PlanesManager {
 	public void addPlane(Airplane airplane){
 		airplane.setId(idCreator);
 		prevayler.execute(new addPlane(airplane));
-		System.out.println("Avião");
 		idCreator++;
 		//planesList.add(airplane);
 	}
