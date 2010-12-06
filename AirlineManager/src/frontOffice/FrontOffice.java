@@ -839,7 +839,6 @@ public class FrontOffice extends UnicastRemoteObject{
 			/* Creates the buttons that redirect to each manager window. */
 			CreateButton("List Flights",Color.white,"Lists all the upcoming flights",15,60,200,150,30);
 			CreateButton("Find Flight",Color.white,"Find your flight",15,60,250,150,30);
-			CreateButton("Check Price",Color.white,"Check the flight's price",15,60,300,150,30);
 
 			CreateButton("Return",Color.white,"Go back to the main menu",15,60,500,100,30);
 			
@@ -848,13 +847,15 @@ public class FrontOffice extends UnicastRemoteObject{
 			
 			/* Defines the sub panels. */
 			newPanel.setLayout(null);
-			newPanel.setBounds(new Rectangle(500, 40, 400, 400));
+			newPanel.setBounds(new Rectangle(500, 40, 500, 500));
 			newPanel.add(CreateTitle("Date:",Color.black,15,60,20,70,20));
 			newPanel.add(dateNew = CreateBoxText(20,100,20,80,20));
 			calendar = new GregorianCalendar();
 			dateNew.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.YEAR));
 			newPanel.add(CreateButton("Booking Date",Color.white,"Choose flight date",15,60,50,150,30));
 			newPanel.add(CreateTitle("Origin:",Color.black,15,60,90,70,20));
+			newPanel.add(CreateButton("Check Price",Color.white,"Check the flight's price",15,60,340,150,30));
+			newPanel.add(CreateButton("Find",Color.white,"Find your flight",15,60,380,150,30));
 			
 			newPanel.add(originNew = CreateComboBox(120,90,120,20,destinations));
 			newPanel.add(CreateTitle("Destination:",Color.black,15,60,120,100,20));
@@ -911,7 +912,7 @@ public class FrontOffice extends UnicastRemoteObject{
 				date.setVisible(true);
 				jCalendar.addPropertyChangeListener(this);
 			}
-			else if (e.getComponent().getName().equals("Check Price") && newPanel.isVisible()){
+			else if (e.getComponent().getName().equals("Check Price")){
 				double price = 0.0;
 				String orig = (String) originNew.getSelectedItem();
 				String dest = (String) destinationNew.getSelectedItem();
@@ -922,6 +923,9 @@ public class FrontOffice extends UnicastRemoteObject{
 					confirmActionNew.setText("The system is not available, please try again later");
 				}
 				confirmActionNew.setText("The price is " + price + "€.");
+			}
+			else if (e.getComponent().getName().equals("Find")){
+				
 			}
 			else if (e.getComponent().getName().equals("Return")){
 				searchMenu.setVisible(false);

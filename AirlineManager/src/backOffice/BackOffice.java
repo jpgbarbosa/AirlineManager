@@ -78,6 +78,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Exception e) {
+			System.out.println("Exiting...");
 			System.exit(-1);
 		}
 		
@@ -104,7 +105,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	
 	public static void main(String[] args) throws RemoteException {
 
-		
 		BackOffice backOffice = new BackOffice();
 		try {
 			System.getProperties().put("java.security.policy", "policy.all");
@@ -117,6 +117,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			System.out.println("There's already another instance running in this port: The system will shutdown. Please restart specifying another port.");
 			System.exit(0);
 		}
+		
+		
 		backOffice.executeGraphics();
 		
 
@@ -1411,7 +1413,36 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		/* First, we need to check if there's such a flight. */
 		if (flight == null){
-			return "Innexistent flight";
+			
+			/* If it isn't in the normal list, than we have to check if there is a flight on 
+			 * the regular list.
+			 */
+			
+			RFlight rflight = flightsManager.searchRFlightById(idFlight);
+			
+			/* If it is still null, than there is no such flight in any list. */
+			if (rflight == null){
+				return "Innexistent flight";
+			}
+			
+			/* If we ever get here, it means that we have found a regular flight with this id.
+			 * Consequently, we have to schedule a flight with this information on the normal
+			 * list, as we got null in the previous if, meaning we don't have this flight in
+			 * the normal list.
+			 */
+			
+			//TODO: Change the date
+			/* We don't consider possible that a regular flight is a charter.
+			 * Besides it, we mark this done as none regular because otherwise, in the scheduleFlight method,
+			 * we would be adding another entry to the regular hashtable.
+			 */
+			GregorianCalendar data = new GregorianCalendar();
+			data.set(Calendar.FRIDAY);
+			data.get(Calendar.FRIDAY);
+			
+			flight = flightsManager.scheduleFlight(rflight.getPlane(), data, rflight.getOrigin(),  rflight.getDestination(), false, false);
+			
+			
 		}
 		/* Second, we need to check if we still have space in this flight. */
 		else if ((new GregorianCalendar()).after(flight.getDate())){

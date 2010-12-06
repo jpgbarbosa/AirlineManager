@@ -28,6 +28,7 @@ public class FeedBackManager {
 		try {
 			prevayler = PrevaylerFactory.createPrevayler(new FeedBackStorage(), "MessageStorage");
 		} catch (Exception e) {
+			System.out.println("Prevayler error, exiting.");
 			System.exit(-1);
 		} 
 		msgStorage=(FeedBackStorage) (prevayler.prevalentSystem());

@@ -3,19 +3,22 @@ package common;
 import java.io.Serializable;
 import java.util.Calendar;
 
+@SuppressWarnings("serial")
 public class RFlight implements Serializable{
+	private Airplane airplane;
 	private String origin;
 	private String destination;
 	private String day;
 	private int idPlane, idFlight, hour, minute;
 	
-	public RFlight(String origin, String destination, int weekDay, int hour, int minute, int idPlane, int idFlight){
+	public RFlight(Airplane airplane, String origin, String destination, int weekDay, int hour, int minute, int idPlane, int idFlight){
 		this.origin = origin;
 		this.destination = destination;
 		this.idPlane = idPlane;
 		this.idFlight = idFlight;
 		this.hour = hour;
 		this.minute = minute;
+		this.airplane = airplane;
 		
 		if (weekDay == Calendar.SUNDAY)
 			day = "Sunday";
@@ -63,5 +66,9 @@ public class RFlight implements Serializable{
 	
 	public String getData(){
 		return day + ", " + hour + "h" + minute;
+	}
+	
+	public Airplane getPlane(){
+		return airplane;
 	}
 }

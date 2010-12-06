@@ -48,6 +48,7 @@ public class Airplane implements Serializable{
 		for (i = 0; i < flights.size(); i++){
 			if (flights.get(i).getDate().after(flight.getDate())){
 				flights.add(i, flight);
+				break;
 			}
 		}
 		/* We insert it in the last position. */

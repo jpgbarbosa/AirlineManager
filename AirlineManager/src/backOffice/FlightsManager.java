@@ -51,6 +51,7 @@ public class FlightsManager {
 			prevaylerRegular = PrevaylerFactory.createPrevayler(new Hashtable<Integer, Vector<RFlight>>(), "RegularFlightsList");
 			
 		} catch (Exception e) {
+			System.out.println("Prevayler error, exiting.");
 			System.exit(-1);
 		} 
 		flightsList=(Vector <Flight>) (prevayler.prevalentSystem());
@@ -166,7 +167,7 @@ public class FlightsManager {
 		
 		if (completed){
 			if(isRegular){
-				RFlight rflight = new RFlight(origin, destination, date.get(Calendar.DAY_OF_WEEK), date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE), plane.getId(), flight.getId());
+				RFlight rflight = new RFlight(plane, origin, destination, date.get(Calendar.DAY_OF_WEEK), date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE), plane.getId(), flight.getId());
 
 				Vector<RFlight> aux = regularFlights.get(date.get(Calendar.DAY_OF_WEEK));
 				for(i=0; i<aux.size();i++){
@@ -289,12 +290,26 @@ public class FlightsManager {
 		return null;
 	}
 	
-	/* Search a flight by ID*/
+	/* Search a normal flight by ID*/
 	public Flight searchFlightById(int id){		
 		for(int i=0; i<flightsList.size(); i++){
 			if(flightsList.get(i).getId() == id)
 				return flightsList.get(i);
 		}
+		return null;
+	}
+	
+	/* Search a regular flight by ID*/
+	public RFlight searchRFlightById(int id){				
+		for (int i = 1; i < 8; i++){
+			Vector<RFlight> aux = regularFlights.get(i);
+			for (int z = 0; z < aux.size() ;z++){
+				RFlight rFlight = aux.get(z);
+				if(rFlight.getIdFlight() == id)
+					return rFlight;
+			}
+		}
+		
 		return null;
 	}
 	

@@ -21,6 +21,7 @@ public class OperatorManager {
 		try {
 			prevayler = PrevaylerFactory.createPrevayler(new Vector<Operator>(), "OperatorsList");
 		} catch (Exception e) {
+			System.out.println("Prevayler error, exiting.");
 			System.exit(-1);
 		} 
 		operatorList=(Vector <Operator>) (prevayler.prevalentSystem());
