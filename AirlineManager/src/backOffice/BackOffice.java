@@ -1436,13 +1436,28 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			 * Besides it, we mark this done as none regular because otherwise, in the scheduleFlight method,
 			 * we would be adding another entry to the regular hashtable.
 			 */
+			int weekDay = rflight.getWeekDay();
 			GregorianCalendar data = new GregorianCalendar();
-			data.set(Calendar.FRIDAY);
-			data.get(Calendar.FRIDAY);
+			
+			/* We can be in that specific day of the week. However, if we past the schedule, this day
+			 * of the week is no longer valid and consequently, we will have to incremente one day.
+			 */
+			if (data.get(Calendar.DAY_OF_WEEK) == weekDay && data.get(Calendar.HOUR) > rflight.getHour() && data.get(Calendar.MINUTE) > rflight.getMinute()){
+				data.roll(data.get(Calendar.DAY_OF_WEEK), 7);
+			}
+			else{
+				while (data.get(Calendar.DAY_OF_WEEK) != weekDay){
+					data.roll(data.get(Calendar.DAY_OF_WEEK), 1);
+					System.out.println("Once");
+				}
+			}	
+			
+			
+			System.out.println("The data is: " + data.toString());
 			
 			flight = flightsManager.scheduleFlight(rflight.getPlane(), data, rflight.getOrigin(),  rflight.getDestination(), false, false);
 			
-			
+			System.out.println("Out");
 		}
 		/* Second, we need to check if we still have space in this flight. */
 		else if ((new GregorianCalendar()).after(flight.getDate())){

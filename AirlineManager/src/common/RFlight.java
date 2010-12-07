@@ -9,7 +9,7 @@ public class RFlight implements Serializable{
 	private String origin;
 	private String destination;
 	private String day;
-	private int idPlane, idFlight, hour, minute;
+	private int idPlane, idFlight, hour, minute, weekDay;
 	
 	public RFlight(Airplane airplane, String origin, String destination, int weekDay, int hour, int minute, int idPlane, int idFlight){
 		this.origin = origin;
@@ -19,6 +19,7 @@ public class RFlight implements Serializable{
 		this.hour = hour;
 		this.minute = minute;
 		this.airplane = airplane;
+		this.weekDay = weekDay;
 		
 		if (weekDay == Calendar.SUNDAY)
 			day = "Sunday";
@@ -70,5 +71,9 @@ public class RFlight implements Serializable{
 	
 	public Airplane getPlane(){
 		return airplane;
+	}
+	
+	public int getWeekDay(){
+		return weekDay;
 	}
 }
