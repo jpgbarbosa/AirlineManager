@@ -198,6 +198,38 @@ public class FlightsManager {
 		}
 	}
 	
+	/* Schedules a new flight. */
+	public Flight reScheduleRFlight(Airplane plane, int idRFlight, GregorianCalendar date, String origin, String destination, boolean isCharter){
+		Flight flight = new Flight(plane, date, origin, destination, false, isCharter);
+		int i;
+		boolean completed;
+		
+		flight.setId(idRFlight);
+		/* First, we check if we can insert in this specific plane. */
+		completed = plane.associateFlight(flight);
+		
+		
+		if (completed){
+			/* Inserts the flight ordered by date. */
+			for (i = 0; i < flightsList.size(); i++){
+				if (flightsList.get(i).getDate().after(flight.getDate())){
+					this.addFlight(i,flight);
+					return flight;
+				}
+			}
+			
+			/* We insert it in the last position.*/
+			if (i == flightsList.size()){
+				addFlight(i,flight);
+			}
+			
+			return flight;
+		}
+		else{
+			return null;
+		}
+	}
+	
 	/* Cancels a specific flight.  */
 	public void cancelFlight(Flight flight){
 		/*

@@ -243,6 +243,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		panel.add(statisticsManagerMenu);
 		panel.add(clientsMenu);
 		
+		System.out.println("LOADING THE IMAGES...");
 		loginMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		menu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
 		feedBackManagerMenu.CreateImage("./src/images/02098_dawndeparture_1280x800.jpg","",0,0,990,570);
@@ -1439,23 +1440,45 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			int weekDay = rflight.getWeekDay();
 			GregorianCalendar data = new GregorianCalendar();
 			
+			System.out.println("We have " + data.get(Calendar.DAY_OF_WEEK) + " and " + weekDay);
 			/* We can be in that specific day of the week. However, if we past the schedule, this day
-			 * of the week is no longer valid and consequently, we will have to incremente one day.
+			 * of the week is no longer valid and consequently, we will have to increment one day.
 			 */
-			if (data.get(Calendar.DAY_OF_WEEK) == weekDay && data.get(Calendar.HOUR) > rflight.getHour() && data.get(Calendar.MINUTE) > rflight.getMinute()){
-				data.roll(data.get(Calendar.DAY_OF_WEEK), 7);
+			if (data.get(Calendar.DAY_OF_WEEK) == weekDay){
+				/* We have past the flight hour, so it can only be next week. */
+				if (data.get(Calendar.HOUR) > rflight.getHour()){
+					System.out.println("1");
+					data.add(Calendar.DAY_OF_MONTH, 7);
+				}
+				/* It's in this hour, so we need to check the minutes. */
+				else if (data.get(Calendar.HOUR) == rflight.getHour()){
+					System.out.println("2.1");
+					/* We have past the time. Only next week. */
+					if (data.get(Calendar.MINUTE) >= rflight.getMinute()){
+						System.out.println("2");
+						data.add(Calendar.DAY_OF_MONTH, 7);
+					}
+					/* Else, we are still in time to schedule the flight. */
+				}
+				/* Else, we are still in time to schedule the flight. */
+				System.out.println("3");
 			}
 			else{
+				System.out.println("4");
 				while (data.get(Calendar.DAY_OF_WEEK) != weekDay){
-					data.roll(data.get(Calendar.DAY_OF_WEEK), 1);
+					data.add(Calendar.DAY_OF_MONTH, 1);
 					System.out.println("Once");
 				}
 			}	
 			
+			data.set(Calendar.HOUR, rflight.getHour());
+			data.set(Calendar.MINUTE, rflight.getMinute());
+			data.set(Calendar.SECOND, 0);
 			
-			System.out.println("The data is: " + data.toString());
+			System.out.println("The data is: " + data.getTime().toString());
 			
-			flight = flightsManager.scheduleFlight(rflight.getPlane(), data, rflight.getOrigin(),  rflight.getDestination(), false, false);
+			//TODO: For now, we consider that the regular flights aren't charter. Maybe change this laster?
+			flight = flightsManager.reScheduleRFlight(rflight.getPlane(), rflight.getIdFlight(), data, rflight.getOrigin(),  rflight.getDestination(), false);
 			
 			System.out.println("Out");
 		}

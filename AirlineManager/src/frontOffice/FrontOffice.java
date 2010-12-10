@@ -143,6 +143,7 @@ public class FrontOffice extends UnicastRemoteObject{
 		panel.add(sendFeedBackMenu);
 		panel.add(searchMenu);
 		
+		System.out.println("LOADING THE IMAGES...");
 		menu.CreateImage("./src/images/takeoff.jpg","",0,0,990,570);
 		bookingsMenu.CreateImage("./src/images/takeoff.jpg","",0,0,990,570);
 		sendFeedBackMenu.CreateImage("./src/images/takeoff.jpg","",0,0,990,570);
@@ -632,6 +633,7 @@ public class FrontOffice extends UnicastRemoteObject{
 					
 				}catch(Exception e1){
 					confirmActionNew.setText("Invalid field(s).\n");
+					e1.printStackTrace();
 				}
 			}
 			else if(e.getComponent().getName().equals("Check")){
