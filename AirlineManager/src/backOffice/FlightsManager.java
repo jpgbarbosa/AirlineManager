@@ -294,7 +294,7 @@ public class FlightsManager {
 		for (int i = 0; i < flightsList.size(); i++){
 			Flight flight = flightsList.get(i);
 			text += flight.getId()+ "\t" + flight.getAirplane().getId() + "\t" 
-					+ flight.getOrigin() + "/" + flight.getDestination() + "\t"+ flight.getData().toString() + "\n";
+					+ flight.getOrigin() + "/" + flight.getDestination() + "\t"+ flight.getData().toString() + "   " + flight.getOccupiedSeats() + "/" + flight.getAirplane().getNoSeats() + "\n";
 		}
 		
 		/* Prints the regular flights. */

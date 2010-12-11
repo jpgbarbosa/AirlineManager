@@ -1440,19 +1440,21 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			int weekDay = rflight.getWeekDay();
 			GregorianCalendar data = new GregorianCalendar();
 			
-			System.out.println("We have " + data.get(Calendar.DAY_OF_WEEK) + " and " + weekDay);
+			System.out.println("The data is: " + data.getTime().toString());
 			/* We can be in that specific day of the week. However, if we past the schedule, this day
 			 * of the week is no longer valid and consequently, we will have to increment one day.
 			 */
 			if (data.get(Calendar.DAY_OF_WEEK) == weekDay){
 				/* We have past the flight hour, so it can only be next week. */
-				if (data.get(Calendar.HOUR) > rflight.getHour()){
+				System.out.println("We have hours " + data.get(Calendar.HOUR_OF_DAY) + " for " + rflight.getHour());
+				if (data.get(Calendar.HOUR_OF_DAY) > rflight.getHour()){
 					System.out.println("1");
 					data.add(Calendar.DAY_OF_MONTH, 7);
 				}
 				/* It's in this hour, so we need to check the minutes. */
-				else if (data.get(Calendar.HOUR) == rflight.getHour()){
+				else if (data.get(Calendar.HOUR_OF_DAY) == rflight.getHour()){
 					System.out.println("2.1");
+					System.out.println("We minutes have " + data.get(Calendar.MINUTE) + " for " + rflight.getMinute());
 					/* We have past the time. Only next week. */
 					if (data.get(Calendar.MINUTE) >= rflight.getMinute()){
 						System.out.println("2");
@@ -1463,19 +1465,20 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				/* Else, we are still in time to schedule the flight. */
 				System.out.println("3");
 			}
-			else{
-				System.out.println("4");
-				while (data.get(Calendar.DAY_OF_WEEK) != weekDay){
-					data.add(Calendar.DAY_OF_MONTH, 1);
-					System.out.println("Once");
-				}
-			}	
+
+			System.out.println("4");
+			while (data.get(Calendar.DAY_OF_WEEK) != weekDay){
+				data.add(Calendar.DAY_OF_MONTH, 1);
+				System.out.println("Once");
+			}
 			
-			data.set(Calendar.HOUR, rflight.getHour());
+			
+			System.out.println("The data before is: " + data.getTime().toString());
+			data.set(Calendar.HOUR_OF_DAY, rflight.getHour());
 			data.set(Calendar.MINUTE, rflight.getMinute());
 			data.set(Calendar.SECOND, 0);
 			
-			System.out.println("The data is: " + data.getTime().toString());
+			System.out.println("The data after is: " + data.getTime().toString());
 			
 			//TODO: For now, we consider that the regular flights aren't charter. Maybe change this laster?
 			flight = flightsManager.reScheduleRFlight(rflight.getPlane(), rflight.getIdFlight(), data, rflight.getOrigin(),  rflight.getDestination(), false);
