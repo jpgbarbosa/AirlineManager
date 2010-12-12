@@ -32,7 +32,6 @@ public class ClientsManager {
 		
 	}
 	
-	
 	public String listClients(){
 		String text = "";
 		
@@ -42,4 +41,10 @@ public class ClientsManager {
 		
 		return text;
 	}
+	
+	public Client searchClient(String email){
+		return clientsHash.get(email);
+	}
+	
+	
 }

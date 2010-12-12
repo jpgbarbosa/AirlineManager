@@ -79,5 +79,14 @@ public class Client implements Serializable{
 		kilometers += no;
 	}
 	
+	public void setKilometers(Double km){
+		kilometers = km;
+	}
+	
+	public String toString(){
+		return "Name: "+ name +"\nContact: "+ phoneContact + "\nEmail: "+email + "\nAddress: " 
+			+ address + "\nKilometers: "+ kilometers;
+	}
+	
 	
 }

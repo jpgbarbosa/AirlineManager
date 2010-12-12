@@ -26,7 +26,7 @@ public class Booking implements Serializable{
 		this.noSeats = noSeats;
 		bookingNumber = number;
 		this.client = client;
-		this.price = price;
+		this.price = price*noSeats;
 		boardingTicket=client.getName()+idFlight+number+price+"";
 		hashBoardingTicket=boardingTicket.hashCode();
 		

@@ -1211,7 +1211,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			clientPanel.add(CreateTitle("Email",Color.white,15,150,80,100,20));
 			clientPanel.add(CreateTitle("Phone Contact",Color.white,15,260,80,150,20));
 			clientPanel.add(clientArea = CreateText(10,50,40,120,350,260));
-			JScrollPane jpOperator = new JScrollPane(operatorArea);
+			JScrollPane jpOperator = new JScrollPane(clientArea);
 			clientPanel.add(jpOperator);
 			jpOperator.setBounds(new Rectangle(40,100,350,260));
 			clientArea.setEditable(false);
@@ -1258,7 +1258,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		}
 		
 		/* This function is used when the user enters this menu.
-		 * We need to set true the right menu and one of its subpanels.
+		 * We need to set true the right menu and one of its sub panels.
 		 */
 		public void entry(){
 			setVisible(true);
@@ -1277,7 +1277,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				Iterator<Operator> it = operador.iterator();
 				operatorArea.setText("");
 				while(it.hasNext()){
-					operatorArea.append(it.next().toString());
+					operatorArea.append(it.next().toString() +"\n\n");
 				}
 			}
 			else if (e.getComponent().getName().equals("List Clients")){
@@ -1286,9 +1286,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				removePanel.setVisible(false);
 				
 				clientArea.setText(clientsManager.listClients());
+				
 			}
 			else if (e.getComponent().getName().equals("Remove Operator")){
 				operatorPanel.setVisible(false);
+				clientPanel.setVisible(false);
 				removePanel.setVisible(true);
 			}
 			else if(e.getComponent().getName().equals("Remove")){
@@ -1298,6 +1300,8 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 				removeArea.setText("Operator with name "+ operator+ " removed from the system");
 			}
 			else if (e.getComponent().getName().equals("Return")){
+				operatorPanel.setVisible(false);
+				clientPanel.setVisible(false);
 				clientsMenu.setVisible(false);
 				menu.setVisible(true);
 			}
@@ -1628,6 +1632,21 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		}
 		
 		return "Booking scheduled, with booking number " + bookingNumber + " and flight number " + idNewFlight + ".";
+	}
+
+	@Override
+	public Double [] bookingPrice(int idFlight, String clientEmail) throws RemoteException {
+		Flight flight = flightsManager.searchFlightById(idFlight);
+		Double [] info = new Double[2];
+		info[0] = destinationsPrices.getPrice(flight.getOrigin(), flight.getDestination());
+		info[1] = clientsManager.searchClient(clientEmail).getKilometers();
+		
+		return info;
+	}
+
+	@Override
+	public void updateMiles(Double miles, String mail) throws RemoteException {
+		clientsManager.searchClient(mail).setKilometers(miles);
 	}
 
 	

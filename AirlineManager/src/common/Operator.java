@@ -40,5 +40,11 @@ public class Operator extends Client implements Serializable{
 	public String getPassword(){
 		return password;
 	}
+	
+	public String toString(){
+		return "Name: "+ name + "\nCompany: "+company + "\nContact: "+ phoneContact + "\nEmail: "+email + "\nAddress: " 
+			+ address;
+	}
+	
 
 }

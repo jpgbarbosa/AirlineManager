@@ -585,14 +585,41 @@ public class FrontOffice extends UnicastRemoteObject{
 			        }
 					if (validPhone && validCC){
 						if (!name.equals("") && !address.equals("") && !mail.equals("")){
+							
+							
+							
 							String answer = backOffice.scheduleBooking(id, name, address, phone, mail, seats, loggedIn, bookingNumber);
 							if (answer.equals("Innexistent flight")){
 								confirmActionNew.setText("There's no such flight.");
 								confirmActionNew.setCaretPosition(0);
 							}
 							else if (answer.equals("Scheduled")){
-								//TODO: We have to proceed to the payment.
-								confirmActionNew.setText("Booking scheduled, with booking number " + bookingNumber + " and flight number " + id + ".");
+								Double [] bookingInfo = backOffice.bookingPrice(id, mail);
+								
+								Double price = bookingInfo[0]*seats;
+								Double miles = bookingInfo[1]-(price*10);
+								
+								if(miles> 0){
+									int option = JOptionPane.showConfirmDialog(f,"The price of the flight is "+seats*price +
+											"€ and you have travelled "+ miles +" miles. Do you want to reduce the final price?"
+											,"Price Reduction",JOptionPane.YES_NO_OPTION);
+									//If the user wants to reduce price
+									if(option==0){
+										if(miles*0.01 < price){
+											price-= (miles*0.01);
+											miles = 0.0;	
+										}
+										else{
+											miles-= price*10; 
+											price = 0.0;
+										}
+										
+										backOffice.updateMiles(miles,mail);
+										
+									}								
+								}
+								
+								confirmActionNew.setText("Booking scheduled, with booking number " + bookingNumber + " flight number " + id + " and price is " + price + "€.");
 								confirmActionNew.setCaretPosition(0);
 								bookingNumber++;
 							}
@@ -825,7 +852,7 @@ public class FrontOffice extends UnicastRemoteObject{
 	private class SearchMenu extends Window implements PropertyChangeListener{
 		
 		private JPanel listPanel;
-		
+		/* NEWPANEL */
 		private JPanel newPanel;
 		private JCalendar jCalendar;
 		private GregorianCalendar calendar;
@@ -833,7 +860,10 @@ public class FrontOffice extends UnicastRemoteObject{
 		private JTextField dateNew;
 		private JComboBox originNew;
 		private JComboBox destinationNew;
-		private JTextArea confirmActionNew;		
+		private JTextArea confirmActionNew;
+		private JLabel idText;
+		private JTextField newID;
+		private JButton bookNew;
 		
 		/* LISTPANEL */
 		private JTextArea listArea;
@@ -864,6 +894,12 @@ public class FrontOffice extends UnicastRemoteObject{
 			newPanel.add(CreateTitle("Destination:",Color.black,15,60,120,100,20));
 			newPanel.add(destinationNew = CreateComboBox(150,120,120,20,destinations));
 			newPanel.add(confirmActionNew = CreateText(300,150,60,180,300,150));
+			newPanel.add(idText = CreateTitle("Flight ID: ",Color.black,15,220,345,100,20));
+			idText.setVisible(false);
+			newPanel.add(newID = CreateBoxInt(20,290,345,70,20,0));
+			newID.setVisible(false);
+			newPanel.add( bookNew = CreateButton("Book",Color.white,"Book a Flight",15,220,380,140,30));
+			bookNew.setVisible(false);
 			
 			listPanel.setLayout(null);
 			listPanel.setBounds(new Rectangle(500, 40, 500, 400));
@@ -905,10 +941,24 @@ public class FrontOffice extends UnicastRemoteObject{
 				String answer;
 				try {
 					answer = backOffice.findFlights(year, month, day, (String) originNew.getSelectedItem(), (String) destinationNew.getSelectedItem());
+					idText.setVisible(true);
+					newID.setVisible(true);
+					bookNew.setVisible(true);
+					
 				} catch (RemoteException e1) {
 					answer = "The system is down.";
 				}
 				confirmActionNew.setText(answer);
+				
+			}
+			else if(e.getComponent().getName().equals("Book")){
+				idText.setVisible(false);
+				newID.setVisible(false);
+				bookNew.setVisible(false);
+				newPanel.setVisible(false);
+				searchMenu.setVisible(false);
+				bookingsMenu.newFlightID.setText(newID.getText());
+				bookingsMenu.entry();
 			}
 			else if(e.getComponent().getName().equals("List Flights")){
 				newPanel.setVisible(false);
@@ -940,9 +990,6 @@ public class FrontOffice extends UnicastRemoteObject{
 					confirmActionNew.setText("The system is not available, please try again later.");
 				}
 				confirmActionNew.setText("The price is " + price + "€.");
-			}
-			else if (e.getComponent().getName().equals("Find")){
-				
 			}
 			else if (e.getComponent().getName().equals("Return")){
 				searchMenu.setVisible(false);
