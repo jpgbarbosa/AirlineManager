@@ -610,10 +610,10 @@ public class FrontOffice extends UnicastRemoteObject{
 											miles = 0.0;	
 										}
 										else{
-											miles-= price*10; 
+											miles-= price*100; 
 											price = 0.0;
 										}
-										
+										//Update user miles
 										backOffice.updateMiles(miles,mail);
 										
 									}								
