@@ -98,6 +98,15 @@ public class Flight implements Serializable{
 	public String getDestination() {
 		return destination;
 	}
+	
+	public boolean isFull(){
+		
+		if (occupied == airplane.getNoSeats()){
+			return true;
+		}
+		
+		return false;
+	}
 
 	public void setBookings(Vector <Booking> seats) {
 		this.bookings = seats;

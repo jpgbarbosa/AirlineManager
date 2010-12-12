@@ -5,7 +5,6 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -34,8 +33,6 @@ import bookings.Booking;
 import messages.Feedback;
 
 import common.*;
-
-import org.prevayler.*;
 
 import com.toedter.calendar.JCalendar;
 
@@ -1522,6 +1519,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	@Override
 	public String listFlights() throws RemoteException{
 		return flightsManager.listFlights();
+	}
+	
+	@Override
+	public String findFlights(int year, int month, int day, String origin, String destination) throws RemoteException{
+		return flightsManager.findFlights(year, month, day, origin, destination);
 	}
 	
 	@Override

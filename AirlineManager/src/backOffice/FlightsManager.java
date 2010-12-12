@@ -1,5 +1,6 @@
 package backOffice;
 
+import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -200,7 +201,7 @@ public class FlightsManager {
 	
 	/* Schedules a new flight. */
 	public Flight reScheduleRFlight(Airplane plane, int idRFlight, GregorianCalendar date, String origin, String destination, boolean isCharter){
-		Flight flight = new Flight(plane, date, origin, destination, false, isCharter);
+		Flight flight = new Flight(plane, date, origin, destination, true, isCharter);
 		int i;
 		boolean completed;
 		
@@ -309,6 +310,54 @@ public class FlightsManager {
 		}
 		
 		return text;
+	}
+	
+	public String findFlights(int year, int month, int day, String origin, String destination){
+		String text = "";
+		GregorianCalendar data = new GregorianCalendar(year, month - 1, day);
+		int weekDay = data.get(Calendar.DAY_OF_WEEK);
+		int i = 0;
+		
+		data.set(Calendar.HOUR_OF_DAY, 23);
+		data.set(Calendar.MINUTE, 59);
+		data.set(Calendar.SECOND, 59);
+		
+
+		while (i < flightsList.size() && flightsList.get(i).getDate().before(data)){
+			Flight flight = flightsList.get(i);
+			GregorianCalendar flightDate = flight.getDate();
+			
+			/* First, gets the normal flights. */
+			if (flightDate.get(Calendar.YEAR) == year &&
+					flightDate.get(Calendar.MONTH) + 1 == month &&
+						flightDate.get(Calendar.DAY_OF_MONTH) == day){
+
+				/* If the flight is regular, it will be joined to the list later.*/
+				if (flight.getOrigin().equals(origin) &&
+						flight.getDestination().equals(destination) &&
+							!flight.isFull() &&
+								!flight.isRegular()){
+					/* This flight matches all the criteria and consequently
+					 * can be added to the list.
+					 */
+					text += "FLIGHT ID: " + flight.getId() + "\n";
+				}
+			}
+			i++;
+		}
+		
+		/* Then, the regular ones. */
+		Vector<RFlight> rFlights = regularFlights.get(weekDay);
+		
+		for (i = 0; i < rFlights.size(); i++){
+			text += "FLIGHT ID: " + rFlights.get(i).getIdFlight() + "\n";
+		}
+		
+		if (text.equals("")){
+			text += "There are no flights for this pair origin/destination in this date.";
+		}
+		return text;
+		
 	}
 	
 	/* Search a flight by Date and plane*/

@@ -26,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import messages.Feedback;
+import backOffice.BackOfficeRemoteInterface;
 import common.*;
 
 import com.toedter.calendar.JCalendar;;
@@ -895,6 +896,20 @@ public class FrontOffice extends UnicastRemoteObject{
 				listPanel.setVisible(false);
 				newPanel.setVisible(true);
 			}
+			else if(e.getComponent().getName().equals("Find")){
+				String [] dateFields = dateNew.getText().split("/");
+				int day = Integer.parseInt(dateFields[0]);
+				int month = Integer.parseInt(dateFields[1]);
+				int year = Integer.parseInt(dateFields[2]);
+				
+				String answer;
+				try {
+					answer = backOffice.findFlights(year, month, day, (String) originNew.getSelectedItem(), (String) destinationNew.getSelectedItem());
+				} catch (RemoteException e1) {
+					answer = "The system is down.";
+				}
+				confirmActionNew.setText(answer);
+			}
 			else if(e.getComponent().getName().equals("List Flights")){
 				newPanel.setVisible(false);
 				listPanel.setVisible(true);
@@ -922,7 +937,7 @@ public class FrontOffice extends UnicastRemoteObject{
 				try {
 					price = backOffice.getPrice(orig, dest);
 				} catch (RemoteException e1) {
-					confirmActionNew.setText("The system is not available, please try again later");
+					confirmActionNew.setText("The system is not available, please try again later.");
 				}
 				confirmActionNew.setText("The price is " + price + "€.");
 			}
