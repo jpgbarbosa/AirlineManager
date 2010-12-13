@@ -72,7 +72,7 @@ public class FlightsManager {
 			for (int i = 1; i < 8; i++){
 			 
 				Vector<RFlight> regularFlightsList = new Vector<RFlight>();
-				regularFlights.put(i, regularFlightsList);
+				this.putRegularFlight(i, regularFlightsList);
 			}
 		}
 		flightsCleaner = new FlightsCleaner(this);

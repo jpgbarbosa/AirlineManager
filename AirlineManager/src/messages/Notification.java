@@ -1,6 +1,6 @@
 package messages;
 
-import java.util.GregorianCalendar;
+import java.util.*;
 
 @SuppressWarnings("serial")
 public class Notification extends Message{
