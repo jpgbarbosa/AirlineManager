@@ -9,6 +9,14 @@ import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -1410,6 +1418,37 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	public String scheduleBooking(int idFlight, String name, String address, String phone, String mail, int seats, boolean isOperator, int bookingNumber) throws RemoteException {
 		
 		Flight flight = flightsManager.searchFlightById(idFlight);
+		 FileOutputStream fos=null; 
+		    DataOutputStream dos=null;
+		    FileInputStream fis=null; 
+		    DataInputStream dis=null;
+
+		  
+
+		      File file= new File("idbooking.txt");
+		    
+		
+			try {
+				fis = new FileInputStream(file);
+				 dis= new DataInputStream(fis);
+				bookingNumber=dis.readInt();
+				fis.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println("lalalal");
+				bookingNumber=0;
+			}
+			
+			 try {
+			    fos = new FileOutputStream(file);
+					
+				dos=new DataOutputStream(fos);
+				dos.writeInt((bookingNumber+1));
+				fos.close();
+				
+			} catch (IOException e) {
+				
+			}
 		
 		//System.out.println("We have " + + " for " + seats + " requested.");
 		

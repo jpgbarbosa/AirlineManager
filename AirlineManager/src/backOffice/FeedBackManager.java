@@ -58,6 +58,7 @@ public class FeedBackManager {
 		}
 	}
 	
+	
 	/* Inserts a new message in the positive feed back list. */
 	public void insertPositiveFeedback(Feedback feedBack){
 		prevayler.execute(new insertPositiveFeedback(feedBack));
@@ -150,3 +151,4 @@ class insertNegativeFeedback implements Transaction{
 	
 	
 }
+

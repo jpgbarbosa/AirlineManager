@@ -58,6 +58,8 @@ public class FeedBackStorage implements Serializable{
 		return negativeFeedBackList.size();
 	}
 	
+	
+	
 	public int getNumNegative(GregorianCalendar beginning, GregorianCalendar end){
 		int num = 0;
 		

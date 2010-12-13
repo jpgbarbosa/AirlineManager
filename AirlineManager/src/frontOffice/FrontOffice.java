@@ -618,7 +618,7 @@ public class FrontOffice extends UnicastRemoteObject{
 										
 									}								
 								}
-								
+								//TODO: arranjar maneira de mudar isto!!
 								confirmActionNew.setText("Booking scheduled, with booking number " + bookingNumber + " flight number " + id + " and price is " + price + "€.");
 								confirmActionNew.setCaretPosition(0);
 								bookingNumber++;
