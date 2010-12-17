@@ -1,11 +1,15 @@
 package common;
 
 import java.io.Serializable;
-import java.util.Vector;
-import bookings.Booking;
-import messages.Message;
 
-
+/**
+ * Class associated with each Client. Has information about the Client, such as:
+ * name, address, contacts, etc.
+ * 
+ * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo
+ *         Bernardino
+ * 
+ */
 public class Client implements Serializable{
 	/**
 	 * 
@@ -19,7 +23,14 @@ public class Client implements Serializable{
 	/* The number of kilometers flown so far. */
 	protected double kilometers;
 	
-	/* The constructor. */
+	/**
+	 * Creates a new client according to his  personal data
+	 * 
+	 * @param name
+	 * @param addr
+	 * @param phone
+	 * @param mail
+	 */
 	public Client(String name, String addr, String phone, String mail){
 		/* Initializes the basic information. */
 		this.name = name;
@@ -29,6 +40,10 @@ public class Client implements Serializable{
 		
 	}
 	
+	/**
+	 * Override of method equals. It compares a client by his name and address
+	 */
+	@Override
 	public boolean equals(Object c){
 		if(((Client) c).getName().equals(this.name)&&((Client) c).getAddress().equals(this.address))
 			return true;
@@ -37,7 +52,7 @@ public class Client implements Serializable{
 		
 	}
 	
-	/**GETTERS & SETTERS**/
+	/*GETTERS & SETTERS**/
 
 	public String getName() {
 		return name;
