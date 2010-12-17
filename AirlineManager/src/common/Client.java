@@ -1,11 +1,15 @@
 package common;
 
 import java.io.Serializable;
-import java.util.Vector;
-import bookings.Booking;
-import messages.Message;
 
-
+/**
+ * Class associated with each Client. Has information about the Client, such as:
+ * name, address, contacts, etc.
+ * 
+ * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo
+ *         Bernardino
+ * 
+ */
 public class Client implements Serializable{
 	/**
 	 * 

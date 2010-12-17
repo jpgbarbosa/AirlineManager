@@ -71,7 +71,7 @@ public class PlanesManager {
 	}
 	
 	/**
-	 * Fun‹o utilizada para obter o nœmero de Avi›es dispon’veis na Companhia.
+	 * Function used to obtain the number of Plains available at the company.
 	 * @return Nœmero de avi›es
 	 */
 	public int getNumPlanes(){
@@ -79,10 +79,10 @@ public class PlanesManager {
 	}
 	
 	/**
-	 * Fun‹o utilizada para obter o nœmero de Avi›es dispon’veis na Companhia entre as datas passadas como argumento da fun‹o.
-	 * @param beginning Data de inicio
-	 * @param end Data de fim
-	 * @return Nœmero de avi›es
+	 * Function used to obtain the number of planes available at the company between the given dates.
+	 * @param beginning Beginning date.
+	 * @param end End date.
+	 * @return Number of planes.
 	 */
 	public int getNumPlanes(GregorianCalendar beginning, GregorianCalendar end){
 		int num = 0;
