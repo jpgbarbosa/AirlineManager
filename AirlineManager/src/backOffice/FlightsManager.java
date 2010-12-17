@@ -13,7 +13,11 @@ import common.Airplane;
 import common.Flight;
 
 import common.RFlight;
-
+/**
+ * This class if responsible for managing the Flights provided by the Company.
+ * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo Bernardino
+ *
+ */
 public class FlightsManager {
 	FeedBackManager feedBackManager;
 	FlightsCleaner flightsCleaner;
@@ -89,14 +93,11 @@ public class FlightsManager {
 		id++;
 		return id;
 	}
-
+	
 	/**
-	 * 
-	 * Write Transactions
-	 */
-
-	/*
 	 * Adds a flight in the flight list
+	 * @param index
+	 * @param flight Flight Object to add to the list
 	 */
 	private void addFlight(int index, Flight flight) {
 		prevayler.execute(new addFlight(index, flight));
@@ -112,9 +113,7 @@ public class FlightsManager {
 
 	/**
 	 * 
-	 * add a new Booking
-	 * 
-	 * @return
+	 * Adds a new Booking
 	 */
 	public void addBookingFlight(Flight id, Booking booking) {
 		prevayler.execute(new addBookingFlight(id, booking));
@@ -142,9 +141,7 @@ public class FlightsManager {
 
 	/**
 	 * 
-	 * cancels a booking
-	 * 
-	 * @return
+	 * Cancels a booking
 	 */
 	public void removeBookingFlight(Flight id, Booking booking) {
 		prevayler.execute(new removeBookingFlight(id, booking));
@@ -158,8 +155,17 @@ public class FlightsManager {
 		return flight;
 
 	}
-
-	/* Schedules a new flight. */
+	
+	/**
+	 * Schedules a new flight.
+	 * @param plane Plane of the Flight
+	 * @param date Date of the flight
+	 * @param origin Origin of the flight
+	 * @param destination Destination of the flight
+	 * @param isRegular True if it is a Regular Flight, False otherwise
+	 * @param isCharter True if it is a charter, False otherwise
+	 * @return Returns the rescheduled Flight
+	 */
 	public Flight scheduleFlight(Airplane plane, GregorianCalendar date,
 			String origin, String destination, boolean isRegular,
 			boolean isCharter) {
@@ -206,8 +212,17 @@ public class FlightsManager {
 		return flight;
 
 	}
-
-	/* Schedules a new flight. */
+	
+	/**
+	 * Schedules a new flight.
+	 * @param plane Plane of the flight
+	 * @param idRFlight Id of the Regular Flight
+	 * @param date Date of the flight
+	 * @param origin Origin of the flight
+	 * @param destination Destination of the flight
+	 * @param isCharter True if it is a charter, False otherwise
+	 * @return Returns the rescheduled Flight
+	 */
 	public Flight reScheduleRFlight(Airplane plane, int idRFlight,
 			GregorianCalendar date, String origin, String destination,
 			boolean isCharter) {
@@ -234,8 +249,11 @@ public class FlightsManager {
 
 		return flight;
 	}
-
-	/* Cancels a specific flight and warns all the respectiv clients */
+	
+	/**
+	 * Cancels a specific flight and warns all the respective clients
+	 * @param flight Flight that is going to be canceled
+	 */
 	public void cancelFlight(Flight flight) {
 		GregorianCalendar calendar = flight.getDate();
 		for (Booking r : flight.getBookings()) {
@@ -263,8 +281,13 @@ public class FlightsManager {
 
 		this.removeFlight(flight);
 	}
-
-	/* Changes a flight's information. */
+	
+	/**
+	 * Re-schedules the Flight to the given date and plane
+	 * @param flight Desired Flight
+	 * @param date New date for the Flight
+	 * @param plane Plane in which the Flight will be available.
+	 */
 	public void reScheduleFlight(Flight flight, GregorianCalendar date,
 			Airplane plane) {
 		Flight temp = flight;
@@ -310,12 +333,11 @@ public class FlightsManager {
 			}
 		}
 	}
-
+	
 	/**
-	 * 
-	 * Read Transactions
+	 * Lists all of the Flights.
+	 * @return Returns a String with the information of each Flight.
 	 */
-
 	public String listFlights() {
 		String text = "";
 
@@ -345,7 +367,16 @@ public class FlightsManager {
 
 		return text;
 	}
-
+	
+	/**
+	 * Function responsible for searching the Flights List.
+	 * @param year
+	 * @param month
+	 * @param day
+	 * @param origin
+	 * @param destination
+	 * @return Returns the String with the results of the search.
+	 */
 	public String findFlights(int year, int month, int day, String origin,
 			String destination) {
 		String text = "";
@@ -397,8 +428,13 @@ public class FlightsManager {
 		return text;
 
 	}
-
-	/* Search a flight by Date and plane */
+	
+	/**
+	 * Search a flight by Date and plane
+	 * @param plane
+	 * @param date
+	 * @return Returns the Flight or null if it is not found.
+	 */
 	public Flight searchFlightByDate(Airplane plane, GregorianCalendar date) {
 		for (int i = 0; i < flightsList.size(); i++) {
 			if (flightsList.get(i).getAirplane().equals(plane)
@@ -407,8 +443,12 @@ public class FlightsManager {
 		}
 		return null;
 	}
-
-	/* Search a normal flight by ID */
+	
+	/**
+	 * Search a normal flight by ID
+	 * @param id ID of the Flight
+	 * @return Returns the Flight object or null if it is not found.
+	 */
 	public Flight searchFlightById(int id) {
 		for (int i = 0; i < flightsList.size(); i++) {
 			if (flightsList.get(i).getId() == id)
@@ -416,8 +456,12 @@ public class FlightsManager {
 		}
 		return null;
 	}
-
-	/* Search a regular flight by ID */
+	
+	/**
+	 * Search a regular flight by ID
+	 * @param id ID of the Regular Flight
+	 * @return Returns the Flight object or null if it is not found.
+	 */
 	public RFlight searchRFlightById(int id) {
 		for (int i = 1; i < 8; i++) {
 			Vector<RFlight> aux = regularFlights.get(i);
@@ -465,7 +509,11 @@ public class FlightsManager {
 
 		return 0;
 	}
-
+	
+	/**
+	 * Function used to calculate the percentage of occupied seats in all the Flights of the company.
+	 * @return Returns the percentage of occupied seats.
+	 */
 	public int getOccupation() {
 		int sum = 0;
 		int total = flightsList.size();
@@ -476,7 +524,13 @@ public class FlightsManager {
 			return 0;
 		return sum / total;
 	}
-
+	
+	/**
+	 * Function used to calculate the percentage of occupied seats in all the Flights of the company, that happened between the given dates.
+	 * @param beginning Beginning Date
+	 * @param end End Date
+	 * @return Returns the percentage of occupied seats.
+	 */
 	public int getOccupation(GregorianCalendar beginning, GregorianCalendar end) {
 		int sum = 0;
 		int total = 0;

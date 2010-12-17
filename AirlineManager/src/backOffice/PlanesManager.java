@@ -7,10 +7,10 @@ import org.prevayler.*;
 import common.Airplane;
 
 /**
- * This class is responsible managing all the airplanes. It stores information about the current planes
+ * This class is responsible for managing all the airplanes. It stores information about the current planes
  * and provides methods to manage them.
  * 
- * @author Barbosa
+ * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo Bernardino
  *
  */
 public class PlanesManager {
@@ -75,7 +75,7 @@ public class PlanesManager {
 	
 	/**
 	 * Function used to obtain the number of Plains available at the company.
-	 * @return Nœmero de avi›es
+	 * @return Number of planes.
 	 */
 	public int getNumPlanes(){
 		return planesList.size();
