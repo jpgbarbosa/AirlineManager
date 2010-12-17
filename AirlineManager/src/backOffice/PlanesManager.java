@@ -72,11 +72,22 @@ public class PlanesManager {
 		return planesList;
 	}
 
-	public int getNumPlanes() {
+	
+	/**
+	 * Function used to obtain the number of Plains available at the company.
+	 * @return Nœmero de avi›es
+	 */
+	public int getNumPlanes(){
 		return planesList.size();
 	}
-
-	public int getNumPlanes(GregorianCalendar beginning, GregorianCalendar end) {
+	
+	/**
+	 * Function used to obtain the number of planes available at the company between the given dates.
+	 * @param beginning Beginning date.
+	 * @param end End date.
+	 * @return Number of planes.
+	 */
+	public int getNumPlanes(GregorianCalendar beginning, GregorianCalendar end){
 		int num = 0;
 
 		for (Airplane a : planesList) {

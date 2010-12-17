@@ -454,7 +454,7 @@ public class FlightsManager {
 
 		return num;
 	}
-
+	
 	public int getNumCancelled() {
 
 		return 0;
