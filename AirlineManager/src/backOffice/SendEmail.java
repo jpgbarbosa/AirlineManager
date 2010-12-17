@@ -6,7 +6,17 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
     
 public class SendEmail {
-  
+	/**
+	 * É esta a função utilizada para enviar Emails para os Clientes da nossa Aplicação.
+	 * @param smtpHost Endereço do servidor de SMTP
+	 * @param smtpPort Porta do servidor de SMTP
+	 * @param from Endereço Email do remetente
+	 * @param to Endereço Email do destinatário
+	 * @param subject Assunto do Email
+	 * @param content Conteúdo do Email
+	 * @throws AddressException
+	 * @throws MessagingException
+	 */
     public static void send(String smtpHost, int smtpPort,
                             String from, String to,
                             String subject, String content)
