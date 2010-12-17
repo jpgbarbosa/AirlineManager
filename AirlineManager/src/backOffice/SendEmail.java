@@ -51,9 +51,9 @@ public class SendEmail {
              "Hello", "Hello, \n\n How are you ?");
     }
     /**
-* SimpleAuthenticator is used to do simple authentication
-* when the SMTP server requires it.
-*/
+     * SimpleAuthenticator is used to do simple authentication
+     * when the SMTP server requires it.
+     */
 	static private class SMTPAuthenticator extends javax.mail.Authenticator
 	{
 	

@@ -70,10 +70,20 @@ public class PlanesManager {
 		return planesList;
 	}
 	
+	/**
+	 * Função utilizada para obter o número de Aviões disponíveis na Companhia.
+	 * @return Número de aviões
+	 */
 	public int getNumPlanes(){
 		return planesList.size();
 	}
 	
+	/**
+	 * Função utilizada para obter o número de Aviões disponíveis na Companhia entre as datas passadas como argumento da função.
+	 * @param beginning Data de inicio
+	 * @param end Data de fim
+	 * @return Número de aviões
+	 */
 	public int getNumPlanes(GregorianCalendar beginning, GregorianCalendar end){
 		int num = 0;
 		
