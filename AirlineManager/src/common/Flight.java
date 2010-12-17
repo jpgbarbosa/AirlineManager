@@ -8,13 +8,19 @@ import java.util.Vector;
 
 import bookings.Booking;
 
+/**
+ * This class represents a Flight. Each flight must have a booking vector that stores all clients' bookings.
+ * It has a date, an origin, destination and its own identification number. It can also be a regular or a
+ * charter flight. If it was cancelled, wasCancelled flag is raised up.
+ * Every flight must be associated with a specific Airplane. 
+ *
+ */
 @SuppressWarnings("serial")
 public class Flight implements Serializable{
 	/* The list of bookings registered for this flight. */
 	private Vector <Booking> bookings;
 	private int occupied;
-	/* The list of waiting clients. */
-	//private Vector <Booking> waitingList;
+	
 	/* The airplane associated to this flight. */
 	private Airplane airplane;
 	private GregorianCalendar date;
@@ -24,12 +30,22 @@ public class Flight implements Serializable{
 	private boolean isCharter;
 	private boolean wasCancelled;
 	private int id;
+	/* Lock object to provent errors while in concurrent operations */
 	public Lock lock = new Lock();
 	
 	//TODO: This is temporary!
 	public static int idCreator = 0;
 	
-	/* The constructor. */
+	/**
+	 * Creates a new Flight.
+	 * 
+	 * @param plane
+	 * @param data
+	 * @param origin
+	 * @param dest
+	 * @param isRegular
+	 * @param isCharter
+	 */
 	public Flight(Airplane plane, GregorianCalendar data, String origin, String dest, boolean isRegular, boolean isCharter){
 		this.airplane = plane;
 		this.origin = origin;
@@ -42,7 +58,11 @@ public class Flight implements Serializable{
 		this.isCharter = isCharter;
 	}
 	
-	/*Override .equals()*/
+	/**
+	 * Override method. It compares two flights according to its id, destination and date
+	 * 
+	 * @param Flight object
+	 */
 	public boolean equals(Object obj){
 		Flight f=(Flight) obj;
 		if(airplane.getId()==f.getAirplane().getId()&&destination.equals(f.getDestination())){
@@ -55,16 +75,29 @@ public class Flight implements Serializable{
 		return false;
 	}
 	
-	/* Adds a new booking to the flight. */
+	/** Adds a new booking to the flight.
+	 * @param booking
+	 */
 	public void newBooking (Booking booking){
 		bookings.add(booking);
 	}
 	
-	/* Removes a booking from the flight. */
+	/**
+	 * Removes a booking from the flight.
+	 * 
+	 * @param booking
+	 * @return the removed booking
+	 */
 	public boolean removeBooking (Booking booking){
 		return bookings.remove(booking);
 	}
 
+	/**
+	 * Searches a booking by ID
+	 * 
+	 * @param id
+	 * @return the booking if found, null if not
+	 */
 	public Booking findBookingById(int id){
 		for (int i = 0; i < bookings.size(); i++){
 			if (bookings.elementAt(i).getBookingNumber() == id)
@@ -128,7 +161,10 @@ public class Flight implements Serializable{
 		this.destination= destination;
 	}
 	
-	/* The number of empty seats for this flight. */
+	/**
+	 *  The number of empty seats for this flight. 
+	 *	@return return int - the available seats  
+	 */
 	public int getEmptySeats(){
 		return airplane.getNoSeats() - occupied;
 	}
@@ -190,6 +226,4 @@ public class Flight implements Serializable{
 	public void decreaseOccupied(int no){
 		occupied -= no;
 	}
-	
-	
 }
