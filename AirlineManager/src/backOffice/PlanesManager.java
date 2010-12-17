@@ -72,7 +72,7 @@ public class PlanesManager {
 	
 	/**
 	 * Function used to obtain the number of Plains available at the company.
-	 * @return Nœmero de avi›es
+	 * @return Number of planes.
 	 */
 	public int getNumPlanes(){
 		return planesList.size();
