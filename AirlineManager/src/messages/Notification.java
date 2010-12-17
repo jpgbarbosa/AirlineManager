@@ -2,6 +2,7 @@ package messages;
 
 import java.util.*;
 
+
 @SuppressWarnings("serial")
 public class Notification extends Message{
 	/* The type of notification. */

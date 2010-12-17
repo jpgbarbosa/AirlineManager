@@ -10,7 +10,11 @@ import javax.swing.JLabel;
 /**
  * This class is responsible for creating a clock, to be displayed while we navigate in the application.
  * 
- * 
+ * @author Daniela Fontes
+ * @author Ivo Correia
+ * @author João Penetra
+ * @author João Barbosa
+ * @author Ricardo Bernardino
  */
 public class ShowTime extends Thread {
 	private JLabel time; 

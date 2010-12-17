@@ -14,6 +14,11 @@ import bookings.Booking;
  * charter flight. If it was cancelled, wasCancelled flag is raised up.
  * Every flight must be associated with a specific Airplane. 
  *
+ * @author Daniela Fontes
+ * @author Ivo Correia
+ * @author João Penetra
+ * @author João Barbosa
+ * @author Ricardo Bernardino
  */
 @SuppressWarnings("serial")
 public class Flight implements Serializable{
