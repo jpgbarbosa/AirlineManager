@@ -14,7 +14,12 @@ public class StatisticsManager {
 		this.planesManager = planesManager;
 	}
 	
-	
+	/**
+	 * Função que gera as estatísticas dos vários managers da aplicação.
+	 * @param beginning Data de inicio.
+	 * @param end Data de fim.
+	 * @return Retorna uma String com as estatísticas
+	 */
 	public String generate(GregorianCalendar beginning, GregorianCalendar end){
 		StringBuilder output = new StringBuilder();
 		
