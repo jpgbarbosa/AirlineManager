@@ -1,105 +1,104 @@
 package backOffice;
 
-
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 import org.prevayler.*;
 import common.Airplane;
 
+/**
+ * This class is responsible managing all the airplanes. It stores information about the current planes
+ * and provides methods to manage them.
+ * 
+ * @author Barbosa
+ *
+ */
 public class PlanesManager {
 	/* The list of registered planes. */
-	private Vector <Airplane> planesList;
+	private Vector<Airplane> planesList;
 	private Prevayler prevayler;
-	private static int idCreator=0;
-	public Prevayler getPrevayler() {
-		return prevayler;
-	}
-	/* The constructor. */
+	private static int idCreator = 0;
+
+	/**
+	 * Creates a new prevayler to store planesList and updates the global ID of each plane to the
+	 * available
+	 */
 	@SuppressWarnings("unchecked")
-	public PlanesManager(){
+	public PlanesManager() {
 		super();
-		
+
 		try {
-			prevayler = PrevaylerFactory.createPrevayler(new Vector<Airplane>(), "PlanesList");
-			
+			prevayler = PrevaylerFactory.createPrevayler(
+					new Vector<Airplane>(), "PlanesList");
+
 		} catch (Exception e) {
 			System.out.println("Prevayler error, exiting.");
 			System.exit(-1);
-		} 
-		planesList=(Vector <Airplane>) (prevayler.prevalentSystem());
-		
-		if(planesList.size()>0){
-			idCreator=getLastID();
 		}
-		
-		/*if(FileManager.loadObjectFromFile("planesList", planesList) == null)
-			planesList = new Vector<Airplane>();
-		*/
+		planesList = (Vector<Airplane>) (prevayler.prevalentSystem());
+
+		if (planesList.size() > 0) {
+			idCreator = getLastID();
+		}
 	}
 	
-	
 	/**
+	 * Adds a new plane to the system.
 	 * 
-	 * Write Transactions
+	 * @param airplane
 	 */
-	
-	
-	/* Adds a new plane to the system. */
-	public void addPlane(Airplane airplane){
+	public void addPlane(Airplane airplane) {
 		airplane.setId(idCreator);
 		prevayler.execute(new addPlane(airplane));
 		idCreator++;
-		//planesList.add(airplane);
 	}
-	
-	/* Removes a plane from the system. */
-	public void removePlane(Airplane airplane){
-		
-		prevayler.execute(new removePlane(airplane));
-		
-		//planesList.remove(airplane);
-	}
+
 	/**
+	 * Removes a plane from the system.
 	 * 
-	 * Read Transactions
+	 * @param airplane
 	 */
+	public void removePlane(Airplane airplane) {
+
+		prevayler.execute(new removePlane(airplane));
+	}
+
+	/* Getters and Setters */
+	public Prevayler getPrevayler() {
+		return prevayler;
+	}
 	
-	/* Getters. */
 	public Vector<Airplane> getPlanesList() {
 		return planesList;
 	}
-	
-	public int getNumPlanes(){
+
+	public int getNumPlanes() {
 		return planesList.size();
 	}
-	
-	public int getNumPlanes(GregorianCalendar beginning, GregorianCalendar end){
+
+	public int getNumPlanes(GregorianCalendar beginning, GregorianCalendar end) {
 		int num = 0;
-		
-		for(Airplane a:planesList){
-			if(a.getDate().after(beginning) && a.getDate().before(end))
+
+		for (Airplane a : planesList) {
+			if (a.getDate().after(beginning) && a.getDate().before(end))
 				num++;
 		}
 		return num;
 	}
-	
-	private int getLastID(){
-		int id=0;
-		for(Airplane a:planesList)
-			if(a.getId()>id){
-				id=a.getId();
+
+	private int getLastID() {
+		int id = 0;
+		for (Airplane a : planesList)
+			if (a.getId() > id) {
+				id = a.getId();
 			}
 		id++;
 		return id;
 	}
-	
-	
-	
+
 }
 
-
-class addPlane implements Transaction{
+class addPlane implements Transaction {
 
 	/**
 	 * 
@@ -109,26 +108,22 @@ class addPlane implements Transaction{
 	 * 
 	 */
 	private Airplane airplane;
-	
 
+	public addPlane(Airplane airplane) {
+		this.airplane = airplane;
 
-	public addPlane(Airplane airplane){
-		this.airplane=airplane;
-		
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void executeOn(Object arg0, Date arg1) {
-		
-		((Vector<Airplane>)arg0).add(airplane);
+
+		((Vector<Airplane>) arg0).add(airplane);
 	}
-	
-	
+
 }
 
-
-class removePlane implements Transaction{
+class removePlane implements Transaction {
 
 	/**
 	 * 
@@ -138,20 +133,17 @@ class removePlane implements Transaction{
 	 * 
 	 */
 	private Airplane airplane;
-	
 
+	public removePlane(Airplane airplane) {
+		this.airplane = airplane;
 
-	public removePlane(Airplane airplane){
-		this.airplane=airplane;
-		
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void executeOn(Object arg0, Date arg1) {
-		
-		((Vector<Airplane>)arg0).remove(airplane);
+
+		((Vector<Airplane>) arg0).remove(airplane);
 	}
-	
-	
+
 }

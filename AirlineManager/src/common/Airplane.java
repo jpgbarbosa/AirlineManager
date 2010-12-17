@@ -4,27 +4,38 @@ import java.io.Serializable;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
+/**
+ *	This class is represents each airplane. An airplane has a list of schedule flights, 
+ *	the respective company, airplane model, maximum number of seats and an ID. 
+ *
+ * @author Barbosa
+ *
+ */
 public class Airplane implements Serializable{
-	/* The total amount of seats and the number of occupied seats.
-	 * This last parameter may be replaced by finding the size of
-	 * the list of clients in this flight.
-	 */
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	/* The flight associated with this airplane. */
+	/**
+	 * Number of Seats
+	 */
 	private int noSeats;
+	/**
+	 * flights associated to this plane
+	 */
 	private Vector <Flight> flights;
+	
 	private String company, model;
 	private int id;
+	
 	private GregorianCalendar date;
 	
-	
-	
-	
-	/* The constructor. */
+	/**
+	 * The Airplane constructor is responsible for creating a new airplane with a certain number of seats,
+	 * a company and its model.
+	 * 
+	 * @param seatsNumber
+	 * @param company
+	 * @param model
+	 */
 	public Airplane(int seatsNumber, String company, String model){
 		this.noSeats = seatsNumber;
 		this.company = company;
@@ -33,9 +44,12 @@ public class Airplane implements Serializable{
 		id = 0;
 	}
 	
-	/*
-	 * Override
-	 * */
+	/**
+	 * This is an override of method equals. It compares two airplanes by their id.
+	 * 
+	 * @param Object a - Airplane;
+	 */
+	@Override
 	public boolean equals(Object a){
 		if(((Airplane) a).getId()==this.id){
 			return true;
@@ -43,7 +57,12 @@ public class Airplane implements Serializable{
 		return false;
 	}
 
-	public boolean associateFlight(Flight flight){
+	/**
+	 * Inserts the flight in the flights' list ordered by date.
+	 * 
+	 * @param flight
+	 */
+	public void associateFlight(Flight flight){
 		int i;
 		for (i = 0; i < flights.size(); i++){
 			if (flights.get(i).getDate().after(flight.getDate())){
@@ -55,20 +74,17 @@ public class Airplane implements Serializable{
 		if (i == flights.size()){
 			flights.add(flight);
 		}
-		
-		return true;
 	}
 	
+	/**
+	 * 
+	 * @param flight
+	 */
 	public void removeFlight (Flight flight){
 		flights.remove(flight);
 	}
 	
 	/* Getters and setters. */
-	
-	public void setDate(GregorianCalendar date) {
-		this.date = date;
-	}
-
 	
 	public Vector <Flight> getFlights() {
 		return flights;
@@ -97,6 +113,10 @@ public class Airplane implements Serializable{
 	public void setFlights(Vector <Flight> flights) {
 		this.flights = flights;
 	}
+	
+	public void setDate(GregorianCalendar date) {
+		this.date = date;
+	}
 
 	public void setId(int id) {
 		this.id = id;
@@ -117,5 +137,6 @@ public class Airplane implements Serializable{
 	public String toString(){
 		return "ID: "+ id +"\nNumber of seats: "+ noSeats+"\nCompany: "+ company + "\nModel: "+model+ "\n\n";
 	}
+
 	
 }
