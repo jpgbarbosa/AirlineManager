@@ -44,10 +44,23 @@ import common.*;
 
 import com.toedter.calendar.JCalendar;
 
+/**
+ * 
+ * BackOffice is responsible for managing the system's content including Airplanes, Flights, Clients,
+ * Operators, Statistics and Feedback to clients. It is also responsible for connecting to the Front 
+ * Office through JAVA RMI.
+ * 
+ * @author Daniela Fontes
+ * @author Ivo Correia
+ * @author João Penetra
+ * @author João Barbosa
+ * @author Ricardo Bernardino
+ *
+ * 
+ */
+
 public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteInterface{
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	
 	public static GregorianCalendar now;
@@ -73,7 +86,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	private StatisticsManagerMenu statisticsManagerMenu;
 	private LoginMenu loginMenu;
 	
-	/* The main constructor. */
+	/**
+	 *  The main constructor.
+	 */
 	public BackOffice() throws RemoteException{
 		super();
 		
@@ -129,7 +144,9 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 
 	}
 
-	/* The method to authenticate the administrator. */
+	/**
+	 *  The method to authenticate the administrator.
+	 */
 	public boolean loginAdmin(String username, String password){
 		//TODO: Maybe remove this static definition of the password or not.
 		String user = "admin";
@@ -140,6 +157,11 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		return false;
 	}
 	
+	
+	/**
+	 *  Check if the inserted fields can form a valid date.
+	 *  @return GregorianCalendar or null
+	 */
 	public GregorianCalendar checkDate(int year, int month, int day, int hour, int minute){
 		
 		/* A non-positive year. */
@@ -204,7 +226,6 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		}
 		return date;
 	}
-	
 	
     public void executeGraphics(){
 		
@@ -1364,8 +1385,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		}
 	}
 	
-	/*
-	 * 
+	/**
 	 * Inserts negative feedback provided by a client app in the appropriate structure in the FeedbackManager
 	 * @see common.BackOfficeRemoteInterface#sendNegativeFeedback(messages.Feedback)
 	 */
@@ -1376,8 +1396,7 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		feedBackManager.insertNegativeFeedback(feedback);
 		
 	}
-	/*
-	 * 
+	/**
 	 * Inserts positive feedback provided by a client app in the appropriate structure in the FeedbackManager
 	 * @see common.BackOfficeRemoteInterface#sendNegativeFeedback(messages.Feedback)
 	 */
@@ -1389,20 +1408,26 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 	}
 
 	
-	/* Check if username is already in use and register operator */
+	/**
+	 *  Check if username is already in use and register operator
+	 *  @return String with the result of the operation
+	 */
 	@Override
 	public String registerOperator(String comp, String name, String addr, String phone, String mail,String password) throws RemoteException {
 		return operatorManager.registerOperator(comp, name, addr, phone, mail, password);		
 	}
 
 	
-	/* Check if the username and password are correct */
+	/**
+	 *  Check if the username and password are correct
+	 *  @return String with the result of the operation 
+	 */
 	@Override
 	public String loginOperator(String user, String pass) throws RemoteException {
 		return operatorManager.loginOperator(user,pass);
 		
 	}
-
+	
 	@Override
 	public Vector<String> getDestinations() throws RemoteException {
 		return destinationsPrices.getDestinations();
@@ -1414,6 +1439,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		return destinationsPrices.getPrice(orig, dest);
 	}
 	
+	/**
+	 *  Method used to create a new booking for a specific client. It is invoked remotely by the Front Office.
+	 *  @return String with the result of the operation
+	 */
 	@Override
 	public String scheduleBooking(int idFlight, String name, String address, String phone, String mail, int seats, boolean isOperator, int bookingNumber) throws RemoteException {
 		
@@ -1559,16 +1588,29 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		return "Scheduled";
 	}
 	
+	/**
+	 *  Method to send the flight list to the Front Office through the JAVA RMI connection.
+	 *  @return String with the list of flights 
+	 */
 	@Override
 	public String listFlights() throws RemoteException{
 		return flightsManager.listFlights();
 	}
 	
+	/**
+	 *  Find a flight in a specific date, origin and destination.
+	 *  @return String with the result of the operation 
+	 */
 	@Override
 	public String findFlights(int year, int month, int day, String origin, String destination) throws RemoteException{
 		return flightsManager.findFlights(year, month, day, origin, destination);
 	}
 	
+	/**
+	 *  Client invokes this method to cancel a booking made previously by removing the booking from
+	 *  the flight manifest.  
+	 *  @return String with the result of the operation(Success or not) 
+	 */
 	@Override
 	public String cancelBooking(int idFlight, int idBooking) throws RemoteException {
 		
@@ -1599,6 +1641,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		return "Cancelled";
 	}
 
+	/**
+	 *  Method invoked by the Operator to charter a new flight.
+	 *  @return String with the result of the operation(Success or not) 
+	 */
 	@Override
 	public String scheduleCharter(GregorianCalendar date, String origin, String destination, int seats) throws RemoteException {
 		/* First, we need to check if there's an airplane with enough seats. */
@@ -1614,7 +1660,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		/* If there is not airplane available, return error message. */
 		return "It wasn't possible to book the charter, no planes available";
 	}
-
+	/**
+	 *  Get information about a specific booking.  
+	 *  @return String with the booking info 
+	 */
 	@Override
 	public String getBookingInfo(int idFlight, int idBooking) throws RemoteException {
 		/* First, we need to check if there's such a flight. */
@@ -1631,6 +1680,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 			return "That booking is not associated with Flight " + idFlight;
 	}
 
+	/**
+	 *  Modify information about a specific booking.  
+	 *  @return String with the result of the operation(Success or not) 
+	 */
 	@Override
 	public String modifyBooking(int idFlight, int idBooking, int idNewFlight, boolean isOperator, int bookingNumber) throws RemoteException {
 		String name, address, phone, email;
@@ -1673,6 +1726,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		return "Booking scheduled, with booking number " + bookingNumber + " and flight number " + idNewFlight + ".";
 	}
 
+	/**
+	 *  Get the price for a specific booking.  
+	 *  @return Array with two Doubles with the result of the operation(Success or not) 
+	 */
 	@Override
 	public Double [] bookingPrice(int idFlight, String clientEmail) throws RemoteException {
 		Flight flight = flightsManager.searchFlightById(idFlight);
@@ -1682,7 +1739,10 @@ public class BackOffice extends UnicastRemoteObject implements BackOfficeRemoteI
 		
 		return info;
 	}
-
+	
+	/**
+	 *  Method used to decrease user miles after using discount.   
+	 */
 	@Override
 	public void updateMiles(Double miles, String mail) throws RemoteException {
 		clientsManager.searchClient(mail).setKilometers(miles);
