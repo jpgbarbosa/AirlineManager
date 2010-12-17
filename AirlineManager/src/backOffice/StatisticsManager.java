@@ -21,7 +21,6 @@ public class StatisticsManager {
 		if(beginning == null && end==null){
 			output.append("Estatisticas:\n\nNumero de Avioes Disponiveis: "+planesManager.getNumPlanes());
 			output.append("\nNumero de Voos Registados: "+flightsManager.getNumFlights()); 
-			output.append("\nNumero de Voos Cancelados: "+flightsManager.getNumCancelled()); //falta implementar
 			output.append("\nTaxa de Ocupacao dos Voos: "+flightsManager.getOccupation()+"%");
 			output.append("\n\nNumero de Feedbacks Positivos: "+feedBackManager.getNumPositive());
 			output.append("\nNumero de Feedbacks Negativos: "+feedBackManager.getNumNegative());
@@ -32,7 +31,6 @@ public class StatisticsManager {
 		
 		output.append("Estatisticas:\n\nNumero de Avioes Disponiveis: "+planesManager.getNumPlanes(beginning, end));
 		output.append("\nNumero de Voos Registados: "+flightsManager.getNumFlights(beginning, end));
-		output.append("\nNumero de Voos Cancelados: "+flightsManager.getNumCancelled(beginning, end)); //falta implementar
 		output.append("\nTaxa de Ocupacao dos Voos: "+flightsManager.getOccupation(beginning, end)+"%");
 		output.append("\n\nNumero de Feedbacks Positivos: "+feedBackManager.getNumPositive(beginning, end));
 		output.append("\nNumero de Feedbacks Negativos: "+feedBackManager.getNumNegative(beginning, end));

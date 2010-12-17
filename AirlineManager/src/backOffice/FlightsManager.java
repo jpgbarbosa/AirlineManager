@@ -29,7 +29,6 @@ public class FlightsManager {
 	private Prevayler prevayler;
 	private Prevayler prevaylerFinished;
 	private Prevayler prevaylerRegular;
-	//TODO: usar o prevayler para gravar isto
 	private Hashtable<Integer, Vector<RFlight>> regularFlights;
 	public Prevayler getPrevayler() {
 		return prevayler;
@@ -418,16 +417,6 @@ public class FlightsManager {
 		}
 		
 		return num;
-	}
-	
-	public int getNumCancelled(){
-		
-		return 0;
-	}
-	
-	public int getNumCancelled(GregorianCalendar beginning, GregorianCalendar end){
-		
-		return 0;
 	}
 	
 	public int getOccupation(){
