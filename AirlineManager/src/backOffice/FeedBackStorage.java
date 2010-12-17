@@ -6,7 +6,7 @@ import java.util.Vector;
 import messages.Feedback;
 
 /**
- * Class responsible for managing the Feedbacks received by the Company, either positive or negative.
+ * Class responsible for storing the Feedbacks received by the Company, either positive or negative.
  * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo Bernardino
  *
  */

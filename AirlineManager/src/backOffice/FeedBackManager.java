@@ -14,7 +14,11 @@ import org.prevayler.Transaction;
 import messages.Feedback;
 import common.Operator;
 
-
+/**
+ * Class responsible for managing the Feedbacks received by the Company, either positive or negative.
+ * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo Bernardino
+ *
+ */
 public class FeedBackManager {
 	private FeedBackStorage msgStorage;
 	private Prevayler prevayler;
@@ -34,7 +38,13 @@ public class FeedBackManager {
 		msgStorage=(FeedBackStorage) (prevayler.prevalentSystem());
 	}
 	
-	/* Sends a notification to a specific client. */
+	/**
+	 * Sends a notification to a specific client.
+	 * @param email Destination's Email
+	 * @param type 
+	 * @param content Content of the Email
+	 * @return Returns True if the email was sent. False otherwise.
+	 */
 	public boolean sendNotificationUser (String email, String type, String content){
 		try {
 			SendEmail.send("smtp.sapo.pt", 25, "airlinemanager@fakemail.com", email, "Notification", content);
@@ -47,7 +57,12 @@ public class FeedBackManager {
 		
 	}
 	
-	/* Sends a notification to all the clients. */
+	/**
+	 * Sends a notification to all the clients.
+	 * @param listOps List of Operators
+	 * @param type
+	 * @param content Content of the Email
+	 */
 	public void sendNotificationAllOperators(Vector <Operator> listOps, String type, String content){
 		for(Operator op : listOps){
 			try {
@@ -58,13 +73,18 @@ public class FeedBackManager {
 		}
 	}
 	
-	
-	/* Inserts a new message in the positive feed back list. */
+	/**
+	 * Inserts a new message in the positive feed back list.
+	 * @param feedBack Feedback object to be inserted.
+	 */
 	public void insertPositiveFeedback(Feedback feedBack){
 		prevayler.execute(new insertPositiveFeedback(feedBack));
 	}
 	
-	/* Inserts a new message in the negative feed back list. */
+	/**
+	 * Inserts a new message in the negative feed back list.
+	 * @param feedBack Feedback object to be inserted.
+	 */
 	public void insertNegativeFeedback(Feedback feedBack) {
 		prevayler.execute(new insertNegativeFeedback(feedBack));
 	}
