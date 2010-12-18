@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.GregorianCalendar;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -16,8 +15,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import common.Flight;
-import common.Lock;
 
+/**
+ * Thread responsible for removing the flights that have already finished from the Flights List. Also, it warns the Back Office when a Flight is departing.
+ * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo Bernardino
+ *
+ */
 public class FlightsCleaner extends Thread{
 	
 	private FlightsManager flightsManager;

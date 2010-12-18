@@ -8,7 +8,11 @@ import java.util.Vector;
  *	This class is represents each airplane. An airplane has a list of schedule flights, 
  *	the respective company, airplane model, maximum number of seats and an ID. 
  *
- * @author Barbosa
+ * @author Daniela Fontes
+ * @author Ivo Correia
+ * @author João Penetra
+ * @author João Barbosa
+ * @author Ricardo Bernardino
  *
  */
 public class Airplane implements Serializable{

@@ -4,12 +4,18 @@ import java.io.Serializable;
 
 import common.Client;
 
+/**
+ * This class is responsible for saving the client reservation data. It associates the client and the
+ * respective flight and has informations about the booking price, booking number, number of seats reserved.
+ * It also contains the boarding ticket and the respective hashed version to ensure the the ticket is valid.
+ *
+ */
 public class Booking implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	/* The flight and the client associated with this booking. */
+	/* The flight and the client are associated with this booking. */
 	private int idFlight;
 	private int noSeats;
 	private Client client;
@@ -20,7 +26,15 @@ public class Booking implements Serializable{
 	
 	
 
-	/* The constructor. */
+	/**
+	 * Creates a new booking
+	 * 
+	 * @param idFlight
+	 * @param noSeats
+	 * @param client
+	 * @param number
+	 * @param price
+	 */
 	public Booking(int idFlight, int noSeats, Client client, int number, double price){
 		this.idFlight = idFlight;
 		this.noSeats = noSeats;
@@ -35,8 +49,6 @@ public class Booking implements Serializable{
 	public String getBoardingTicket() {
 		return boardingTicket;
 	}
-
-	
 
 	public int getHashBoardingTicket() {
 		return hashBoardingTicket;

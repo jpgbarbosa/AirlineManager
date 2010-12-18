@@ -5,6 +5,11 @@ import java.util.Vector;
 
 import messages.Feedback;
 
+/**
+ * Class responsible for storing the Feedbacks received by the Company, either positive or negative.
+ * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo Bernardino
+ *
+ */
 public class FeedBackStorage implements Serializable{
 	
 	/**
@@ -18,13 +23,18 @@ public class FeedBackStorage implements Serializable{
 	private Vector <Feedback> positiveFeedBackList=new Vector <Feedback>();
 	private Vector <Feedback> negativeFeedBackList=new Vector <Feedback>();
 	
-	
-	/* Inserts a new message in the positive feed back list. */
+	/**
+	 * Inserts a new message in the positive feed back list.
+	 * @param feedBack Feedback object that will be inserted.
+	 */
 	public void insertPositiveFeedback(Feedback feedBack){
 		positiveFeedBackList.add(feedBack);
 	}
 	
-	/* Inserts a new message in the negative feed back list. */
+	/**
+	 * Inserts a new message in the negative feed back list.
+	 * @param feedBack Feedback object that will be inserted.
+	 */
 	public void insertNegativeFeedback(Feedback feedBack) {
 		negativeFeedBackList.add(feedBack);
 	}
@@ -39,10 +49,20 @@ public class FeedBackStorage implements Serializable{
 		return negativeFeedBackList;
 	}
 	
+	/**
+	 * Function responsible for calculating the number of positive feedbacks the company has received.
+	 * @return Returns the number of positive feedbacks.
+	 */
 	public int getNumPositive(){
 		return positiveFeedBackList.size();
 	}
 	
+	/**
+	 * Function responsible for calculating the number of positive feedbacks the company has received between the given dates.
+	 * @param beginning Beginning Date
+	 * @param end End Date
+	 * @return Returns the number of positive feedbacks.
+	 */
 	public int getNumPositive(GregorianCalendar beginning, GregorianCalendar end){
 		int num = 0;
 		
@@ -54,12 +74,21 @@ public class FeedBackStorage implements Serializable{
 		return num;
 	}
 	
+	/**
+	 * Function responsible for calculating the number of negative feedbacks the company has received.
+	 * @return Returns the number of negative feedbacks.
+	 */
 	public int getNumNegative(){
 		return negativeFeedBackList.size();
 	}
 	
 	
-	
+	/**
+	 * Function responsible for calculating the number of negative feedbacks the company has received between the given dates.
+	 * @param beginning Beginning Date
+	 * @param end End Date
+	 * @return Returns the number of negative feedbacks.
+	 */
 	public int getNumNegative(GregorianCalendar beginning, GregorianCalendar end){
 		int num = 0;
 		

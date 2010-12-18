@@ -7,12 +7,25 @@ import java.util.GregorianCalendar;
 
 import javax.swing.JLabel;
 
+/**
+ * This class is responsible for creating a clock, to be displayed while we navigate in the application.
+ * 
+ * @author Daniela Fontes
+ * @author Ivo Correia
+ * @author João Penetra
+ * @author João Barbosa
+ * @author Ricardo Bernardino
+ */
 public class ShowTime extends Thread {
 	private JLabel time; 
 	
-	/* The main constructor. */
-    public ShowTime(JLabel t) {
-    	time = t;
+	/**
+	 * Creates an area to display the clock and start it.
+	 * 
+	 * @param label
+	 */
+    public ShowTime(JLabel label) {
+    	time = label;
     	time.setBounds(new Rectangle(0,10,300,20));
     	time.setName("time");
     	time.setFont(new Font("sansserif",Font.PLAIN,15));

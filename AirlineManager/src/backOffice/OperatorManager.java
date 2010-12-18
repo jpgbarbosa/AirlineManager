@@ -6,6 +6,7 @@ import org.prevayler.*;
 
 import common.Operator;
 
+
 /**
  * Class that manages operators.
  * Possesses a Vector with the list of the operators that is updated when a new operator makes a new register
@@ -38,21 +39,20 @@ public class OperatorManager {
 	}
 	
 	/**
-	 * 
-	 * Write Transactions
-	 */
-	
-	/**
-	 *  Adds a new operator to the system after checking if it already exists 
+	 * Adds a new operator to the system after checking if it already exists.
+	 * @param operator Operator Object to insert in the list.
 	 */
 	public void addOperator(Operator operator){
 		prevayler.execute(new addOperator(operator));
-		//operatorList.add(operator);
-		
 	}
 	
 	/**
+<<<<<<< HEAD
 	 *  Deletes an operator from the system
+=======
+	 * Deletes an operator from the system
+	 * @param operator Operator object to remove from the list.
+>>>>>>> f5f51412531a17f04bdad1699c0826f3438dcf6f
 	 */
 	public void removeOperator(Operator operator){
 		prevayler.execute(new removeOperator(operator));
@@ -60,7 +60,18 @@ public class OperatorManager {
 	}
 	
 	/**
+<<<<<<< HEAD
 	 * Tries to register a new operator 
+=======
+	 * Tries to register a new operator
+	 * @param comp Company of the operator
+	 * @param name Name of the operator
+	 * @param addr Address of the operator
+	 * @param phone Phone number of the operator
+	 * @param mail Email of the operator
+	 * @param password Password for the account
+	 * @return
+>>>>>>> f5f51412531a17f04bdad1699c0826f3438dcf6f
 	 */
 	public String registerOperator(String comp, String name, String addr, String phone, String mail,String password){
 		Operator op = searchOperator(name);
@@ -73,12 +84,9 @@ public class OperatorManager {
 	}
 	
 	/**
-	 * 
-	 * Read Transactions
-	 */
-	
-	/**
-	 *  Search operator to avoid operators with the same login name
+	 * Search operator to avoid operators with the same login name.
+	 * @param name Name of the operator
+	 * @return Returns the Operator object or null if not found.
 	 */
 	public Operator searchOperator(String name){
 		for(int i = 0; i < operatorList.size(); i++){
@@ -91,9 +99,11 @@ public class OperatorManager {
 	}
 	
 	
-	
 	/**
-	 * Tries to authenticate the operator 
+	 * Tries to authenticate the operator
+	 * @param name Name of the operator
+	 * @param password Password for the account
+	 * @return Returns a String saying if the operation was successful or not.
 	 */
 	public String loginOperator(String name, String password){
 		Operator op = searchOperator(name);
