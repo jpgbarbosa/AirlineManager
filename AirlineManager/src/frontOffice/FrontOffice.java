@@ -10,6 +10,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -689,15 +690,17 @@ public class FrontOffice extends UnicastRemoteObject {
 					if (validPhone && validCC) {
 						if (!name.equals("") && !address.equals("")
 								&& !mail.equals("")) {
-
+							
 							String answer = backOffice.scheduleBooking(id,
 									name, address, phone, mail, seats,
 									loggedIn, bookingNumber);
+							StringTokenizer token=new StringTokenizer(answer);
+							String scheduleAnswer=token.nextToken();
 							if (answer.equals("Innexistent flight")) {
 								confirmActionNew
 										.setText("There's no such flight.");
 								confirmActionNew.setCaretPosition(0);
-							} else if (answer.equals("Scheduled")) {
+							} else if (scheduleAnswer.equals("Scheduled")) {
 								Double[] bookingInfo = backOffice.bookingPrice(
 										id, mail);
 
@@ -733,14 +736,14 @@ public class FrontOffice extends UnicastRemoteObject {
 								// TODO: arranjar maneira de mudar isto!!
 								confirmActionNew
 										.setText("Booking scheduled, with booking number "
-												+ bookingNumber
+												+ token.nextToken()
 												+ " flight number "
 												+ id
 												+ " and price is "
 												+ price
 												+ "€.");
 								confirmActionNew.setCaretPosition(0);
-								bookingNumber++;
+								//bookingNumber++;
 							} else if (answer.equals("Over")) {
 								confirmActionNew
 										.setText("This flight is over, please choose another.");

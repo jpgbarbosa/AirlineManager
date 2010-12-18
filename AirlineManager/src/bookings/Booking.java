@@ -21,8 +21,7 @@ public class Booking implements Serializable{
 	private Client client;
 	private int bookingNumber;
 	private double price;
-	private String boardingTicket;
-	private int hashBoardingTicket;
+	
 	
 	
 
@@ -41,19 +40,11 @@ public class Booking implements Serializable{
 		bookingNumber = number;
 		this.client = client;
 		this.price = price*noSeats;
-		boardingTicket=client.getName()+idFlight+number+price+"";
-		hashBoardingTicket=boardingTicket.hashCode();
+		
 		
 	}
 	
-	public String getBoardingTicket() {
-		return boardingTicket;
-	}
-
-	public int getHashBoardingTicket() {
-		return hashBoardingTicket;
-	}
-
+	
 	public int getIdFlight() {
 		return idFlight;
 	}

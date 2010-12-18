@@ -1610,16 +1610,7 @@ public class BackOffice extends UnicastRemoteObject implements
 			bookingNumber = 0;
 		}
 
-		try {
-			fos = new FileOutputStream(file);
-
-			dos = new DataOutputStream(fos);
-			dos.writeInt((bookingNumber + 1));
-			fos.close();
-
-		} catch (IOException e) {
-
-		}
+		
 
 		/* First, we need to check if there's such a flight. */
 		if (flight == null) {
@@ -1745,8 +1736,17 @@ public class BackOffice extends UnicastRemoteObject implements
 			flightsManager.addBookingFlight(flight, booking);
 
 		}
+		try {
+			fos = new FileOutputStream(file);
 
-		return "Scheduled";
+			dos = new DataOutputStream(fos);
+			dos.writeInt((bookingNumber + 1));
+			fos.close();
+
+		} catch (IOException e) {
+
+		}
+		return "Scheduled "+bookingNumber;
 	}
 
 	/**

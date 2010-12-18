@@ -122,8 +122,10 @@ public class FlightsManager {
 				"NEW BOOKING",
 				"Reservation under the name of: "
 						+ booking.getClient().getName()
-						+ "\nSecret Boarding Code: "
-						+ booking.getHashBoardingTicket());
+						+ "\nBooking Number: "
+						+ booking.getBookingNumber()
+						+ "\n Flight: "
+						+booking.getIdFlight());
 
 	}
 
