@@ -3,15 +3,31 @@ package common;
 import java.io.Serializable;
 import java.util.Calendar;
 
+/**
+ * Class that represents a regular flight.
+ */
 @SuppressWarnings("serial")
-public class RFlight implements Serializable{
+public class RFlight implements Serializable {
 	private Airplane airplane;
 	private String origin;
 	private String destination;
 	private String day;
 	private int idPlane, idFlight, hour, minute, weekDay;
-	
-	public RFlight(Airplane airplane, String origin, String destination, int weekDay, int hour, int minute, int idPlane, int idFlight){
+
+	/**
+	 * The Main Constructor.
+	 * 
+	 * @param airplane
+	 * @param origin
+	 * @param destination
+	 * @param weekDay
+	 * @param hour
+	 * @param minute
+	 * @param idPlane
+	 * @param idFlight
+	 */
+	public RFlight(Airplane airplane, String origin, String destination,
+			int weekDay, int hour, int minute, int idPlane, int idFlight) {
 		this.origin = origin;
 		this.destination = destination;
 		this.idPlane = idPlane;
@@ -20,7 +36,7 @@ public class RFlight implements Serializable{
 		this.minute = minute;
 		this.airplane = airplane;
 		this.weekDay = weekDay;
-		
+
 		if (weekDay == Calendar.SUNDAY)
 			day = "Sunday";
 		else if (weekDay == Calendar.MONDAY)
@@ -35,45 +51,45 @@ public class RFlight implements Serializable{
 			day = "Friday";
 		else if (weekDay == Calendar.SATURDAY)
 			day = "Saturday";
-}
-	
-	public String getOrigin(){
+	}
+
+	public String getOrigin() {
 		return origin;
 	}
-	
-	public String getDestination(){
+
+	public String getDestination() {
 		return destination;
 	}
-	
-	public int getIdPlane(){
+
+	public int getIdPlane() {
 		return idPlane;
 	}
-	
-	public int getIdFlight(){
+
+	public int getIdFlight() {
 		return idFlight;
 	}
-	
-	public int getHour(){
+
+	public int getHour() {
 		return hour;
 	}
-	
-	public int getMinute(){
+
+	public int getMinute() {
 		return minute;
 	}
-	
-	public String getDay(){
+
+	public String getDay() {
 		return day;
 	}
-	
-	public String getData(){
+
+	public String getData() {
 		return day + ", " + hour + "h" + minute;
 	}
-	
-	public Airplane getPlane(){
+
+	public Airplane getPlane() {
 		return airplane;
 	}
-	
-	public int getWeekDay(){
+
+	public int getWeekDay() {
 		return weekDay;
 	}
 }

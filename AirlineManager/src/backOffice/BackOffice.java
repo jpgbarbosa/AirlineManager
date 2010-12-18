@@ -52,8 +52,8 @@ import com.toedter.calendar.JCalendar;
  * 
  * @author Daniela Fontes
  * @author Ivo Correia
- * @author João Penetra
- * @author João Barbosa
+ * @author Miguel Penetra
+ * @author Pedro Barbosa
  * @author Ricardo Bernardino
  *
  * 

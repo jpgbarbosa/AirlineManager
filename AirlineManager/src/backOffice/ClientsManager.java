@@ -13,6 +13,11 @@ import bookings.Booking;
 
 import common.Client;
 
+/**
+ * Class that manages clients.
+ * Possesses an Hashtable with the list of the clients that have used our system.
+ * This list is updated when a new client makes a new booking.
+ */
 public class ClientsManager {
 
 	private Hashtable<String, Client> clientsHash;

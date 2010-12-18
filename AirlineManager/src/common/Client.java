@@ -6,8 +6,11 @@ import java.io.Serializable;
  * Class associated with each Client. Has information about the Client, such as:
  * name, address, contacts, etc.
  * 
- * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo
- *         Bernardino
+ * @author Daniela Fontes
+ * @author Ivo Correia
+ * @author Penetra
+ * @author Barbosa
+ * @author Ricardo Bernardino
  * 
  */
 public class Client implements Serializable{
