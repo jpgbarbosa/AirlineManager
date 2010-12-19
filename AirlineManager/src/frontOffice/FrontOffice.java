@@ -25,7 +25,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
-import messages.Feedback;
+import messages.Message;
 import backOffice.BackOfficeRemoteInterface;
 import common.*;
 
@@ -111,16 +111,9 @@ public class FrontOffice extends UnicastRemoteObject {
 	}
 
 	/**
-	 * Sends some feedback to the BackOffice, about a specific flight.
-	 */
-	public void sendFeedBack(Flight flight, Feedback message) {
-		/* TODO: Wut??! */
-	}
-
-	/**
 	 * Sends positive feedback to the BackOffice.
 	 */
-	public String sendPositiveFeedBack(Feedback message) {
+	public String sendPositiveFeedBack(Message message) {
 		try {
 			backOffice.sendPositiveFeedback(message);
 		} catch (RemoteException e) {
@@ -132,7 +125,7 @@ public class FrontOffice extends UnicastRemoteObject {
 	/**
 	 * Sends negative feedback to the BackOffice.
 	 */
-	public String sendNegativeFeedBack(Feedback message) {
+	public String sendNegativeFeedBack(Message message) {
 		try {
 			backOffice.sendNegativeFeedback(message);
 		} catch (RemoteException e) {
@@ -977,11 +970,9 @@ public class FrontOffice extends UnicastRemoteObject {
 				menu.setVisible(true);
 			} else if (e.getComponent().getName().equals("Send")) {
 				System.out.println(posMsgArea.getText());
-				displayP.setText(frontOffice.sendPositiveFeedBack(new Feedback(
-						"Positive", posMsgArea.getText())));
+				displayP.setText(frontOffice.sendPositiveFeedBack(new Message(posMsgArea.getText(), new GregorianCalendar())));
 			} else if (e.getComponent().getName().equals("Send ")) {
-				displayN.setText(frontOffice.sendNegativeFeedBack(new Feedback(
-						"Negative", negMsgArea.getText())));
+				displayN.setText(frontOffice.sendNegativeFeedBack(new Message(negMsgArea.getText(), new GregorianCalendar())));
 			}
 
 		}

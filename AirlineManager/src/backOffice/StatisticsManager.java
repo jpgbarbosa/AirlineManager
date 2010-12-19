@@ -2,6 +2,12 @@ package backOffice;
 
 import java.util.GregorianCalendar;
 
+import planes.PlanesManager;
+
+import messages.FeedBackManager;
+
+import flights.FlightsManager;
+
 /**
  * Class responsible for generating the Statistics of the Application.
  * 

@@ -34,13 +34,25 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
+import planes.Airplane;
+import planes.PlanesManager;
+
 import bookings.Booking;
 
-import messages.Feedback;
+import messages.FeedBackManager;
+import messages.Message;
 
+import clients.Client;
+import clients.ClientsManager;
+import clients.Operator;
+import clients.OperatorManager;
 import common.*;
 
 import com.toedter.calendar.JCalendar;
+
+import flights.Flight;
+import flights.FlightsManager;
+import flights.RFlight;
 
 /**
  * 
@@ -473,7 +485,7 @@ public class BackOffice extends UnicastRemoteObject implements
 				// Positive List Button
 				posMsgArea.setText("");
 
-				for (Feedback f : feedBackManager.getPositiveFeedBackList()) {
+				for (Message f : feedBackManager.getPositiveFeedBackList()) {
 					posMsgArea.append(f.getMessageContents()
 							+ "\n--------------------------\n");
 				}
@@ -484,7 +496,7 @@ public class BackOffice extends UnicastRemoteObject implements
 				toPanel.setVisible(false);
 				negMsgArea.setText("");
 
-				for (Feedback f : feedBackManager.getNegativeFeedBackList()) {
+				for (Message f : feedBackManager.getNegativeFeedBackList()) {
 					negMsgArea.append(f.getMessageContents()
 							+ "\n--------------------------\n");
 				}
@@ -1565,7 +1577,7 @@ public class BackOffice extends UnicastRemoteObject implements
 	 * @see common.BackOfficeRemoteInterface#sendNegativeFeedback(messages.Feedback)
 	 */
 	@Override
-	public void sendNegativeFeedback(Feedback feedback) throws RemoteException {
+	public void sendNegativeFeedback(Message feedback) throws RemoteException {
 		System.out.println(" " + feedback.getMessageContents());
 
 		feedBackManager.insertNegativeFeedback(feedback);
@@ -1579,7 +1591,7 @@ public class BackOffice extends UnicastRemoteObject implements
 	 * @see common.BackOfficeRemoteInterface#sendNegativeFeedback(messages.Feedback)
 	 */
 	@Override
-	public void sendPositiveFeedback(Feedback feedback) throws RemoteException {
+	public void sendPositiveFeedback(Message feedback) throws RemoteException {
 		System.out.println(" " + feedback.getMessageContents());
 		feedBackManager.insertPositiveFeedback(feedback);
 

@@ -1,9 +1,11 @@
+//COMPLETELY CHECKED
+
 package messages;
 
 import java.io.Serializable;
 import java.util.GregorianCalendar;
 
-public abstract class Message implements Serializable{
+public class Message implements Serializable{
 	/**
 	 * @author Daniela Fontes
 	 * @author Ivo Correia
@@ -33,11 +35,4 @@ public abstract class Message implements Serializable{
 		return messageContents;
 	}
 
-	public void setMessageContents(String messageContents) {
-		this.messageContents = messageContents;
-	}
-
-	public void setDate(GregorianCalendar date) {
-		this.date = date;
-	}
 }

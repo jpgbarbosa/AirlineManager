@@ -2,7 +2,8 @@ package bookings;
 
 import java.io.Serializable;
 
-import common.Client;
+import clients.Client;
+
 
 /**
  * This class is responsible for saving the client reservation data. It associates the client and the

@@ -4,13 +4,13 @@ import java.rmi.*;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
-import messages.Feedback;
+import messages.Message;
 
 public interface BackOfficeRemoteInterface extends Remote{
 	
-	abstract void sendPositiveFeedback(Feedback feedback) throws RemoteException;
+	abstract void sendPositiveFeedback(Message feedback) throws RemoteException;
 	
-	abstract void sendNegativeFeedback(Feedback feedback) throws RemoteException;
+	abstract void sendNegativeFeedback(Message feedback) throws RemoteException;
 	
 	abstract String registerOperator(String comp, String name, String addr, String phone, String mail,String password) throws RemoteException;
 	

@@ -4,8 +4,12 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Vector;
 
-import backOffice.FlightsManager;
-import backOffice.PlanesManager;
+import planes.Airplane;
+import planes.PlanesManager;
+
+import flights.Flight;
+import flights.FlightsManager;
+
 import bookings.Booking;
 
 /**
