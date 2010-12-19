@@ -103,9 +103,9 @@ public class FlightsManager {
 		prevayler.execute(new addFlight(index, flight));
 	}
 
-	/*
-	 * Removes a flight from the flight list
-	 */
+	/**
+	  * Removes a flight from the flight list
+	  */
 	private void removeFlight(Flight flight) {
 		prevayler.execute(new removeFlight(flight));
 
@@ -138,6 +138,12 @@ public class FlightsManager {
 	public void addRegularFlight(int id, RFlight rf) {
 
 		prevaylerRegular.execute(new addRegularFlight(id, rf));
+
+	}
+	
+	public void removeRegularFlight(int id, RFlight rf) {
+
+		prevaylerRegular.execute(new removeRegularFlight(id, rf));
 
 	}
 
@@ -283,6 +289,12 @@ public class FlightsManager {
 
 		this.removeFlight(flight);
 	}
+	
+	public void cancelRegularFlight (RFlight flight){
+		this.removeRegularFlight(flight.getWeekDay(), flight);
+	}
+	
+	
 	
 	/**
 	 * Re-schedules the Flight to the given date and plane
@@ -747,6 +759,33 @@ class addRegularFlight implements Transaction {
 	@Override
 	public void executeOn(Object arg0, Date arg1) {
 		((Hashtable<Integer, Vector<RFlight>>) arg0).get((Integer) id).add(rfs);
+	}
+
+}
+
+
+class removeRegularFlight implements Transaction {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private RFlight rfs;
+	private int id;
+
+	public removeRegularFlight(int id, RFlight rfs) {
+		this.id = id;
+		this.rfs = rfs;
+
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void executeOn(Object arg0, Date arg1) {
+		((Hashtable<Integer, Vector<RFlight>>) arg0).get((Integer) id).remove(rfs);
 	}
 
 }

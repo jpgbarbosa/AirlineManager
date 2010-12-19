@@ -5,7 +5,13 @@ import java.util.GregorianCalendar;
 
 public abstract class Message implements Serializable{
 	/**
-	 * 
+	 * @author Daniela Fontes
+	 * @author Ivo Correia
+	 * @author João Penetra
+	 * @author João Barbosa
+	 * @author Ricardo Bernardino
+	 * @author Barbosa
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	/* The contents of the message. */

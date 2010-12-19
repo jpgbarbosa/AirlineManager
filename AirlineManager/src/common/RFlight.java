@@ -2,6 +2,7 @@ package common;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Class that represents a regular flight.
@@ -36,7 +37,17 @@ public class RFlight implements Serializable {
 		this.minute = minute;
 		this.airplane = airplane;
 		this.weekDay = weekDay;
+		translateWeekDayToString(weekDay);
+		
+	}
 
+	/**
+	 * Given a week day in number format, saves its correspondent string
+	 * in the variable day.
+	 * 
+	 * @param int weekDay
+	 */
+	public void translateWeekDayToString(int weekDay){
 		if (weekDay == Calendar.SUNDAY)
 			day = "Sunday";
 		else if (weekDay == Calendar.MONDAY)
@@ -52,7 +63,7 @@ public class RFlight implements Serializable {
 		else if (weekDay == Calendar.SATURDAY)
 			day = "Saturday";
 	}
-
+	
 	public String getOrigin() {
 		return origin;
 	}
@@ -91,5 +102,11 @@ public class RFlight implements Serializable {
 
 	public int getWeekDay() {
 		return weekDay;
+	}
+	
+	public void setDate(GregorianCalendar date){
+		hour = date.get(Calendar.HOUR_OF_DAY);
+		minute = date.get(Calendar.MINUTE);
+		translateWeekDayToString(date.get(Calendar.DAY_OF_WEEK));
 	}
 }

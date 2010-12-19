@@ -10,7 +10,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -99,7 +98,7 @@ public class FrontOffice extends UnicastRemoteObject {
 		searchMenu = new SearchMenu();
 
 		/* TODO: Change this later. */
-		bookingNumber = 0;
+		//bookingNumber = 0;
 
 	}
 
@@ -694,8 +693,8 @@ public class FrontOffice extends UnicastRemoteObject {
 							String answer = backOffice.scheduleBooking(id,
 									name, address, phone, mail, seats,
 									loggedIn, bookingNumber);
-							StringTokenizer token=new StringTokenizer(answer);
-							String scheduleAnswer=token.nextToken();
+							String [] splitted = answer.split(" ");
+							String scheduleAnswer = splitted[0];
 							if (answer.equals("Innexistent flight")) {
 								confirmActionNew
 										.setText("There's no such flight.");
@@ -712,8 +711,7 @@ public class FrontOffice extends UnicastRemoteObject {
 											.showConfirmDialog(
 													f,
 													"The price of the flight is "
-															+ seats
-															* price
+															+ price
 															+ "€ and you have travelled "
 															+ miles
 															+ " miles. Do you want to reduce the final price?",
@@ -733,10 +731,9 @@ public class FrontOffice extends UnicastRemoteObject {
 
 									}
 								}
-								// TODO: arranjar maneira de mudar isto!!
 								confirmActionNew
 										.setText("Booking scheduled, with booking number "
-												+ token.nextToken()
+												+ splitted[1]
 												+ " flight number "
 												+ id
 												+ " and price is "
@@ -816,8 +813,8 @@ public class FrontOffice extends UnicastRemoteObject {
 
 			} else if (e.getComponent().getName().equals("Cancel")) {
 				try {
-					int idFlight = Integer.parseInt(cancelBookingID.getText());
-					int idBooking = Integer.parseInt(cancelFlightID.getText());
+					int idFlight = Integer.parseInt(cancelFlightID.getText());
+					int idBooking = Integer.parseInt(cancelBookingID.getText());
 
 					String answer = backOffice.cancelBooking(idFlight,
 							idBooking);
@@ -901,9 +898,9 @@ public class FrontOffice extends UnicastRemoteObject {
 		FrontOffice frontOffice;
 		JPanel positivePanel;
 		JPanel negativePanel;
-		/* Positive Pannel Message Area */
+		/* Positive Panel Message Area */
 		private JTextArea posMsgArea;
-		/* Negative Pannel Message Area */
+		/* Negative Panel Message Area */
 		private JTextArea negMsgArea;
 		private JTextArea displayN;
 		private JTextArea displayP;

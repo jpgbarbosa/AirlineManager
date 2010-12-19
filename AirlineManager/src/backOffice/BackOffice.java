@@ -132,7 +132,6 @@ public class BackOffice extends UnicastRemoteObject implements
 
 			Registry r = LocateRegistry.createRegistry(2000);
 			r.rebind("AirlineManager", backOffice);
-			System.out.println("RMI ready.");
 		} catch (RemoteException re) {
 			System.out
 					.println("There's already another instance running in this port: The system will shutdown. Please restart specifying another port.");
@@ -817,9 +816,30 @@ public class BackOffice extends UnicastRemoteObject implements
 					minute = Integer.parseInt(minuteFieldReschedule.getText());
 					idPlane = Integer.parseInt(rescheduleFlightID.getText());
 					Flight flight = search.searchFlightById(idPlane);
-
 					GregorianCalendar date;
-					if ((date = checkDate(year, month, day, hour, minute)) != null) {
+					
+					if (flight == null){
+						/*If we get here, it means that's there no flight in the normal
+						 * list. Consequently, we will check on the regular flights list.
+						 */
+						RFlight rflight = flightsManager.searchRFlightById(idPlane);
+						
+						/* There's no flight at all with this ID. */
+						if (rflight == null){
+							confirmActionReschedule.setText("There's no such flight!");
+						}
+						else{
+							/* Reschedule the regular flight. */
+							if ((date = checkDate(year, month, day, hour, minute)) != null) {
+								rflight.setDate(date);
+								confirmActionReschedule.setText("Regular flight rescheduled!");
+							} else {
+								confirmActionReschedule.setText("Invalid date!");
+							}
+						}
+					}
+					else if ((date = checkDate(year, month, day, hour, minute)) != null) {
+						/* Reschedule the normal flight. */
 						flight.setDate(date);
 						confirmActionReschedule.setText("Flight rescheduled!");
 					} else {
@@ -905,7 +925,25 @@ public class BackOffice extends UnicastRemoteObject implements
 						confirmActionCancel
 								.setText("Flight successfully canceled!");
 					} else if (flight == null) {
-						confirmActionCancel.setText("Flight not found.");
+						/* It wasn't found in the normal flight's list.
+						 * Consequently, it may be a regular flight with
+						 * no bookings yet and we ought to verify this
+						 * possibility.
+						 */
+						
+						RFlight rflight = flightsManager.searchRFlightById(id);
+						
+						/* Not even in the regular list this plane was found,
+						 * so it really doesn't exist at all.
+						 */
+						if (rflight == null){
+							confirmActionCancel.setText("Flight not found.");
+						}
+						else{
+							flightsManager.cancelRegularFlight(rflight);
+							confirmActionCancel
+								.setText("Regular flight successfully canceled!");
+						}
 					}
 				}
 			} else if (e.getComponent().getName().equals("Return")) {
@@ -1379,7 +1417,7 @@ public class BackOffice extends UnicastRemoteObject implements
 			operatorPanel.setLayout(null);
 			operatorPanel.setBounds(new Rectangle(500, 40, 500, 400));
 			operatorPanel.add(CreateTitle("Operators:", Color.white, 15, 60,
-					40, 70, 20));
+					40, 100, 20));
 			operatorPanel.add(CreateTitle("Name", Color.white, 15, 40, 80, 100,
 					20));
 			operatorPanel.add(CreateTitle("Company", Color.white, 15, 150, 80,
@@ -1635,7 +1673,7 @@ public class BackOffice extends UnicastRemoteObject implements
 			 * list.
 			 */
 
-			// TODO: Change the date
+			// TODO: Change this down?
 			/*
 			 * We don't consider possible that a regular flight is a charter.
 			 * Besides it, we mark this done as none regular because otherwise,
@@ -1645,7 +1683,6 @@ public class BackOffice extends UnicastRemoteObject implements
 			int weekDay = rflight.getWeekDay();
 			GregorianCalendar data = new GregorianCalendar();
 
-			System.out.println("The data is: " + data.getTime().toString());
 			/*
 			 * We can be in that specific day of the week. However, if we past
 			 * the schedule, this day of the week is no longer valid and
@@ -1653,44 +1690,27 @@ public class BackOffice extends UnicastRemoteObject implements
 			 */
 			if (data.get(Calendar.DAY_OF_WEEK) == weekDay) {
 				/* We have past the flight hour, so it can only be next week. */
-				System.out.println("We have hours "
-						+ data.get(Calendar.HOUR_OF_DAY) + " for "
-						+ rflight.getHour());
 				if (data.get(Calendar.HOUR_OF_DAY) > rflight.getHour()) {
-					System.out.println("1");
 					data.add(Calendar.DAY_OF_MONTH, 7);
 				}
 				/* It's in this hour, so we need to check the minutes. */
 				else if (data.get(Calendar.HOUR_OF_DAY) == rflight.getHour()) {
-					System.out.println("2.1");
-					System.out.println("We minutes have "
-							+ data.get(Calendar.MINUTE) + " for "
-							+ rflight.getMinute());
 					/* We have past the time. Only next week. */
 					if (data.get(Calendar.MINUTE) >= rflight.getMinute()) {
-						System.out.println("2");
 						data.add(Calendar.DAY_OF_MONTH, 7);
 					}
 					/* Else, we are still in time to schedule the flight. */
 				}
 				/* Else, we are still in time to schedule the flight. */
-				System.out.println("3");
 			}
-
-			System.out.println("4");
+			
 			while (data.get(Calendar.DAY_OF_WEEK) != weekDay) {
 				data.add(Calendar.DAY_OF_MONTH, 1);
-				System.out.println("Once");
 			}
 
-			System.out.println("The data before is: "
-					+ data.getTime().toString());
 			data.set(Calendar.HOUR_OF_DAY, rflight.getHour());
 			data.set(Calendar.MINUTE, rflight.getMinute());
 			data.set(Calendar.SECOND, 0);
-
-			System.out.println("The data after is: "
-					+ data.getTime().toString());
 
 			// TODO: For now, we consider that the regular flights aren't
 			// charter. Maybe change this laster?
@@ -1698,17 +1718,12 @@ public class BackOffice extends UnicastRemoteObject implements
 					rflight.getIdFlight(), data, rflight.getOrigin(),
 					rflight.getDestination(), false);
 
-			System.out.println("Out");
 		}
 		/* Second, we need to check if we still have space in this flight. */
 		else if ((new GregorianCalendar()).after(flight.getDate())) {
 			return "Over";
 		}
-		/* Third, it may have been cancelled. */
-		else if (flight.isWasCancelled()) {
-			return "Cancelled";
-		}
-		/* Fourth, we only accept operators booking charter flights. */
+		/* Third, we only accept operators booking charter flights. */
 		else if (flight.isCharter() && !isOperator) {
 			return "Charter";
 		}

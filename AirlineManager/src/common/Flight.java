@@ -35,11 +35,8 @@ public class Flight implements Serializable{
 	private boolean isCharter;
 	private boolean wasCancelled;
 	private int id;
-	/* Lock object to provent errors while in concurrent operations */
+	/* Lock object to prevent errors while executing concurrent operations */
 	public Lock lock = new Lock();
-	
-	//TODO: This is temporary!
-	public static int idCreator = 0;
 	
 	/**
 	 * Creates a new Flight.
@@ -59,7 +56,6 @@ public class Flight implements Serializable{
 		this.date = data;
 		this.isRegular = isRegular;
 		this.wasCancelled = false;
-		this.id = idCreator++;
 		this.isCharter = isCharter;
 	}
 	
@@ -150,20 +146,12 @@ public class Flight implements Serializable{
 		this.bookings = seats;
 	}
 
-	public void setAirplane(Airplane airplane) {
-		this.airplane = airplane;
-	}
-
 	public void setDate(GregorianCalendar date) {
 		this.date = date;
 	}
 
 	public void setId(int id) {
 		this.id = id;
-	}
-	
-	public void setDestination(String destination) {
-		this.destination= destination;
 	}
 	
 	/**
@@ -182,28 +170,16 @@ public class Flight implements Serializable{
 		return origin;
 	}
 
-	public void setOrigin(String origin) {
-		this.origin = origin;
-	}
-
 	public boolean isRegular() {
 		return isRegular;
 	}
 
-	public void setRegular(boolean isRegular) {
-		this.isRegular = isRegular;
-	}
-
-	public boolean isWasCancelled() {
+	public boolean isWasCancelledp() {
 		return wasCancelled;
 	}
 
 	public void setWasCancelled(boolean wasCancelled) {
 		this.wasCancelled = wasCancelled;
-	}
-
-	public static int getIdCreator() {
-		return idCreator;
 	}
 	
 	public boolean isCharter() {
@@ -216,16 +192,8 @@ public class Flight implements Serializable{
 		"\nCancelled: "+ new Boolean(wasCancelled).toString() +"\nOver: "+ (getEmptySeats() > 0 ? "Not closed." : "Closed.") + "\n\n";
 	}
 	
-	public void increaseOccupied(){
-		occupied++;
-	}
-	
 	public void increaseOccupied(int no){
 		occupied += no;
-	}
-	
-	public void decreaseOccupied(){
-		occupied--;
 	}
 	
 	public void decreaseOccupied(int no){
