@@ -573,6 +573,7 @@ public class BackOffice extends UnicastRemoteObject implements
 		private JPanel reschedulePanel;
 		private JPanel cancelPanel;
 		private JPanel listPanel;
+		private JPanel listFinishedPanel;
 
 		/* SCHEDULEPANEL */
 		private JTextField idPlaneScheduleField;
@@ -604,6 +605,9 @@ public class BackOffice extends UnicastRemoteObject implements
 
 		/* LISTPANEL */
 		private JTextArea listArea;
+		
+		/* LISTFINISHEDPANEL */
+		private JTextArea listFinishedArea;
 
 		public FlightsManagerMenu() {
 			/* Creates the buttons that redirect to each manager window. */
@@ -615,6 +619,8 @@ public class BackOffice extends UnicastRemoteObject implements
 					"Cancels an already scheduled flight", 15, 60, 300, 200, 30);
 			CreateButton("List Flights", Color.white, "List all the Flights",
 					15, 60, 350, 200, 30);
+			CreateButton("List Finished Flights", Color.white, "List all finished the Flights",
+					15, 60, 400, 200, 30);
 
 			CreateButton("Return", Color.white, "Go back to the main menu", 15,
 					60, 500, 100, 30);
@@ -627,6 +633,7 @@ public class BackOffice extends UnicastRemoteObject implements
 			reschedulePanel = new JPanel();
 			cancelPanel = new JPanel();
 			listPanel = new JPanel();
+			listFinishedPanel = new JPanel();
 
 			/* Defines the subpanels. */
 			schedulePanel.setLayout(null);
@@ -730,12 +737,26 @@ public class BackOffice extends UnicastRemoteObject implements
 			JScrollPane jpList = new JScrollPane(listArea);
 			listPanel.add(jpList);
 			jpList.setBounds(20, 60, 450, 320);
+			
+			
+			listFinishedPanel.setLayout(null);
+			listFinishedPanel.setBounds(new Rectangle(500, 40, 500, 400));
+			listFinishedPanel.add(CreateTitle("LIST OF FLIGHTS:", Color.white, 15, 20,
+					20, 150, 20));
+			listFinishedPanel.add(CreateTitle(
+					" ID      PLANE        DESTINATION                  TIME",
+					Color.white, 15, 20, 40, 400, 20));
+			listFinishedPanel.add(listFinishedArea = CreateText(10, 50, 20, 60, 450, 320));
+			JScrollPane jpFinishedList = new JScrollPane(listFinishedArea);
+			listFinishedPanel.add(jpFinishedList);
+			jpFinishedList.setBounds(20, 60, 450, 320);
 
 			/* Adds the subpanels to the main panel. */
 			panel.add(schedulePanel);
 			panel.add(reschedulePanel);
 			panel.add(cancelPanel);
 			panel.add(listPanel);
+			panel.add(listFinishedPanel);
 
 			reschedulePanel.setVisible(false);
 			reschedulePanel.setOpaque(false);
@@ -743,6 +764,8 @@ public class BackOffice extends UnicastRemoteObject implements
 			cancelPanel.setOpaque(false);
 			listPanel.setVisible(false);
 			listPanel.setOpaque(false);
+			listFinishedPanel.setVisible(false);
+			listFinishedPanel.setOpaque(false);
 			schedulePanel.setVisible(false);
 			schedulePanel.setOpaque(false);
 		}
@@ -772,6 +795,7 @@ public class BackOffice extends UnicastRemoteObject implements
 				reschedulePanel.setVisible(false);
 				cancelPanel.setVisible(false);
 				listPanel.setVisible(false);
+				listFinishedPanel.setVisible(false);
 				schedulePanel.setVisible(true);
 
 				menuIdentifier = "schedulePanel";
@@ -779,6 +803,7 @@ public class BackOffice extends UnicastRemoteObject implements
 				reschedulePanel.setVisible(true);
 				cancelPanel.setVisible(false);
 				listPanel.setVisible(false);
+				listFinishedPanel.setVisible(false);
 				schedulePanel.setVisible(false);
 
 				menuIdentifier = "reschedulePanel";
@@ -786,6 +811,7 @@ public class BackOffice extends UnicastRemoteObject implements
 				reschedulePanel.setVisible(false);
 				cancelPanel.setVisible(true);
 				listPanel.setVisible(false);
+				listFinishedPanel.setVisible(false);
 				schedulePanel.setVisible(false);
 
 				menuIdentifier = "cancelPanel";
@@ -793,12 +819,23 @@ public class BackOffice extends UnicastRemoteObject implements
 				reschedulePanel.setVisible(false);
 				cancelPanel.setVisible(false);
 				listPanel.setVisible(true);
+				listFinishedPanel.setVisible(false);
 				schedulePanel.setVisible(false);
 
 				listArea.setText(flightsManager.listFlights());
 
 				menuIdentifier = "listPanel";
-			} else if (e.getComponent().getName().equals("Schedule Date")) {
+			} else if (e.getComponent().getName().equals("List Finished Flights")) {
+				reschedulePanel.setVisible(false);
+				cancelPanel.setVisible(false);
+				listPanel.setVisible(false);
+				listFinishedPanel.setVisible(true);
+				schedulePanel.setVisible(false);
+
+				listFinishedArea.setText(flightsManager.listFinishedFlights());
+
+				menuIdentifier = "listPanel";
+			}else if (e.getComponent().getName().equals("Schedule Date")) {
 				JFrame dateFlight = new JFrame("Booking");
 				jCalendarFlight = new JCalendar();
 
@@ -947,7 +984,7 @@ public class BackOffice extends UnicastRemoteObject implements
 				cancelPanel.setVisible(false);
 				listPanel.setVisible(false);
 				schedulePanel.setVisible(false);
-
+				listFinishedPanel.setVisible(false);
 				flightsManagerMenu.setVisible(false);
 				menu.setVisible(true);
 			}

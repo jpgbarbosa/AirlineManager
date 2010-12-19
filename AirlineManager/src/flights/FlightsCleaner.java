@@ -43,6 +43,7 @@ public class FlightsCleaner extends Thread{
 			
 			for (int i = 0; i < flightsManager.getFlightsList().size() && flightsManager.getFlightsList().get(i).getDate().before(date); i++){
 				flight = flightsManager.removeFlight(i);
+				flight.setFinishedReason("Finished");
 				flightsManager.addFinished(flight);
 				
 				if (departure != null && panel != null){

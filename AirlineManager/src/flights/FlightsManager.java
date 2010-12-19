@@ -306,8 +306,11 @@ public class FlightsManager {
 									+ ", was cancelled.\nWe are deeply sorry for all the trouble that might incur.");
 
 		}
-
+		
 		this.removeFlight(flight);
+		/* After removing it, we need to add it to the finished list. */
+		flight.setFinishedReason("Cancelled");
+		this.addFinished(flight);
 	}
 	
 	public void cancelRegularFlight (RFlight flight){
@@ -403,6 +406,23 @@ public class FlightsManager {
 	}
 	
 	/**
+	 * Lists all of the finished Flights.
+	 * @return Returns a String with the information of each Flight.
+	 */
+	public String listFinishedFlights() {
+		String text = "";
+
+		/* Prints the finished flights. */
+		text += "FINISHED FLIGHTS\n";
+		for (int i = 0; i < finishedFlights.size(); i++) {
+			Flight flight = finishedFlights.get(i);
+			text += flight.toFinishedString();
+		}
+
+		return text;
+	}
+	
+	/**
 	 * Function responsible for searching the Flights List.
 	 * @param year
 	 * @param month
@@ -443,7 +463,7 @@ public class FlightsManager {
 					 * This flight matches all the criteria and consequently can
 					 * be added to the list.
 					 */
-					text += "FLIGHT ID: " + flight.getId() + "\n";
+					text += flight.toString() + "\n";
 				}
 			}
 			i++;

@@ -42,6 +42,8 @@ public class Flight implements Serializable{
 	private int id;
 	/* Lock object to prevent errors while executing concurrent operations */
 	public Lock lock = new Lock();
+	/* How this flight ended, if it occurred or was instead cancelled. */
+	private String finishedReason;
 	
 	
 	/**
@@ -64,6 +66,7 @@ public class Flight implements Serializable{
 		this.isRegular = isRegular;
 		this.isCharter = isCharter;
 		this.id = id;
+		finishedReason = "Not finished";
 	}
 	
 	/**
@@ -177,10 +180,20 @@ public class Flight implements Serializable{
 		return isCharter;
 	}
 	
+	public void setFinishedReason(String str){
+		finishedReason = str;
+	}
+	
+	@Override
 	public String toString(){
 		return "ID: "+ id + "\nDate: "+date.get(Calendar.DAY_OF_MONTH)+"/"+date.get(Calendar.MONTH)+date.get(Calendar.YEAR)+
 		"\nOrigin: "+ origin + "\nDestination: "+destination + "\nRegular:"+ new Boolean(isRegular).toString()
-		+"\nState: "+ (getEmptySeats() > 0 ? "Not closed." : "Closed.") + "\n\n";
+		+"\nState: "+ (getEmptySeats() > 0 ? "Not closed. (" + occupied + "/" + airplane.getNoSeats() + ")" : "Closed.") + "\n\n";
+	}
+	
+	public String toFinishedString(){
+		return "ID: "+ id + "\nDate: "+date.get(Calendar.DAY_OF_MONTH)+"/"+date.get(Calendar.MONTH)+date.get(Calendar.YEAR)+
+		"\nOrigin: "+ origin + "\nDestination: "+destination +"\nState: "+ finishedReason + "\n\n";
 	}
 	
 	public void increaseOccupied(int no){
