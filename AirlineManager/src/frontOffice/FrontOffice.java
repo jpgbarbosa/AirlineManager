@@ -97,9 +97,6 @@ public class FrontOffice extends UnicastRemoteObject {
 		sendFeedBackMenu = new SendFeedBackMenu(this);
 		searchMenu = new SearchMenu();
 
-		/* TODO: Change this later. */
-		//bookingNumber = 0;
-
 	}
 
 	public static void main(String[] args) throws RemoteException {

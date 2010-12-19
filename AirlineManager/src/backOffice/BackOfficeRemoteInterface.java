@@ -1,3 +1,5 @@
+//COMPLETELY CHECKED
+
 package backOffice;
 
 import java.rmi.*;

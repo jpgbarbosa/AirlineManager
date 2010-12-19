@@ -1,3 +1,5 @@
+//COMPLETELY CHECKED
+
 package clients;
 
 import java.io.IOException;
@@ -41,16 +43,7 @@ public class ClientsManager {
 		;
 	}
 
-	// TODO: Verificar put cliente! codigo com os km comentado
 	public void putClient(Client client, Booking booking) {
-
-		/*
-		 * Client c = clientsHash.get(client.getEmail());
-		 * 
-		 * if (c != null){ c.increaseKilometers(booking.getPrice() * 10); }
-		 * else{ client.increaseKilometers(booking.getPrice()* 10);
-		 * clientsHash.put(client.getEmail(), client); }
-		 */
 		prevayler.execute(new putClient(client, booking));
 
 	}
@@ -76,9 +69,8 @@ public class ClientsManager {
 	/**
 	 * Searches a client by his email
 	 * 
-	 * @param String
-	 *            email
-	 * @return Cliente
+	 * @param String email
+	 * @return Client
 	 */
 	public Client searchClient(String email) {
 		return clientsHash.get(email);

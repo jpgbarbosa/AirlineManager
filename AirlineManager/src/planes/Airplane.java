@@ -1,3 +1,5 @@
+//COMPLETELY CHECKED
+
 package planes;
 
 import java.io.Serializable;
@@ -43,11 +45,25 @@ public class Airplane implements Serializable{
 	 * @param company
 	 * @param model
 	 */
-	public Airplane(int seatsNumber, String company, String model){
+	public Airplane(int seatsNumber, String company, String model, GregorianCalendar date){
 		this.noSeats = seatsNumber;
 		this.company = company;
 		this.model = model;
 		this.flights = new Vector <Flight>();
+		this.date = date;
+	}
+	
+	/**
+	 * This is an override of method equals. It compares two airplanes by their id.
+	 * 
+	 * @param Object a - Airplane;
+	 */
+	@Override
+	public boolean equals(Object a){
+		if(((Airplane) a).getId()==this.id){
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -67,14 +83,6 @@ public class Airplane implements Serializable{
 		if (i == flights.size()){
 			flights.add(flight);
 		}
-	}
-	
-	/**
-	 * 
-	 * @param flight
-	 */
-	public void removeFlight (Flight flight){
-		flights.remove(flight);
 	}
 	
 	/* Getters and setters. */
@@ -99,28 +107,8 @@ public class Airplane implements Serializable{
 		return noSeats;
 	}
 	
-	public void setNoSeats(int noSeats) {
-		this.noSeats = noSeats;
-	}
-
-	public void setFlights(Vector <Flight> flights) {
-		this.flights = flights;
-	}
-	
-	public void setDate(GregorianCalendar date) {
-		this.date = date;
-	}
-
-	public void setId(int id) {
+	public void setId(int id){
 		this.id = id;
-	}
-	
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
-	public void setModel(String model) {
-		this.model = model;
 	}
 	
 	public GregorianCalendar getDate(){

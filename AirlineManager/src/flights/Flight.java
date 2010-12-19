@@ -1,3 +1,5 @@
+//COMPLETELY CHECKED
+
 package flights;
 
 import java.io.Serializable;
@@ -37,7 +39,6 @@ public class Flight implements Serializable{
 	private String destination;
 	private boolean isRegular;
 	private boolean isCharter;
-	private boolean wasCancelled;
 	private int id;
 	/* Lock object to prevent errors while executing concurrent operations */
 	public Lock lock = new Lock();
@@ -53,15 +54,16 @@ public class Flight implements Serializable{
 	 * @param isRegular
 	 * @param isCharter
 	 */
-	public Flight(Airplane plane, GregorianCalendar data, String origin, String dest, boolean isRegular, boolean isCharter){
+	public Flight(Airplane plane, GregorianCalendar data, String origin, String dest,
+			boolean isRegular, boolean isCharter, int id){
 		this.airplane = plane;
 		this.origin = origin;
 		this.destination = dest;
 		this.bookings = new Vector <Booking>();
 		this.date = data;
 		this.isRegular = isRegular;
-		this.wasCancelled = false;
 		this.isCharter = isCharter;
+		this.id = id;
 	}
 	
 	/**
@@ -147,16 +149,8 @@ public class Flight implements Serializable{
 		return false;
 	}
 
-	public void setBookings(Vector <Booking> seats) {
-		this.bookings = seats;
-	}
-
 	public void setDate(GregorianCalendar date) {
 		this.date = date;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 	
 	/**
@@ -178,14 +172,6 @@ public class Flight implements Serializable{
 	public boolean isRegular() {
 		return isRegular;
 	}
-
-	public boolean isWasCancelledp() {
-		return wasCancelled;
-	}
-
-	public void setWasCancelled(boolean wasCancelled) {
-		this.wasCancelled = wasCancelled;
-	}
 	
 	public boolean isCharter() {
 		return isCharter;
@@ -193,8 +179,8 @@ public class Flight implements Serializable{
 	
 	public String toString(){
 		return "ID: "+ id + "\nDate: "+date.get(Calendar.DAY_OF_MONTH)+"/"+date.get(Calendar.MONTH)+date.get(Calendar.YEAR)+
-		"\nOrigin: "+ origin + "\nDestination: "+destination + "\nRegular:"+ new Boolean(isRegular).toString() + 
-		"\nCancelled: "+ new Boolean(wasCancelled).toString() +"\nOver: "+ (getEmptySeats() > 0 ? "Not closed." : "Closed.") + "\n\n";
+		"\nOrigin: "+ origin + "\nDestination: "+destination + "\nRegular:"+ new Boolean(isRegular).toString()
+		+"\nState: "+ (getEmptySeats() > 0 ? "Not closed." : "Closed.") + "\n\n";
 	}
 	
 	public void increaseOccupied(int no){

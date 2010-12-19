@@ -1,8 +1,9 @@
+//COMPLETELY CHECKED
+
 package flights;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import planes.Airplane;
 
@@ -44,6 +45,20 @@ public class RFlight implements Serializable {
 		
 	}
 
+	/**
+	 * This is an override of method equals. It compares two flights by their id.
+	 * 
+	 * @param Object a - Airplane;
+	 */
+	@Override
+	public boolean equals(Object a){
+		if(((RFlight) a).getIdFlight()==this.idFlight){
+			return true;
+		}
+		return false;
+	}
+	
+	
 	/**
 	 * Given a week day in number format, saves its correspondent string
 	 * in the variable day.
@@ -105,11 +120,5 @@ public class RFlight implements Serializable {
 
 	public int getWeekDay() {
 		return weekDay;
-	}
-	
-	public void setDate(GregorianCalendar date){
-		hour = date.get(Calendar.HOUR_OF_DAY);
-		minute = date.get(Calendar.MINUTE);
-		translateWeekDayToString(date.get(Calendar.DAY_OF_WEEK));
 	}
 }

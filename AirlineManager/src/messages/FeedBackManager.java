@@ -1,3 +1,5 @@
+//COMPLETELY CHECKED.
+
 package messages;
 
 import java.util.Date;
@@ -16,11 +18,10 @@ import clients.Operator;
 
 import backOffice.SendEmail;
 
-import frontOffice.FeedBackStorage;
 
 /**
  * Class responsible for managing the Feedbacks received by the Company, either positive or negative.
- * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo Bernardino
+ * @author Daniela Fontes, Ivo Correia, Miguel Penetra, Pedro Barbosa, Ricardo Bernardino
  *
  */
 public class FeedBackManager {
@@ -103,6 +104,7 @@ public class FeedBackManager {
 		return msgStorage.getNegativeFeedBackList();
 	}
 	
+	/* Methods used for statistical purposes. */
 	public int getNumPositive(){
 		return msgStorage.getNumPositive();
 	}

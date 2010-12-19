@@ -86,7 +86,6 @@ public class BackOffice extends UnicastRemoteObject implements
 	private StatisticsManager statisticsManager;
 	private OperatorManager operatorManager;
 	private ClientsManager clientsManager;
-	private Search search;
 	private ClientsMenu clientsMenu;
 	private DestinationsPrices destinationsPrices;
 
@@ -121,7 +120,6 @@ public class BackOffice extends UnicastRemoteObject implements
 		clientsManager = new ClientsManager();
 		statisticsManager = new StatisticsManager(feedBackManager,
 				flightsManager, planesManager);
-		search = new Search(flightsManager, planesManager);
 		clientsMenu = new ClientsMenu();
 		destinationsPrices = new DestinationsPrices();
 
@@ -827,28 +825,14 @@ public class BackOffice extends UnicastRemoteObject implements
 					hour = Integer.parseInt(hourFieldReschedule.getText());
 					minute = Integer.parseInt(minuteFieldReschedule.getText());
 					idPlane = Integer.parseInt(rescheduleFlightID.getText());
-					Flight flight = search.searchFlightById(idPlane);
+					Flight flight = flightsManager.searchFlightById(idPlane);
 					GregorianCalendar date;
 					
 					if (flight == null){
 						/*If we get here, it means that's there no flight in the normal
-						 * list. Consequently, we will check on the regular flights list.
+						 * list. Are not allowing reschedules of regular flights.
 						 */
-						RFlight rflight = flightsManager.searchRFlightById(idPlane);
-						
-						/* There's no flight at all with this ID. */
-						if (rflight == null){
-							confirmActionReschedule.setText("There's no such flight!");
-						}
-						else{
-							/* Reschedule the regular flight. */
-							if ((date = checkDate(year, month, day, hour, minute)) != null) {
-								rflight.setDate(date);
-								confirmActionReschedule.setText("Regular flight rescheduled!");
-							} else {
-								confirmActionReschedule.setText("Invalid date!");
-							}
-						}
+						confirmActionReschedule.setText("There's no such flight!");
 					}
 					else if ((date = checkDate(year, month, day, hour, minute)) != null) {
 						/* Reschedule the normal flight. */
@@ -876,7 +860,7 @@ public class BackOffice extends UnicastRemoteObject implements
 								.parseInt(minuteFieldSchedule.getText());
 						idPlane = Integer.parseInt(idPlaneScheduleField
 								.getText());
-						Airplane airplane = search.searchPlane(idPlane);
+						Airplane airplane = planesManager.searchPlane(idPlane);
 
 						if (airplane != null) {
 							GregorianCalendar date;
@@ -1162,7 +1146,7 @@ public class BackOffice extends UnicastRemoteObject implements
 				Airplane airplane = null;
 				try {
 					int flightID = Integer.parseInt(idSearchField.getText());
-					airplane = search.searchPlane(flightID);
+					airplane = planesManager.searchPlane(flightID);
 					if (airplane != null)
 						findArea.setText(airplane.toString());
 					else
@@ -1184,8 +1168,7 @@ public class BackOffice extends UnicastRemoteObject implements
 
 						if (!company.equals("") && !model.equals("")
 								&& noSeats > 0) {
-							airplane = new Airplane(noSeats, company, model);
-							airplane.setDate(now);
+							airplane = new Airplane(noSeats, company, model, now);
 						} else {
 							buyArea.setText("Invalid data.");
 						}
@@ -1199,13 +1182,12 @@ public class BackOffice extends UnicastRemoteObject implements
 								+ airplane.getId() + "!");
 					}
 				} else if (menuIdentifier.equals("sellPanel")) {
-					// TODO: Eventualmente protecções.
 					Airplane airplane = null;
 					int id = -1;
 					try {
 						id = Integer.parseInt(idSellField.getText());
 
-						airplane = search.searchPlane(id);
+						airplane = planesManager.searchPlane(id);
 
 					} catch (Exception e1) {
 						sellArea.setText("Invalid data.");
@@ -1848,7 +1830,7 @@ public class BackOffice extends UnicastRemoteObject implements
 	public String scheduleCharter(GregorianCalendar date, String origin,
 			String destination, int seats) throws RemoteException {
 		/* First, we need to check if there's an airplane with enough seats. */
-		Airplane plane = search.searchPlaneBySeats(seats);
+		Airplane plane = planesManager.searchPlaneBySeats(seats);
 
 		if (plane != null) {
 			/*

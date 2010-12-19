@@ -1,3 +1,5 @@
+//COMPLETELY CHECKED
+
 package flights;
 
 import java.awt.Color;
@@ -41,7 +43,6 @@ public class FlightsCleaner extends Thread{
 			
 			for (int i = 0; i < flightsManager.getFlightsList().size() && flightsManager.getFlightsList().get(i).getDate().before(date); i++){
 				flight = flightsManager.removeFlight(i);
-				//TODO: Change this line to prevayler.
 				flightsManager.addFinished(flight);
 				
 				if (departure != null && panel != null){

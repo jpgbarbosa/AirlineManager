@@ -1,3 +1,5 @@
+//COMPLETELY CHECKED
+
 package flights;
 
 import java.io.DataInputStream;
@@ -33,7 +35,7 @@ public class FlightsManager {
 	private Vector<Flight> flightsList;
 	private Vector<Flight> finishedFlights;
 
-	public static int idCreator = 0;
+	public int idCreator = 0;
 	private Prevayler prevayler;
 	private Prevayler prevaylerFinished;
 	private Prevayler prevaylerRegular;
@@ -74,9 +76,8 @@ public class FlightsManager {
 		regularFlights = (Hashtable<Integer, Vector<RFlight>>) (prevaylerRegular
 				.prevalentSystem());
 
-		if (flightsList.size() > 0) {
-			idCreator = getLastID();
-		}
+		/* Gets the last id saved on the proper file. */
+		idCreator = getLastID();
 
 		feedBackManager = feed;
 
@@ -123,7 +124,6 @@ public class FlightsManager {
 	  */
 	private void removeFlight(Flight flight) {
 		prevayler.execute(new removeFlight(flight));
-
 	}
 
 	/**
@@ -145,19 +145,16 @@ public class FlightsManager {
 	}
 
 	public void putRegularFlight(int id, Vector<RFlight> rfs) {
-
 		prevaylerRegular.execute(new putRegularFlight(id, rfs));
 
 	}
 
 	public void addRegularFlight(int id, RFlight rf) {
-
 		prevaylerRegular.execute(new addRegularFlight(id, rf));
 
 	}
 	
 	public void removeRegularFlight(int id, RFlight rf) {
-
 		prevaylerRegular.execute(new removeRegularFlight(id, rf));
 
 	}
@@ -186,20 +183,20 @@ public class FlightsManager {
 	 * @param origin Origin of the flight
 	 * @param destination Destination of the flight
 	 * @param isRegular True if it is a Regular Flight, False otherwise
-	 * @param isCharter True if it is a charter, False otherwise
+	 * @param isCharter True if it is a charter, False otherwise		
 	 * @return Returns the rescheduled Flight
 	 */
 	public Flight scheduleFlight(Airplane plane, GregorianCalendar date,
 			String origin, String destination, boolean isRegular,
 			boolean isCharter) {
+		
 		Flight flight = new Flight(plane, date, origin, destination, isRegular,
-				isCharter);
+				isCharter, idCreator);
 		int i;
 		FileOutputStream fos = null;
 		DataOutputStream dos = null;
 		File file = new File("idflight.bin");
 		
-		flight.setId(idCreator);
 		idCreator++;
 		
 		try {
@@ -242,16 +239,13 @@ public class FlightsManager {
 		}
 
 		/* We insert it in the last position. */
-		if (i == flightsList.size()) {
-			addFlight(i, flight);
-		}
+		addFlight(i, flight);
 
 		return flight;
-
 	}
 	
 	/**
-	 * Schedules a new flight.
+	 * Schedules a flight, given a regular flight that hasn't been booked yet.
 	 * @param plane Plane of the flight
 	 * @param idRFlight Id of the Regular Flight
 	 * @param date Date of the flight
@@ -263,11 +257,11 @@ public class FlightsManager {
 	public Flight reScheduleRFlight(Airplane plane, int idRFlight,
 			GregorianCalendar date, String origin, String destination,
 			boolean isCharter) {
+		
 		Flight flight = new Flight(plane, date, origin, destination, true,
-				isCharter);
+				isCharter, idRFlight);
 		int i;
 
-		flight.setId(idRFlight);
 		/* First, we check if we can insert in this specific plane. */
 		plane.associateFlight(flight);
 
@@ -280,10 +274,7 @@ public class FlightsManager {
 		}
 
 		/* We insert it in the last position. */
-		if (i == flightsList.size()) {
-			addFlight(i, flight);
-		}
-
+		addFlight(i, flight);
 		return flight;
 	}
 	
@@ -540,17 +531,6 @@ public class FlightsManager {
 		}
 
 		return num;
-	}
-	
-	public int getNumCancelled() {
-
-		return 0;
-	}
-
-	public int getNumCancelled(GregorianCalendar beginning,
-			GregorianCalendar end) {
-
-		return 0;
 	}
 	
 	/**

@@ -1,3 +1,5 @@
+//COMPLETELY CHECKED
+
 package common;
 
 import java.awt.Color;

@@ -1,3 +1,5 @@
+//COMPLETELY CHECKED.
+
 package frontOffice;
 
 import java.rmi.Remote;

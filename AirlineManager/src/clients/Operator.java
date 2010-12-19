@@ -1,3 +1,5 @@
+//COMPLETELY CHECKED
+
 package clients;
 
 import java.io.Serializable;

@@ -1,3 +1,5 @@
+//COMPLETELY CHECKED
+
 package backOffice;
 
 import java.util.GregorianCalendar;
@@ -11,7 +13,7 @@ import flights.FlightsManager;
 /**
  * Class responsible for generating the Statistics of the Application.
  * 
- * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo
+ * @author Daniela Fontes, Ivo Correia, João Penetra, João Barbosa, Ricardo
  *         Bernardino
  * 
  */

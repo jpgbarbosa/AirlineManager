@@ -1,5 +1,8 @@
+//COMPLETELY CHECKED
+
 package common;
 
+//TODO: Maybe we should put here more constants?
 public class Constants {
 
 	static public boolean DEBUGGING = true;

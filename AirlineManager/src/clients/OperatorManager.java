@@ -1,10 +1,10 @@
+//COMPLETELY CHECKED
+
 package clients;
 
 import java.util.Date;
 import java.util.Vector;
 import org.prevayler.*;
-
-
 
 /**
  * Class that manages operators.
@@ -33,8 +33,6 @@ public class OperatorManager {
 			System.exit(-1);
 		} 
 		operatorList=(Vector <Operator>) (prevayler.prevalentSystem());
-		
-		//operatorList = new Vector<Client>();
 	}
 	
 	/**
@@ -46,22 +44,14 @@ public class OperatorManager {
 	}
 	
 	/**
-<<<<<<< HEAD
-	 *  Deletes an operator from the system
-=======
 	 * Deletes an operator from the system
 	 * @param operator Operator object to remove from the list.
->>>>>>> f5f51412531a17f04bdad1699c0826f3438dcf6f
 	 */
 	public void removeOperator(Operator operator){
 		prevayler.execute(new removeOperator(operator));
-		//operatorList.remove(operator);
 	}
 	
 	/**
-<<<<<<< HEAD
-	 * Tries to register a new operator 
-=======
 	 * Tries to register a new operator
 	 * @param comp Company of the operator
 	 * @param name Name of the operator
@@ -70,7 +60,6 @@ public class OperatorManager {
 	 * @param mail Email of the operator
 	 * @param password Password for the account
 	 * @return
->>>>>>> f5f51412531a17f04bdad1699c0826f3438dcf6f
 	 */
 	public String registerOperator(String comp, String name, String addr, String phone, String mail,String password){
 		Operator op = searchOperator(name);
@@ -117,8 +106,6 @@ public class OperatorManager {
 	public Vector<Operator> getOperatorList() {
 		return operatorList;
 	}
-	
-	
 }
 
 
@@ -132,8 +119,6 @@ class addOperator implements Transaction{
 	 * 
 	 */
 	private Operator operator;
-	
-
 
 	public addOperator(Operator operator){
 		this.operator=operator;

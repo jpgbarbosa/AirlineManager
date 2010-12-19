@@ -1,3 +1,5 @@
+//COMPLETELY CHECKED
+
 package bookings;
 
 import java.io.Serializable;
@@ -53,26 +55,9 @@ public class Booking implements Serializable{
 	public int getNoSeats() {
 		return noSeats;
 	}
-
-	public void setFlight(int flight) {
-		this.idFlight = flight;
-	}
-	
-	public void setNoSeats(int noSeats) {
-		this.noSeats = noSeats;
-	}
 	
 	public int getBookingNumber() {
 		return bookingNumber;
-	}
-
-	public void setBookingNumber(int number) {
-		this.bookingNumber = number;
-	}
-	
-	public String toString(){
-		return "Flight ID: "+idFlight+"\nBooking ID: "+bookingNumber+"\nName: "+client.getName()+"\nEmail: "+client.getEmail()
-			+ "\nNumber of seats: "+ noSeats;
 	}
 	
 	public double getPrice(){
@@ -81,5 +66,10 @@ public class Booking implements Serializable{
 	
 	public Client getClient(){
 		return client;
+	}
+	
+	public String toString(){
+		return "Flight ID: "+idFlight+"\nBooking ID: "+bookingNumber+"\nName: "+client.getName()+"\nEmail: "+client.getEmail()
+			+ "\nNumber of seats: "+ noSeats;
 	}
 }

@@ -4,6 +4,7 @@ package planes;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.Vector;
 import org.prevayler.*;
 
@@ -18,7 +19,7 @@ public class PlanesManager {
 	/* The list of registered planes. */
 	private Vector<Airplane> planesList;
 	private Prevayler prevayler;
-	private static int idCreator = 0;
+	private int idCreator = 0;
 
 	/**
 	 * Creates a new prevayler to store planesList and updates the global ID of each plane to the
@@ -96,6 +97,43 @@ public class PlanesManager {
 				num++;
 		}
 		return num;
+	}
+	
+	/**
+	 * A method to search for a plane.
+	 */
+	public Airplane searchPlane(int planeId) {
+		Iterator<Airplane> it = planesList.iterator();
+
+		while (it.hasNext()) {
+			Airplane plane = it.next();
+
+			/* If the ID's match, we have found our plane. */
+			if (plane.getId() == planeId) {
+				return plane;
+			}
+		}
+
+		/* There was no plane with this ID. */
+		return null;
+	}
+
+	/**
+	 * A method to search for a plane by the number of seats, useful to book
+	 * charter flights
+	 */
+	public Airplane searchPlaneBySeats(int seats) {
+		Airplane airplane;
+		Iterator<Airplane> it = planesList.iterator();
+
+		while (it.hasNext()) {
+			airplane = it.next();
+
+			/* If the airplane has enough seats, we have found our plane. */
+			if (airplane.getNoSeats() >= seats)
+				return airplane;
+		}
+		return null;
 	}
 
 	private int getLastID() {

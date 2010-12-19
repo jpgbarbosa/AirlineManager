@@ -1,3 +1,5 @@
+//COMPLETELY CHECKED
+
 package backOffice;
 
 import javax.mail.*;
@@ -56,13 +58,6 @@ public class SendEmail {
 
 		// Send the message
 		Transport.send(msg);
-	}
-
-	public static void main(String[] args) throws Exception {
-		// Send a test message
-		send("smtp.sapo.pt", 25, "airlinemanager@lalala.com",
-				"icorreia@student.dei.uc.pt", "Hello",
-				"Hello, \n\n How are you ?");
 	}
 
 	/**
