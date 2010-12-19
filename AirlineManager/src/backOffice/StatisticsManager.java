@@ -41,12 +41,17 @@ public class StatisticsManager {
 	 */
 	public String generate(GregorianCalendar beginning, GregorianCalendar end) {
 		StringBuilder output = new StringBuilder();
-
+		int [] outcome;
+		
 		if (beginning == null && end == null) {
+			outcome = flightsManager.getNumFlights();
+			
 			output.append("Estatisticas:\n\nNumero de Avioes Disponiveis: "
 					+ planesManager.getNumPlanes());
-			output.append("\nNumero de Voos Registados: "
-					+ flightsManager.getNumFlights());
+			output.append("\nNumero de Voos Realizados: "
+					+ outcome[0]);
+			output.append("\nNumero de Voos Cancelados: "
+					+ outcome[1]);
 			output.append("\nTaxa de Ocupacao dos Voos: "
 					+ flightsManager.getOccupation() + "%");
 			output.append("\n\nNumero de Feedbacks Positivos: "
@@ -58,10 +63,14 @@ public class StatisticsManager {
 			return output.toString();
 		}
 
+		outcome = flightsManager.getNumFlights(beginning, end);
+		
 		output.append("Estatisticas:\n\nNumero de Avioes Disponiveis: "
 				+ planesManager.getNumPlanes(beginning, end));
-		output.append("\nNumero de Voos Registados: "
-				+ flightsManager.getNumFlights(beginning, end));
+		output.append("\nNumero de Voos Realizados: "
+				+ outcome[0]);
+		output.append("\nNumero de Voos Cancelados: "
+				+ outcome[1]);
 		output.append("\nTaxa de Ocupacao dos Voos: "
 				+ flightsManager.getOccupation(beginning, end) + "%");
 		output.append("\n\nNumero de Feedbacks Positivos: "

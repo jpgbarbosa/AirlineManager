@@ -171,6 +171,10 @@ public class Flight implements Serializable{
 	public String getOrigin() {
 		return origin;
 	}
+	
+	public String getFinishedReason() {
+		return finishedReason;
+	}
 
 	public boolean isRegular() {
 		return isRegular;

@@ -537,20 +537,45 @@ public class FlightsManager {
 		return finishedFlights;
 	}
 
-	public int getNumFlights() {
-		return flightsList.size();
-	}
-
-	public int getNumFlights(GregorianCalendar beginning, GregorianCalendar end) {
-		int num = 0;
-
-		for (Flight f : flightsList) {
-			if (f.getDate().after(beginning) && f.getDate().before(end)) {
-				num++;
+	public int[] getNumFlights() {
+		/* In the first field, we registered the finished flights.
+		 * In the second, goes the cancelled number.
+		 */
+		int [] outcome = new int[2];
+		outcome[0] = 0;
+		outcome[1] = 0;
+		for (Flight flight : finishedFlights){
+			if (flight.getFinishedReason().equals("Finished")){
+				outcome[0]++;
+			}
+			else{
+				outcome[1]++;
 			}
 		}
+		
+		return outcome;
+	}
 
-		return num;
+	public int[] getNumFlights(GregorianCalendar beginning, GregorianCalendar end) {
+		/* In the first field, we registered the finished flights.
+		 * In the second, goes the cancelled number.
+		 */
+		int [] outcome = new int[2];
+		outcome[0] = 0;
+		outcome[1] = 0;
+		for (Flight flight : finishedFlights){
+			if (flight.getDate().after(beginning) && flight.getDate().before(end)) {
+				if (flight.getFinishedReason().equals("Finished")){
+					outcome[0]++;
+				}
+				else{
+					outcome[1]++;
+				}
+			}
+		}
+		
+		return outcome;
+		
 	}
 	
 	/**
