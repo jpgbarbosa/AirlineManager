@@ -1,5 +1,3 @@
-//COMPLETELY CHCKED
-
 package common;
 
 import java.awt.Color;
@@ -24,6 +22,16 @@ import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+/**
+ * Graphics window class.
+ *
+ * @author Daniela Fontes
+ * @author Ivo Correia
+ * @author João Penetra
+ * @author João Barbosa
+ * @author Ricardo Bernardino
+ */
 
 @SuppressWarnings("serial")
 public abstract class Window extends JPanel implements MouseListener{

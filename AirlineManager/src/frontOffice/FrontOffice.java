@@ -42,8 +42,8 @@ import com.toedter.calendar.JCalendar;
  * 
  * @author Daniela Fontes
  * @author Ivo Correia
- * @author Miguel Penetra
- * @author Pedro Barbosa
+ * @author João Penetra
+ * @author João Barbosa
  * @author Ricardo Bernardino
  * 
  * 
@@ -62,6 +62,7 @@ public class FrontOffice extends UnicastRemoteObject {
 	private BackOfficeRemoteInterface backOffice;
 	private boolean loggedIn = false;
 	private JFrame f;
+	private ShowTime showTime;
 
 	private Vector<String> destinations;
 
@@ -85,7 +86,7 @@ public class FrontOffice extends UnicastRemoteObject {
 		try {
 
 			backOffice = (BackOfficeRemoteInterface) Naming
-					.lookup("rmi://localhost:2000/AirlineManager");
+					.lookup("rmi://localhost:" + Constants.RMI_PORT +"/AirlineManager");
 
 		} catch (Exception e) {
 			System.exit(-1);
@@ -149,10 +150,13 @@ public class FrontOffice extends UnicastRemoteObject {
 		timeDisplay.setBounds(new Rectangle(765, 11, 250, 50));
 		timeDisplay.setOpaque(false);
 		JLabel time = new JLabel();
+		JLabel userNameField = new JLabel();
 		timeDisplay.add(time);
 		timeDisplay.setVisible(true);
+		timeDisplay.add(userNameField);
+		timeDisplay.setVisible(true);
 		panel.add(timeDisplay);
-		new ShowTime(time);
+		showTime = new ShowTime(time, userNameField);
 
 		panel.add(menu);
 		panel.add(bookingsMenu);
@@ -250,7 +254,7 @@ public class FrontOffice extends UnicastRemoteObject {
 
 					/* User has 3 opportunities to finish login process */
 					while (!loggedIn && count++ != 3) {
-
+						String userName, passWord;
 						/* Pop-up to ask for the login information */
 						status = JOptionPane.showConfirmDialog(null, jop,
 								"Please enter your information",
@@ -266,8 +270,8 @@ public class FrontOffice extends UnicastRemoteObject {
 							 * Get the information from the TextField and
 							 * PasswordField
 							 */
-							String userName = user.getText();
-							String passWord = new String(pwd.getPassword());
+							userName = user.getText();
+							passWord = new String(pwd.getPassword());
 
 							/* The fields are empty. */
 							if (userName.equals("") || passWord.equals("")) {
@@ -292,6 +296,7 @@ public class FrontOffice extends UnicastRemoteObject {
 						 */
 						if (answer.equals("Login successful")) {
 							loggedIn = true;
+							showTime.setIsLoggedIn(userName);
 						}
 						JOptionPane.showMessageDialog(null, answer);
 						pwd.setText("");
@@ -353,6 +358,7 @@ public class FrontOffice extends UnicastRemoteObject {
 								if (answer
 										.equals("Registration was successful")) {
 									loggedIn = true;
+									showTime.setIsLoggedIn(user.getText());
 									JOptionPane.showMessageDialog(null, answer);
 								}
 							} else {

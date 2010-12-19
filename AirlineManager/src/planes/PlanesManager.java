@@ -1,5 +1,3 @@
-//COMPLETELY CHECKED
-
 package planes;
 
 import java.util.Date;
@@ -12,7 +10,7 @@ import org.prevayler.*;
  * This class is responsible for managing all the airplanes. It stores information about the current planes
  * and provides methods to manage them.
  * 
- * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo Bernardino
+ * @author Daniela Fontes, Ivo Correia, João Penetra, João Barbosa, Ricardo Bernardino
  *
  */
 public class PlanesManager {

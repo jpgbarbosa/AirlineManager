@@ -25,7 +25,7 @@ import bookings.Booking;
 
 /**
  * This class if responsible for managing the Flights provided by the Company.
- * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo Bernardino
+ * @author Daniela Fontes, Ivo Correia, João Penetra, João Barbosa, Ricardo Bernardino
  *
  */
 public class FlightsManager {
@@ -217,7 +217,7 @@ public class FlightsManager {
 			RFlight rflight = new RFlight(plane, origin, destination,
 					date.get(Calendar.DAY_OF_WEEK),
 					date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE),
-					plane.getId(), flight.getId());
+					plane.getId(), flight.getId(), isCharter);
 
 			Vector<RFlight> aux = regularFlights.get(date
 					.get(Calendar.DAY_OF_WEEK));
@@ -386,7 +386,8 @@ public class FlightsManager {
 					+ flight.getOrigin() + "/" + flight.getDestination() + "\t"
 					+ flight.getData().toString() + "   "
 					+ flight.getOccupiedSeats() + "/"
-					+ flight.getAirplane().getNoSeats() + "\n";
+					+ flight.getAirplane().getNoSeats()
+					+ (flight.isCharter() ? "   Charter" : "   Normal")+ "\n";
 		}
 
 		/* Prints the regular flights. */
@@ -398,6 +399,7 @@ public class FlightsManager {
 				text += rFlight.getIdFlight() + "\t" + rFlight.getIdPlane()
 						+ "\t" + rFlight.getOrigin() + "/"
 						+ rFlight.getDestination() + "\t" + rFlight.getData()
+						+ (rFlight.isCharter() ? "   Charter" : "   Normal")
 						+ "\n";
 			}
 		}

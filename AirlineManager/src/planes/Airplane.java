@@ -1,5 +1,3 @@
-//COMPLETELY CHECKED
-
 package planes;
 
 import java.io.Serializable;

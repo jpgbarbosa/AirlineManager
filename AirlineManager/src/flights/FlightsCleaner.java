@@ -1,5 +1,3 @@
-//COMPLETELY CHECKED
-
 package flights;
 
 import java.awt.Color;
@@ -19,7 +17,7 @@ import javax.swing.JPanel;
 
 /**
  * Thread responsible for removing the flights that have already finished from the Flights List. Also, it warns the Back Office when a Flight is departing.
- * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo Bernardino
+ * @author Daniela Fontes, Ivo Correia, João Penetra, João Barbosa, Ricardo Bernardino
  *
  */
 public class FlightsCleaner extends Thread{

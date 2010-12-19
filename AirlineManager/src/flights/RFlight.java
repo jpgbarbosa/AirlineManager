@@ -1,5 +1,3 @@
-//COMPLETELY CHECKED
-
 package flights;
 
 import java.io.Serializable;
@@ -10,6 +8,8 @@ import planes.Airplane;
 
 /**
  * Class that represents a regular flight.
+ * @author Daniela Fontes, Ivo Correia, João Penetra, João Barbosa, Ricardo Bernardino
+ *
  */
 @SuppressWarnings("serial")
 public class RFlight implements Serializable {
@@ -17,6 +17,7 @@ public class RFlight implements Serializable {
 	private String origin;
 	private String destination;
 	private String day;
+	private boolean isCharter;
 	private int idPlane, idFlight, hour, minute, weekDay;
 
 	/**
@@ -32,7 +33,7 @@ public class RFlight implements Serializable {
 	 * @param idFlight
 	 */
 	public RFlight(Airplane airplane, String origin, String destination,
-			int weekDay, int hour, int minute, int idPlane, int idFlight) {
+			int weekDay, int hour, int minute, int idPlane, int idFlight, boolean isCharter) {
 		this.origin = origin;
 		this.destination = destination;
 		this.idPlane = idPlane;
@@ -41,6 +42,7 @@ public class RFlight implements Serializable {
 		this.minute = minute;
 		this.airplane = airplane;
 		this.weekDay = weekDay;
+		this.isCharter = isCharter;
 		translateWeekDayToString(weekDay);
 		
 	}
@@ -120,5 +122,9 @@ public class RFlight implements Serializable {
 
 	public int getWeekDay() {
 		return weekDay;
+	}
+	
+	public boolean isCharter(){
+		return isCharter;
 	}
 }

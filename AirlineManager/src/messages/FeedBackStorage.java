@@ -1,5 +1,3 @@
-//COMPLETELY CHECKED
-
 package messages;
 
 import java.io.Serializable;
@@ -9,7 +7,7 @@ import java.util.Vector;
 
 /**
  * Class responsible for storing the Feedbacks received by the Company, either positive or negative.
- * @author Daniela Fontes, Ivo Correia, Jo‹o Penetra, Jo‹o Barbosa, Ricardo Bernardino
+ * @author Daniela Fontes, Ivo Correia, João Penetra, João Barbosa, Ricardo Bernardino
  *
  */
 public class FeedBackStorage implements Serializable{

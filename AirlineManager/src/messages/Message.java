@@ -1,5 +1,3 @@
-//COMPLETELY CHECKED
-
 package messages;
 
 import java.io.Serializable;

@@ -1,5 +1,3 @@
-//COMPLETELY CHECKED
-
 package flights;
 
 import java.io.Serializable;
@@ -9,9 +7,7 @@ import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import planes.Airplane;
-
 import common.Lock;
-
 import bookings.Booking;
 
 /**

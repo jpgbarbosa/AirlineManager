@@ -140,7 +140,7 @@ public class BackOffice extends UnicastRemoteObject implements
 			System.getProperties().put("java.security.policy", "policy.all");
 			System.setSecurityManager(new RMISecurityManager());
 
-			Registry r = LocateRegistry.createRegistry(2000);
+			Registry r = LocateRegistry.createRegistry(Constants.RMI_PORT);
 			r.rebind("AirlineManager", backOffice);
 		} catch (RemoteException re) {
 			System.out
@@ -156,9 +156,8 @@ public class BackOffice extends UnicastRemoteObject implements
 	 * The method to authenticate the administrator.
 	 */
 	public boolean loginAdmin(String username, String password) {
-		// TODO: Maybe remove this static definition of the password or not.
-		String user = "admin";
-		String pass = "fixe";
+		String user = Constants.ADMIN_USERNAME;
+		String pass = Constants.ADMIN_PASSWORD;
 		if (username.equals(user) && password.equals(pass)) {
 			return true;
 		}
@@ -253,7 +252,7 @@ public class BackOffice extends UnicastRemoteObject implements
 		timeDisplay.add(time);
 		timeDisplay.setVisible(true);
 		panel.add(timeDisplay);
-		new ShowTime(time);
+		new ShowTime(time, null);
 
 		/* Sets the panel that will hold the time display. */
 		JPanel departuresDisplay = new JPanel();
@@ -366,9 +365,9 @@ public class BackOffice extends UnicastRemoteObject implements
 		JPanel negativePanel;
 		JPanel sendPanel;
 		JPanel toPanel;
-		/* Positive Pannel Message Area */
+		/* Positive Panel Message Area */
 		private JTextArea posMsgArea;
-		/* Negative Pannel Message Area */
+		/* Negative Panel Message Area */
 		private JTextArea negMsgArea;
 		/* Message to Send Text Area */
 		private JTextArea messageToSend;
@@ -1550,8 +1549,8 @@ public class BackOffice extends UnicastRemoteObject implements
 			CreateTitle("Password: ", Color.white, 15, 90, 230, 90, 20);
 			passwordField = CreateBoxPassword(20, 175, 230, 90, 20);
 
-			usernameField.setText("admin");
-			passwordField.setText("fixe");
+			usernameField.setText(Constants.ADMIN_USERNAME);
+			passwordField.setText(Constants.ADMIN_PASSWORD);
 
 			/* The buttons. */
 			CreateButton("Login", Color.white, "Login in the system", 15, 60,
@@ -1695,6 +1694,10 @@ public class BackOffice extends UnicastRemoteObject implements
 			if (rflight == null) {
 				return "Innexistent flight";
 			}
+			else if (rflight.isCharter() && !isOperator){
+				return "Charter";
+			}
+			
 
 			/*
 			 * If we ever get here, it means that we have found a regular flight
@@ -1702,15 +1705,10 @@ public class BackOffice extends UnicastRemoteObject implements
 			 * this information on the normal list, as we got null in the
 			 * previous if, meaning we don't have this flight in the normal
 			 * list.
+			 * If it's a charter flight and it's a regular client scheduling it,
+			 * we undo the operation.
 			 */
 
-			// TODO: Change this down?
-			/*
-			 * We don't consider possible that a regular flight is a charter.
-			 * Besides it, we mark this done as none regular because otherwise,
-			 * in the scheduleFlight method, we would be adding another entry to
-			 * the regular hashtable.
-			 */
 			int weekDay = rflight.getWeekDay();
 			GregorianCalendar data = new GregorianCalendar();
 
@@ -1743,11 +1741,9 @@ public class BackOffice extends UnicastRemoteObject implements
 			data.set(Calendar.MINUTE, rflight.getMinute());
 			data.set(Calendar.SECOND, 0);
 
-			// TODO: For now, we consider that the regular flights aren't
-			// charter. Maybe change this laster?
 			flight = flightsManager.reScheduleRFlight(rflight.getPlane(),
 					rflight.getIdFlight(), data, rflight.getOrigin(),
-					rflight.getDestination(), false);
+					rflight.getDestination(), rflight.isCharter());
 
 		}
 		/* Second, we need to check if we still have space in this flight. */
