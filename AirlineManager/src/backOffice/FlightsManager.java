@@ -1,5 +1,11 @@
 package backOffice;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -84,13 +90,21 @@ public class FlightsManager {
 
 	}
 
+	//TODO: THis is a buggy procedure. When we don't have any flights, it considers
 	private int getLastID() {
 		int id = 0;
-		for (Flight a : flightsList)
-			if (a.getId() > id) {
-				id = a.getId();
-			}
-		id++;
+		FileInputStream fis = null;
+		DataInputStream dis = null;
+		File file = new File("idbooking.bin");
+
+		try {
+			fis = new FileInputStream(file);
+			dis = new DataInputStream(fis);
+			id = dis.readInt();
+			fis.close();
+		} catch (IOException e) {
+			id = 0;
+		}
 		return id;
 	}
 	
@@ -180,9 +194,23 @@ public class FlightsManager {
 		Flight flight = new Flight(plane, date, origin, destination, isRegular,
 				isCharter);
 		int i;
-
+		FileOutputStream fos = null;
+		DataOutputStream dos = null;
+		File file = new File("idbooking.bin");
+		
 		flight.setId(idCreator);
 		idCreator++;
+		
+		try {
+			fos = new FileOutputStream(file);
+
+			dos = new DataOutputStream(fos);
+			dos.writeInt((idCreator));
+			fos.close();
+
+		} catch (IOException e) {
+
+		}
 
 		/* First, we check if we can insert in this specific plane. */
 		plane.associateFlight(flight);

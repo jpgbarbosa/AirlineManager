@@ -38,6 +38,7 @@ public class Flight implements Serializable{
 	/* Lock object to prevent errors while executing concurrent operations */
 	public Lock lock = new Lock();
 	
+	
 	/**
 	 * Creates a new Flight.
 	 * 

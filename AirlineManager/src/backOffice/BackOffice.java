@@ -1637,7 +1637,7 @@ public class BackOffice extends UnicastRemoteObject implements
 		FileInputStream fis = null;
 		DataInputStream dis = null;
 
-		File file = new File("idbooking.txt");
+		File file = new File("idbooking.bin");
 
 		try {
 			fis = new FileInputStream(file);
