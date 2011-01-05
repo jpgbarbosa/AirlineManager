@@ -193,7 +193,7 @@ public class Flight implements Serializable{
 	}
 	
 	public String toFinishedString(){
-		return "ID: "+ id + "\nDate: "+date.get(Calendar.DAY_OF_MONTH)+"/"+date.get(Calendar.MONTH)+date.get(Calendar.YEAR)+
+		return "ID: "+ id + "\nDate: "+date.get(Calendar.DAY_OF_MONTH)+"/"+ (date.get(Calendar.MONTH) + 1)+"/"+date.get(Calendar.YEAR)+
 		"\nOrigin: "+ origin + "\nDestination: "+destination +"\nState: "+ finishedReason + "\n\n";
 	}
 	
