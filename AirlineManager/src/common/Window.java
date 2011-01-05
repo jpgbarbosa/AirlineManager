@@ -134,7 +134,6 @@ public abstract class Window extends JPanel implements MouseListener{
 	public JTextArea CreateText(int size,int size1,int x,int y, int x1,int y1){
 		JTextArea text = new JTextArea(size,size1);
 		text.setBounds(new Rectangle(x,y,x1,y1));
-		text.setEditable(false);
 		text.setLineWrap(true);
 		text.setWrapStyleWord(true);
 		add(text);

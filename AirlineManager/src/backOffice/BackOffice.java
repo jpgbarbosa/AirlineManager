@@ -443,7 +443,7 @@ public class BackOffice extends UnicastRemoteObject implements
 					15, 150, 150, 200, 30));
 			toPanel.add(CreateTitle(
 					"Enter the flightID to send to all client's with bookings:",
-					Color.white, 15, 20, 100, 350, 20));
+					Color.white, 15, 20, 100, 350, 40));
 			toPanel.add(flight = CreateText(10, 50, 370, 100, 100, 20));
 			toPanel.add(CreateButton("Send To Turistic Operators", Color.white,
 					"Send To Turistic Operators", 15, 130, 260, 220, 30));

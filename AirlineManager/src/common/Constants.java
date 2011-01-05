@@ -17,5 +17,6 @@ public class Constants {
 	static public int RMI_PORT = 2000;
 	static public String ADMIN_USERNAME = "admin";
 	static public String ADMIN_PASSWORD = "ES2010";
+	static public boolean DEBUGGING = true;
 	
 }
