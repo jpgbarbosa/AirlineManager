@@ -933,7 +933,8 @@ public class FrontOffice extends UnicastRemoteObject {
 							&& !originCharter.getSelectedItem()
 									.equals("")
 							&& !destinationCharter.getSelectedItem()
-									.equals("")) {
+									.equals("")
+							&& Integer.parseInt(seatsCharter.getText()) > 0)  {
 						
 						try {
 							confirmActionCharter
@@ -948,7 +949,10 @@ public class FrontOffice extends UnicastRemoteObject {
 									.setText("The server is not available, please try again later");
 						}
 						
-					}					
+					}
+					else {
+						confirmActionCharter.setText("Invalid data");
+					}
 
 				} catch (NumberFormatException e1) {
 					confirmActionCharter.setText("Invalid Date");
