@@ -921,22 +921,6 @@ public class FrontOffice extends UnicastRemoteObject {
 					day = Integer.parseInt(dateFields[0]);
 					month = Integer.parseInt(dateFields[1]);
 					year = Integer.parseInt(dateFields[2]);
-<<<<<<< HEAD
-
-					try {
-						confirmActionCharter.setText(backOffice
-								.scheduleCharter(new GregorianCalendar(year,
-										month, day), originCharter
-										.getSelectedItem().toString(),
-										destinationCharter.getSelectedItem()
-												.toString(), Integer
-												.parseInt(seatsCharter
-														.getText())));
-					} catch (RemoteException e1) {
-						confirmActionCharter
-								.setText("The server is not available, please try again later");
-					}
-=======
 					
 					hour = Integer.parseInt(hourFieldCharter.getText());
 					minute = Integer
@@ -965,7 +949,6 @@ public class FrontOffice extends UnicastRemoteObject {
 						}
 						
 					}					
->>>>>>> c3285d361b45383af2297ecd9f751efaa75a9957
 
 				} catch (NumberFormatException e1) {
 					confirmActionCharter.setText("Invalid Date");

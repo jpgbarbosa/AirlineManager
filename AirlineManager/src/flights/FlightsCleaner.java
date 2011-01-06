@@ -40,7 +40,6 @@ public class FlightsCleaner extends Thread{
 			GregorianCalendar date = new GregorianCalendar();
 			
 			for (int i = 0; i < flightsManager.getFlightsList().size() && flightsManager.getFlightsList().get(i).getDate().before(date); i++){
-				System.out.println("Cleaning because we have " + flightsManager.getFlightsList().get(i).getDate().getTime());
 				flight = flightsManager.removeFlight(i);
 				flight.setFinishedReason("Finished");
 				flightsManager.addFinished(flight);
