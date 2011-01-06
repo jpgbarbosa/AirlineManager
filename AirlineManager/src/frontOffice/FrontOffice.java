@@ -181,6 +181,78 @@ public class FrontOffice extends UnicastRemoteObject {
 		f.setVisible(true);
 
 	}
+	
+	/**
+	 * Check if the inserted fields can form a valid date.
+	 * 
+	 * @return GregorianCalendar or null
+	 */
+	public GregorianCalendar checkDate(int year, int month, int day, int hour,
+			int minute) {
+
+		/* A non-positive year. */
+		if (year < 0) {
+			return null;
+		}
+		/* An invalid month. */
+		else if (month < 1 || month > 12) {
+			return null;
+		}
+		/* An invalid day. */
+		else if (day < 1
+				|| (day > 31 && (month == 1 || month == 3 || month == 5
+						|| month == 7 || month == 8 || month == 10 || month == 12))
+				|| (day > 30 && (month == 4 || month == 6 || month == 9 || month == 11))) {
+			return null;
+		}
+		/* Invalid hour. */
+		else if (hour < 0 || hour > 23) {
+			return null;
+		}
+		/* Invalid minute. */
+		else if (minute < 0 || minute > 59) {
+			return null;
+		}
+
+		/* It's February, so we ought to check if we are in a leap year or not. */
+		if (month == 2) {
+			boolean leapYear;
+
+			/* Verifies whether we are in a leap year or not. */
+			if (year % 400 == 0) {
+				leapYear = true;
+			} else if (year % 100 == 0) {
+				leapYear = false;
+			} else if (year % 4 == 0) {
+				leapYear = true;
+			} else {
+				leapYear = false;
+			}
+
+			/* Acts accordingly to the result collected above. */
+			if (leapYear) {
+				if (day > 29) {
+					return null;
+				}
+			} else {
+				if (day > 28) {
+					return null;
+				}
+			}
+		}
+
+		GregorianCalendar now = new GregorianCalendar();
+		GregorianCalendar date = new GregorianCalendar(year, month - 1, day,
+				hour, minute);
+		/* This is an old date. */
+		if (now.after(date)) {
+			return null;
+		}
+		return date;
+	}
+	
+	
+	
 
 	@SuppressWarnings("serial")
 	private class Menu extends Window {
@@ -431,6 +503,9 @@ public class FrontOffice extends UnicastRemoteObject {
 		private JComboBox destinationCharter;
 		private JTextArea confirmActionCharter;
 		private JScrollPane jpCharter;
+		private JTextField hourFieldCharter;
+		private JTextField minuteFieldCharter;
+		private GregorianCalendar calendar;
 
 		public BookingsMenu() {
 
@@ -552,27 +627,37 @@ public class FrontOffice extends UnicastRemoteObject {
 			charterPanel.add(CreateTitle("Date:", Color.black, 15, 60, 20, 70,
 					20));
 			charterPanel.add(dateCharter = CreateBoxText(20, 100, 20, 80, 20));
+			calendar = new GregorianCalendar();
 			charterPanel.add(CreateButton("Charter Date", Color.white,
 					"Choose flight date", 15, 60, 50, 120, 30));
-			charterPanel.add(CreateTitle("Origin:", Color.black, 15, 60, 90,
+			charterPanel.add(CreateTitle("TIME:", Color.white, 15, 60, 90, 70,
+					20));
+			charterPanel.add(hourFieldCharter = CreateBoxInt(20, 100, 90, 20,
+					20, calendar.get(Calendar.HOUR_OF_DAY)));
+			charterPanel
+					.add(CreateTitle("h", Color.white, 15, 125, 90, 70, 20));
+			charterPanel.add(minuteFieldCharter = CreateBoxInt(20, 140, 90,
+					20, 20, (calendar.get(Calendar.MINUTE) + 1) % 60));
+			
+			charterPanel.add(CreateTitle("Origin:", Color.black, 15, 60, 120,
 					70, 20));
-			charterPanel.add(originCharter = CreateComboBox(120, 90, 120, 20,
+			charterPanel.add(originCharter = CreateComboBox(120, 120, 120, 20,
 					destinations));
 			charterPanel.add(CreateTitle("Destination:", Color.black, 15, 60,
-					120, 100, 20));
-			charterPanel.add(destinationCharter = CreateComboBox(150, 120, 120,
+					150, 100, 20));
+			charterPanel.add(destinationCharter = CreateComboBox(150, 150, 120,
 					20, destinations));
-			charterPanel.add(CreateTitle("Seats:", Color.black, 15, 60, 150,
+			charterPanel.add(CreateTitle("Seats:", Color.black, 15, 60, 180,
 					50, 20));
-			charterPanel.add(seatsCharter = CreateBoxInt(20, 120, 150, 50, 20,
+			charterPanel.add(seatsCharter = CreateBoxInt(20, 120, 180, 50, 20,
 					0));
 			charterPanel.add(confirmActionCharter = CreateText(300, 150, 60,
-					180, 300, 150));
+					210, 300, 150));
 			jpCharter = new JScrollPane(confirmActionCharter);
 			charterPanel.add(jpCharter);
-			jpCharter.setBounds(60, 180, 300, 150);
+			jpCharter.setBounds(60, 210, 300, 150);
 			charterPanel.add(CreateButton("Book Flight", Color.white,
-					"Search for a flight", 15, 60, 350, 120, 20));
+					"Search for a flight", 15, 60, 380, 120, 20));
 
 			/* Adds the sub panels to the main panel. */
 			panel.add(newPanel);
@@ -830,26 +915,40 @@ public class FrontOffice extends UnicastRemoteObject {
 							.setText("The system is not availabe at the moment");
 				}
 			} else if (e.getComponent().getName().equals("Book Flight")) {
-				int day, month, year;
+				int day, month, year, hour, minute;
 				String[] dateFields = dateCharter.getText().split("/");
 				try {
 					day = Integer.parseInt(dateFields[0]);
 					month = Integer.parseInt(dateFields[1]);
 					year = Integer.parseInt(dateFields[2]);
-
-					try {
-						confirmActionCharter.setText(backOffice
-								.scheduleCharter(new GregorianCalendar(year,
-										month - 1, day), originCharter
-										.getSelectedItem().toString(),
-										destinationCharter.getSelectedItem()
-												.toString(), Integer
-												.parseInt(seatsCharter
-														.getText())));
-					} catch (RemoteException e1) {
-						confirmActionCharter
-								.setText("The server is not available, please try again later");
-					}
+					
+					hour = Integer.parseInt(hourFieldCharter.getText());
+					minute = Integer
+							.parseInt(minuteFieldCharter.getText());
+					
+					GregorianCalendar date = new GregorianCalendar(year, month - 1,
+							day, hour, minute);
+					
+					if ((checkDate(year, month, day, hour, minute)) != null
+							&& !originCharter.getSelectedItem()
+									.equals("")
+							&& !destinationCharter.getSelectedItem()
+									.equals("")) {
+						
+						try {
+							confirmActionCharter
+							.setText(backOffice.scheduleCharter(date, originCharter
+									.getSelectedItem().toString(),
+									destinationCharter.getSelectedItem()
+											.toString(), Integer
+											.parseInt(seatsCharter
+													.getText())));
+						} catch (RemoteException e1) {
+							confirmActionCharter
+									.setText("The server is not available, please try again later");
+						}
+						
+					}					
 
 				} catch (NumberFormatException e1) {
 					confirmActionCharter.setText("Invalid Date");
@@ -880,10 +979,10 @@ public class FrontOffice extends UnicastRemoteObject {
 		public void propertyChange(PropertyChangeEvent evt) {
 			Calendar cal = jCalendar.getCalendar();
 			GregorianCalendar calendar = new GregorianCalendar(
-					cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
-					cal.get(Calendar.DAY_OF_MONTH));
-			dateCharter.setText(calendar.get(Calendar.DAY_OF_MONTH) + "/"
-					+ calendar.get(Calendar.MONTH) + "/"
+					cal.get(Calendar.YEAR),
+					cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+			dateCharter.setText(calendar.get(Calendar.DAY_OF_MONTH)
+					+ "/" + (calendar.get(Calendar.MONTH) + 1) + "/"
 					+ calendar.get(Calendar.YEAR));
 
 		}
