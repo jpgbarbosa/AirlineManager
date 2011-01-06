@@ -840,7 +840,7 @@ public class FrontOffice extends UnicastRemoteObject {
 					try {
 						confirmActionCharter.setText(backOffice
 								.scheduleCharter(new GregorianCalendar(year,
-										month - 1, day), originCharter
+										month, day), originCharter
 										.getSelectedItem().toString(),
 										destinationCharter.getSelectedItem()
 												.toString(), Integer
